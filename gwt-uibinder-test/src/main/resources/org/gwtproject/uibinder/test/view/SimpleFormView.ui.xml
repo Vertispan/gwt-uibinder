@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+
+  <g:VerticalPanel>
+    <g:Label ui:field="buttonLabel" theText="Foo"/>
+    <g:Button ui:field="simpleButton" text="Simple Event"/>
+
+  </g:VerticalPanel>
+
+</ui:UiBinder>

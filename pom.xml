@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.gwtproject</groupId>
+  <artifactId>gwt-uibinder</artifactId>
+  <name>GWT UiBinder</name>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <packaging>pom</packaging>
+
+  <properties>
+    <!-- Global build settings -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <java.version>1.8</java.version>
+    <gwt.version>2.8.2</gwt.version>
+  </properties>
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.5.1</version>
+          <!-- <version>3.7.0</version> -->
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>net.ltgt.gwt.maven</groupId>
+          <artifactId>gwt-maven-plugin</artifactId>
+          <version>1.0-rc-9</version>
+          <extensions>true</extensions>
+          <configuration>
+            <sourceLevel>${java.version}</sourceLevel>
+            <failOnError>true</failOnError>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.0.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-codeserver</artifactId>
+        <version>${gwt.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-servlet</artifactId>
+        <version>${gwt.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-dev</artifactId>
+        <version>${gwt.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-user</artifactId>
+        <version>${gwt.version}</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <profiles>
+    <profile>
+      <id>gwt-uibinder-test</id>
+      <modules>
+        <module>gwt-uibinder-test</module>
+      </modules>
+    </profile>
+  </profiles>
+
+  <modules>
+    <module>gwt-uibinder-client</module>
+    <module>gwt-uibinder-processor</module>
+  </modules>
+
+</project>
