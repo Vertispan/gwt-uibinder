@@ -23,7 +23,9 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: mvn -Pgwt-uibinder-test dependency:go-offline
+      - run: 
+          name: build and fetch dependencies
+          command: mvn -Pgwt-uibinder-test package dependency:go-offline
 
       - save_cache:
           paths:
