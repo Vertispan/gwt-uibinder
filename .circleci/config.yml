@@ -1,0 +1,36 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+#
+defaults: &defaults
+    working_directory: ~/gwt-uibinder
+    docker:
+      - image: circleci/openjdk:8-jdk
+        environment: 
+          _JAVA_OPTIONS: "-Xms1g -Xmx1g"
+
+
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "pom.xml" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: mvn -Pgwt-uibinder-test dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+        
+      # run tests!
+      - run: mvn -Pgwt-uibinder-test integration-test
+
+
