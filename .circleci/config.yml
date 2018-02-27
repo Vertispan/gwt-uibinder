@@ -25,7 +25,7 @@ jobs:
 
       - run: 
           name: build and fetch dependencies
-          command: mvn package dependency:go-offline
+          command: mvn package dependency:go-offline || true
 
       - save_cache:
           paths:
