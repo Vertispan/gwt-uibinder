@@ -92,22 +92,20 @@
         <version>${gwt.version}</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt</artifactId>
+        <version>${gwt.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
-
-
-  <profiles>
-    <profile>
-      <id>gwt-uibinder-test</id>
-      <modules>
-        <module>gwt-uibinder-test</module>
-      </modules>
-    </profile>
-  </profiles>
 
   <modules>
     <module>gwt-uibinder-client</module>
     <module>gwt-uibinder-processor</module>
+    <module>gwt-uibinder-test</module>
   </modules>
 
 </project>
