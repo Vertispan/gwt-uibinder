@@ -13,8 +13,10 @@
 
   <source path=""/>
 
-  <entry-point class="org.gwtproject.uibinder.test.Application"/>
-
   <!-- Only support recent browsers -->
   <set-property name="user.agent" value="ie10,gecko1_8,safari"/>
+
+
+
+  <entry-point class="org.gwtproject.uibinder.test.Application"/>
 </module>

@@ -15,7 +15,7 @@
   <name>GWT UiBinder Testbed</name>
   <description>Intended to be a test module for GWT UiBinder</description>
 
-  <packaging>war</packaging>
+  <packaging>gwt-app</packaging>
 
   <build>
     <resources>
@@ -39,8 +39,9 @@
         <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
-          <moduleName>org.gwtproject.uibinder.test.Application</moduleName>
-          <moduleShortName>uibinder-test</moduleShortName>
+          <moduleName>org.gwtproject.uibinder.test.GwtUiBinderTest</moduleName>
+          <moduleShortName>uibindertest</moduleShortName>
+          <skipModule>true</skipModule>
         </configuration>
       </plugin>
       <plugin>
@@ -49,7 +50,6 @@
       </plugin>
     </plugins>
   </build>
-
 
   <dependencies>
     <dependency>
@@ -68,6 +68,12 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

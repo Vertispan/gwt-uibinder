@@ -25,7 +25,7 @@ jobs:
 
       - run: 
           name: build and fetch dependencies
-          command: mvn -Pgwt-uibinder-test package dependency:go-offline
+          command: mvn package dependency:go-offline
 
       - save_cache:
           paths:
@@ -33,6 +33,6 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
       # run tests!
-      - run: mvn -Pgwt-uibinder-test integration-test
+      - run: mvn integration-test
 
 

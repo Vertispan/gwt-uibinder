@@ -14,7 +14,7 @@
   <artifactId>gwt-uibinder-client</artifactId>
   <name>GWT UiBinder Client</name>
 
-  <packaging>jar</packaging>
+  <packaging>gwt-lib</packaging>
 
   <build>
     <resources>
@@ -30,6 +30,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>net.ltgt.gwt.maven</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <configuration>
+          <moduleName>org.gwtproject.uibinder.UiBinder</moduleName>
+          <skipModule>true</skipModule>
+        </configuration>
       </plugin>
     </plugins>
   </build>
