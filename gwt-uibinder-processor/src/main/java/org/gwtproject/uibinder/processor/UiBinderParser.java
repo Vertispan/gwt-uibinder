@@ -1,10 +1,13 @@
 package org.gwtproject.uibinder.processor;
 
+import static org.gwtproject.uibinder.processor.AptUtil.asTypeElement;
+
 import org.gwtproject.uibinder.processor.elementparsers.BeanParser;
 import org.gwtproject.uibinder.processor.elementparsers.SimpleInterpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.messages.MessagesWriter;
 import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
+import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
 import org.gwtproject.uibinder.processor.model.ImplicitDataResource;
 import org.gwtproject.uibinder.processor.model.ImplicitImageResource;
 import org.gwtproject.uibinder.processor.model.OwnerField;
@@ -14,8 +17,10 @@ import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -306,7 +311,7 @@ public class UiBinderParser {
         return;
       } else {
         // Let's keep trying, but we know the type at least.
-        resourceType = AptUtil.asTypeElement(types.erasure(ownerField.getType().getRawType()));
+        resourceType = asTypeElement(types.erasure(ownerField.getType().getRawType()));
       }
     }
 
@@ -348,41 +353,39 @@ public class UiBinderParser {
 
   private void createResourceUiFactory(XMLElement elem, String resourceName,
       TypeMirror resourceType) throws UnableToCompleteException {
-    // TODO implement
-//    FieldWriter fieldWriter;
-//    JMethod factoryMethod = writer.getOwnerClass().getUiFactoryMethod(resourceType);
-//    JClassType methodReturnType = factoryMethod.getReturnType().getErasedType()
-//        .isClassOrInterface();
-//    if (!resourceType.getErasedType().equals(methodReturnType)) {
-//      writer.die(elem, "Type must match %s.", methodReturnType);
-//    }
-//
-//    String initializer;
+    FieldWriter fieldWriter;
+    ExecutableElement factoryMethod = writer.getOwnerClass().getUiFactoryMethod(resourceType);
+    TypeElement methodReturnType = asTypeElement(
+        AptUtil.getTypeUtils().erasure(factoryMethod.getReturnType()));
+    if (!AptUtil.getTypeUtils().isSameType(resourceType, methodReturnType.asType())) {
+      writer.die(elem, "Type must match %s.", methodReturnType);
+    }
+
+    String initializer;
 //    if (writer.getDesignTime().isDesignTime()) {
 //      String typeName = factoryMethod.getReturnType().getQualifiedSourceName();
 //      initializer = writer.getDesignTime().getProvidedFactory(typeName,
 //          factoryMethod.getName(), "");
 //    } else {
-//      initializer = String.format("owner.%s()", factoryMethod.getName());
+    initializer = String.format("owner.%s()", factoryMethod.getSimpleName());
 //    }
-//    fieldWriter = fieldManager.registerField(
-//        FieldWriterType.IMPORTED, resourceType, resourceName);
-//    fieldWriter.setInitializer(initializer);
+    fieldWriter = fieldManager.registerField(
+        FieldWriterType.IMPORTED, resourceType, resourceName);
+    fieldWriter.setInitializer(initializer);
   }
 
   private void createResourceUiField(String resourceName, OwnerField ownerField)
       throws UnableToCompleteException {
-    // TODO implement
-//    FieldWriter fieldWriter;
-//    String initializer;
-//
-//    initializer = "owner." + ownerField.getName();
-//
-//    fieldWriter = fieldManager.registerField(
-//        FieldWriterType.IMPORTED,
-//        ownerField.getType().getRawType().getErasedType(),
-//        resourceName);
-//    fieldWriter.setInitializer(initializer);
+    FieldWriter fieldWriter;
+    String initializer;
+
+    initializer = "owner." + ownerField.getName();
+
+    fieldWriter = fieldManager.registerField(
+        FieldWriterType.IMPORTED,
+        AptUtil.getTypeUtils().erasure(ownerField.getType().getRawType()),
+        resourceName);
+    fieldWriter.setInitializer(initializer);
   }
 
   private void createResourceUiRenderer(XMLElement elem, String resourceName,
@@ -430,31 +433,30 @@ public class UiBinderParser {
   }
 
   private void createStyle(XMLElement elem) throws UnableToCompleteException {
-    // TODO implement
-//    String body = elem.consumeUnescapedInnerText();
-//    String[] source = elem.consumeRawArrayAttribute(SOURCE_ATTRIBUTE);
-//
-//    if (0 == body.length() && 0 == source.length) {
-//      writer.die(elem, "Must have either a src attribute or body text");
-//    }
-//
-//    String name = elem.consumeRawAttribute(FIELD_ATTRIBUTE, "style");
-//    JClassType publicType = consumeCssResourceType(elem);
-//
-//    String[] importTypeNames = elem.consumeRawArrayAttribute(IMPORT_ATTRIBUTE);
-//    LinkedHashSet<JClassType> importTypes = new LinkedHashSet<JClassType>();
-//    for (String type : importTypeNames) {
-//      importTypes.add(findCssResourceType(elem, type));
-//    }
-//
-//    boolean gss = determineGssForFile(elem.consumeBooleanConstantAttribute(GSS_ATTRIBUTE));
-//    ImplicitCssResource cssMethod = bundleClass.createCssResource(name, source,
-//        publicType, body, importTypes, gss, resourceOracle);
-//
-//    FieldWriter field = fieldManager.registerFieldForGeneratedCssResource(cssMethod);
-//    field.setInitializer(String.format("%s.%s()",
-//        fieldManager.convertFieldToGetter(bundleClass.getFieldName()),
-//        cssMethod.getName()));
+    String body = elem.consumeUnescapedInnerText();
+    String[] source = elem.consumeRawArrayAttribute(SOURCE_ATTRIBUTE);
+
+    if (0 == body.length() && 0 == source.length) {
+      writer.die(elem, "Must have either a src attribute or body text");
+    }
+
+    String name = elem.consumeRawAttribute(FIELD_ATTRIBUTE, "style");
+    TypeMirror publicType = consumeCssResourceType(elem);
+
+    String[] importTypeNames = elem.consumeRawArrayAttribute(IMPORT_ATTRIBUTE);
+    LinkedHashSet<TypeMirror> importTypes = new LinkedHashSet<>();
+    for (String type : importTypeNames) {
+      importTypes.add(findCssResourceType(elem, type));
+    }
+
+    boolean gss = determineGssForFile(elem.consumeBooleanConstantAttribute(GSS_ATTRIBUTE));
+    ImplicitCssResource cssMethod = bundleClass.createCssResource(name, source,
+        publicType, body, importTypes, gss);
+
+    FieldWriter field = fieldManager.registerFieldForGeneratedCssResource(cssMethod);
+    field.setInitializer(String.format("%s.%s()",
+        fieldManager.convertFieldToGetter(bundleClass.getFieldName()),
+        cssMethod.getName()));
   }
 
   private boolean determineGssForFile(Boolean attributeInUiBinderFile)

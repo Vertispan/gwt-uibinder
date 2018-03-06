@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
@@ -179,6 +181,18 @@ public class AptUtil {
 
   public static PackageElement getPackageElement(TypeMirror mirror) {
     return getPackageElement(asTypeElement(mirror));
+  }
+
+  public static String getReadableDeclaration(ExecutableElement element, boolean noAccess,
+      boolean noNative, boolean noStatic, boolean noFinal, boolean noAbstract) {
+    if (element == null) {
+      return "";
+    }
+    Set<Modifier> modifiers = element.getModifiers();
+    StringBuilder sb = new StringBuilder();
+    // FIXME
+    throw new NullPointerException();
+    //return null;
   }
 
   public static List<? extends TypeMirror> getTypeArguments(TypeMirror typeMirror) {

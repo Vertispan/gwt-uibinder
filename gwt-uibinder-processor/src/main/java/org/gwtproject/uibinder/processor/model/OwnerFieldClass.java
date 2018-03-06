@@ -1,7 +1,14 @@
 package org.gwtproject.uibinder.processor.model;
 
+import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderContext;
+import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+
 import java.beans.Introspector;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collection;
@@ -17,17 +24,11 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
-import org.gwtproject.uibinder.processor.AptUtil;
-import org.gwtproject.uibinder.processor.MortalLogger;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
-import org.gwtproject.uibinder.processor.UiBinderContext;
-import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
 /**
  * Descriptor for a class which can be used as a @UiField. This is usually a widget, but can also be
@@ -256,8 +257,8 @@ public class OwnerFieldClass {
    * @param ownerType the type of the owner class
    */
   private void findUiChildren(TypeMirror ownerType) throws UnableToCompleteException {
-    TypeElement ownerElement = AptUtil.asTypeElement(AptUtil.getTypeUtils().asElement(ownerType));
-    while (!TypeKind.NONE.equals(ownerElement.getKind())) {
+    while (!TypeKind.NONE.equals(ownerType.getKind())) {
+      TypeElement ownerElement = AptUtil.asTypeElement(ownerType);
       List<ExecutableElement> methods = ElementFilter.methodsIn(ownerElement.getEnclosedElements());
       for (ExecutableElement method : methods) {
         AnnotationMirror annotation = AptUtil.getAnnotation(method, UiBinderClasses.UICHILD);
@@ -289,8 +290,7 @@ public class OwnerFieldClass {
         }
       }
 
-      TypeMirror superclass = ownerElement.getSuperclass();
-      ownerElement = AptUtil.asTypeElement(AptUtil.getTypeUtils().asElement(superclass));
+      ownerType = ownerElement.getSuperclass();
     }
   }
 
@@ -352,10 +352,18 @@ public class OwnerFieldClass {
     List<? extends VariableElement> params = method.getParameters();
     int rank = 0;
     for (int i = 0; i < Math.min(params.size(), 10); i++) {
-      QualifiedNameable paramType = AptUtil.asQualifiedNameable(params.get(i));
       int cost = DEFAULT_COST;
-      if (TYPE_RANK.containsKey(paramType.getQualifiedName().toString())) {
-        cost = TYPE_RANK.get(paramType.getQualifiedName().toString());
+
+      TypeMirror paramTypeMirror = params.get(i).asType();
+      if (paramTypeMirror.getKind().isPrimitive()) {
+        if (TYPE_RANK.containsKey(paramTypeMirror.getKind().name().toLowerCase())) {
+          cost = TYPE_RANK.get(paramTypeMirror.getKind().name().toLowerCase());
+        }
+      } else {
+        TypeElement paramType = AptUtil.asTypeElement(paramTypeMirror);
+        if (TYPE_RANK.containsKey(paramType.getQualifiedName().toString())) {
+          cost = TYPE_RANK.get(paramType.getQualifiedName().toString());
+        }
       }
       assert (cost >= 0 && cost <= 0x07);
       rank = rank | (cost << (3 * i));

@@ -2,6 +2,7 @@ package org.gwtproject.uibinder.processor;
 
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.messages.MessagesWriter;
+import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
 
 import org.w3c.dom.Document;
 
@@ -137,6 +138,9 @@ public class UiBinderProcessor extends BaseProcessor {
     if (messages.hasMessages()) {
       messages.write(writerManager.makePrintWriterFor(messages.getMessagesClassName()));
     }
+
+    ImplicitClientBundle bundleClass = uiBinderWriter.getBundleClass();
+    new BundleWriter(bundleClass, writerManager, logger).write();
 
     writerManager.commit();
   }
