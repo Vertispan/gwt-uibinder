@@ -1,71 +1,46 @@
 package org.gwtproject.uibinder.processor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.List;
+import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
 public abstract class BaseProcessor extends AbstractProcessor {
 
-  // utility methods
+  @Override
+  public final boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
+    MortalLogger logger = new MortalLogger(processingEnv.getMessager());
+    try {
+      if (!env.processingOver()) {
+        AptUtil.setProcessingEnvironment(processingEnv);
+        for (TypeElement annotation : annotations) {
+          for (Element element : env.getElementsAnnotatedWith(annotation)) {
+            logger.setCurrentElement(element);
+            String generatedClassName = processElement((TypeElement) element, logger);
+            logger.log(Kind.NOTE, "generated type " + generatedClassName);
+          }
+        }
+        return true;
+      }
+    } catch (Exception e) {
+      logger.log(Kind.ERROR, "Error Processing Annotation", e);
+      return false;
+    } finally {
+      AptUtil.setProcessingEnvironment(null);
+    }
+    return false;
+  }
 
   /**
-   * Gets the implemented interface from provided element.
+   * Process single TypeElement.
+   *
+   * @param interfaceType the TypeElement to process
+   * @param treeLogger the logger
+   * @return canonical classname
    */
-  public TypeMirror getImplementedInterface(TypeElement element, TypeMirror interfaceType) {
-    List<? extends TypeMirror> interfaces = element.getInterfaces();
-    Types typeUtils = processingEnv.getTypeUtils();
-    interfaceType = typeUtils.erasure(interfaceType);
-    for (TypeMirror anInterface : interfaces) {
-      if (typeUtils.isSameType(typeUtils.erasure(anInterface), interfaceType)) {
-        return anInterface;
-      }
-    }
-    return null;
-  }
-
-  public List<? extends TypeMirror> getTypeArguments(TypeMirror declaration) {
-    if (declaration instanceof DeclaredType) {
-      DeclaredType declaredType = (DeclaredType) declaration;
-      return declaredType.getTypeArguments();
-    }
-    return null;
-  }
-
-  protected void error(Element element, Object... message) {
-    log(Diagnostic.Kind.ERROR, element, message);
-  }
-
-  protected void log(Diagnostic.Kind logLevel, Element element, Object... message) {
-    StringBuilder sb = new StringBuilder();
-    for (Object o : message) {
-      sb.append(o);
-    }
-    if (element == null) {
-      processingEnv.getMessager().printMessage(logLevel, sb.toString());
-    } else {
-      processingEnv.getMessager().printMessage(logLevel, sb.toString(), element);
-    }
-  }
-
-  protected void logException(Element element, Exception e) {
-    StringWriter stringWriter = new StringWriter();
-    e.printStackTrace(new PrintWriter(stringWriter));
-    error(element, "Error Processing Annotation:\n" + stringWriter.getBuffer().toString());
-  }
-
-
-  protected void note(Element element, Object... message) {
-    log(Diagnostic.Kind.NOTE, element, message);
-  }
-
-  protected void warn(Element element, Object... message) {
-    log(Diagnostic.Kind.MANDATORY_WARNING, element, message);
-  }
+  protected abstract String processElement(TypeElement interfaceType, MortalLogger treeLogger)
+      throws UnableToCompleteException;
 }

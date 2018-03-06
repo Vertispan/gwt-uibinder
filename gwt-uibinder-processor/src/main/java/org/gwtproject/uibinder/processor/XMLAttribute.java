@@ -1,0 +1,74 @@
+package org.gwtproject.uibinder.processor;
+
+import org.gwtproject.uibinder.processor.attributeparsers.FieldReferenceConverter;
+import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import org.w3c.dom.Attr;
+
+/**
+ * Like {@link XMLElement}, a wrapper around {@link Attr} to keep parser writers out of trouble.
+ */
+public class XMLAttribute {
+
+  private XMLElement xmlElem;
+  private Attr w3cAttr;
+
+  XMLAttribute(XMLElement element, Attr attr) {
+    this.xmlElem = element;
+    this.w3cAttr = attr;
+  }
+
+  public String consumeRawValue() {
+    return xmlElem.consumeRawAttribute(w3cAttr.getName());
+  }
+
+  public String consumeSafeHtmlValue() throws UnableToCompleteException {
+    return xmlElem.consumeSafeHtmlAttribute(w3cAttr.getName());
+  }
+
+  /**
+   * Consumes this attribute as either a SafeUri or a String. Used in HTML contexts.
+   */
+  public String consumeSafeUriOrStringAttribute() throws UnableToCompleteException {
+    return xmlElem.consumeSafeUriOrStringAttribute(w3cAttr.getName());
+  }
+
+  public String consumeStringValue() throws UnableToCompleteException {
+    return xmlElem.consumeStringAttribute(w3cAttr.getName());
+  }
+
+  public XMLElement getElement() {
+    return xmlElem;
+  }
+
+  public String getLocalName() {
+    return w3cAttr.getLocalName();
+  }
+
+  public String getName() {
+    return w3cAttr.getName();
+  }
+
+  public String getNamespaceUri() {
+    return w3cAttr.getNamespaceURI();
+  }
+
+  public boolean hasComputedValue() {
+    return FieldReferenceConverter.hasFieldReferences(w3cAttr.getValue());
+  }
+
+  public boolean hasToken() {
+    return Tokenator.hasToken(w3cAttr.getValue());
+  }
+
+  public boolean isConsumed() {
+    return !xmlElem.hasAttribute(w3cAttr.getName());
+  }
+
+  @Override
+  public String toString() {
+    return String.format("<%s:%s ... %s=%s ...>", xmlElem.getPrefix(), xmlElem.getLocalName(),
+        w3cAttr.getName(), w3cAttr.getValue());
+  }
+
+}

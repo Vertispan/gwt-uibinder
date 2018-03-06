@@ -29,5 +29,5 @@ public @interface UiTemplate {
   /**
    * Returns the template name.
    */
-  String value();
+  String value() default "";
 }
