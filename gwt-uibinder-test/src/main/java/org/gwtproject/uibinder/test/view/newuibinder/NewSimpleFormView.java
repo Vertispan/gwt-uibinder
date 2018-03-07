@@ -1,13 +1,16 @@
 package org.gwtproject.uibinder.test.view.newuibinder;
 
+import org.gwtproject.uibinder.client.UiBinder;
+import org.gwtproject.uibinder.client.UiFactory;
+import org.gwtproject.uibinder.client.UiHandler;
+import org.gwtproject.uibinder.client.UiTemplate;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.gwtproject.uibinder.client.UiBinder;
-import org.gwtproject.uibinder.client.UiTemplate;
 
 /**
  *
@@ -27,19 +30,17 @@ public class NewSimpleFormView implements IsWidget {
   public Widget asWidget() {
     if (widget == null) {
       widget = binder.createAndBindUi(this);
-      // for the time being, use a label
-      widget = new Label("unimplemented");
     }
     return widget;
   }
 
 
-  // TODO
+  @UiFactory
   protected Label createButtonLabel(String theText) {
     return new Label(theText);
   }
 
-  // TODO
+  @UiHandler("simpleButton")
   protected void onSimpleButtonClick(ClickEvent event) {
     Window.alert("Button Clicked");
   }

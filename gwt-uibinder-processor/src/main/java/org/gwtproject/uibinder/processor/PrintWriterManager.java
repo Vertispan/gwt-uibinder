@@ -77,10 +77,13 @@ public class PrintWriterManager {
     }
 
     TypeElement existingType = processingEnv.getElementUtils().getTypeElement(typeName);
+    // FIXME - identify when we should overwrite
+    /*
     if (existingType != null) {
       logger.log(Kind.NOTE, "Type '" + typeName + "' already exists and will not be re-created");
       return null;
     }
+    */
 
     try {
       JavaFileObject sourceFile = processingEnv.getFiler()

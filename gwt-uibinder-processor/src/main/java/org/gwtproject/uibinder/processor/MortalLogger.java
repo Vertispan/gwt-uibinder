@@ -93,7 +93,7 @@ public class MortalLogger {
   public void die(XMLElement context, String message, Object... params)
       throws UnableToCompleteException {
 
-    String.format(message, params);
+    logLocation(Kind.ERROR, context, String.format(message, params));
     throw new UnableToCompleteException();
   }
 

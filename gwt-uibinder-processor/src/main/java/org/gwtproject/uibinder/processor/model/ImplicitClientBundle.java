@@ -1,10 +1,13 @@
 package org.gwtproject.uibinder.processor.model;
 
+import org.gwtproject.uibinder.processor.MortalLogger;
+
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
+
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.gwtproject.uibinder.processor.MortalLogger;
+import javax.lang.model.type.TypeMirror;
 
 /**
  * Models the ClientBundle to be generated from a ui.xml.
@@ -46,18 +49,16 @@ public class ImplicitClientBundle {
    * @param importTypes for the {@literal @}Import annotation, if any. LinkedHashSet to enforce
    * deterministic order across recompiles
    * @param gss indicates that GSS is used or not
-   * @param resourceOracle from which to load resources
    * @return the newly-created CssResource
-   * TODO createCssResource needs update /
+   */
   public ImplicitCssResource createCssResource(String name, String[] source,
-      JClassType extendedInterface, String body, LinkedHashSet<JClassType> importTypes,
-      Boolean gss, ResourceOracle resourceOracle) {
+      TypeMirror extendedInterface, String body, LinkedHashSet<TypeMirror> importTypes,
+      Boolean gss) {
     ImplicitCssResource css = new ImplicitCssResource(packageName, cssBaseName + name, name, source,
-        extendedInterface, body, logger, importTypes, gss, resourceOracle);
+        extendedInterface, body, logger, importTypes, gss);
     cssMethods.add(css);
     return css;
   }
-  */
 
   /**
    * Called to declare a new DataResource accessor on this bundle. All params must be non-null

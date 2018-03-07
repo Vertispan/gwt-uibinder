@@ -13,4 +13,5 @@ public interface UiBinderClasses {
   String UICHILD = "org.gwtproject.uibinder.client.UiChild";
   String UIFACTORY = "org.gwtproject.uibinder.client.UiFactory";
   String UIHANDLER = "org.gwtproject.uibinder.client.UiHandler";
+  String LAZYDOMELEMENT = "org.gwtproject.uibinder.client.LazyDomElement";
 }
