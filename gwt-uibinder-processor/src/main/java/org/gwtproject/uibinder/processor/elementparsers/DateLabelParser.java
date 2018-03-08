@@ -1,0 +1,124 @@
+package org.gwtproject.uibinder.processor.elementparsers;
+
+import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.UiBinderWriter;
+import org.gwtproject.uibinder.processor.XMLElement;
+import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.i18n.client.TimeZone;
+
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+
+/**
+ * Parses {@link com.google.gwt.user.client.ui.DateLabel} widgets.
+ */
+public class DateLabelParser implements ElementParser {
+
+  static final String AT_MOST_ONE_SPECIFIED_FORMAT = "May have at most one of format, predefinedFormat and customFormat.";
+  static final String AT_MOST_ONE_SPECIFIED_TIME_ZONE = "May have at most one of timezone and timezoneOffset.";
+  static final String NO_TIMEZONE_WITHOUT_SPECIFIED_FORMAT = "May not specify a time zone if no format is given.";
+
+  public void parse(XMLElement elem, String fieldName, TypeMirror type,
+      UiBinderWriter writer) throws UnableToCompleteException {
+    boolean supportsTimeZone = hasDateTimeFormatAndTimeZoneConstructor(type);
+    if (hasDateTimeFormatConstructor(type)
+        || supportsTimeZone) {
+      String format = consumeFormat(elem, writer);
+
+      if (format != null) {
+        String timeZone = (supportsTimeZone ? consumeTimeZone(elem, writer)
+            : null);
+
+        writer.setFieldInitializerAsConstructor(fieldName, makeArgs(
+            format, timeZone));
+      } else if (supportsTimeZone && hasTimeZone(elem)) {
+        writer.die(elem, NO_TIMEZONE_WITHOUT_SPECIFIED_FORMAT);
+      }
+    }
+  }
+
+  private String consumeFormat(XMLElement elem, UiBinderWriter writer)
+      throws UnableToCompleteException {
+    String format = elem.consumeAttribute("format",
+        AptUtil.getElementUtils().getTypeElement(DateTimeFormat.class.getCanonicalName())
+            .asType());
+    String predefinedFormat = elem.consumeAttribute("predefinedFormat",
+        AptUtil.getElementUtils().getTypeElement(PredefinedFormat.class.getCanonicalName())
+            .asType());
+    String customFormat = elem.consumeStringAttribute("customFormat");
+
+    if (format != null) {
+      if (predefinedFormat != null || customFormat != null) {
+        writer.die(elem, AT_MOST_ONE_SPECIFIED_FORMAT);
+      }
+      return format;
+    }
+    if (predefinedFormat != null) {
+      if (customFormat != null) {
+        writer.die(elem, AT_MOST_ONE_SPECIFIED_FORMAT);
+      }
+      return makeGetFormat(predefinedFormat);
+    }
+    if (customFormat != null) {
+      return makeGetFormat(customFormat);
+    }
+    return null;
+  }
+
+  private String consumeTimeZone(XMLElement elem, UiBinderWriter writer)
+      throws UnableToCompleteException {
+    String timeZone = elem.consumeAttribute("timezone",
+        AptUtil.getElementUtils().getTypeElement(TimeZone.class.getCanonicalName()).asType());
+    String timeZoneOffset = elem.consumeAttribute("timezoneOffset",
+        getIntType());
+    if (timeZone != null && timeZoneOffset != null) {
+      writer.die(elem, AT_MOST_ONE_SPECIFIED_TIME_ZONE);
+    }
+    if (timeZone != null) {
+      return timeZone;
+    }
+    if (timeZoneOffset != null) {
+      return TimeZone.class.getCanonicalName() + ".createTimeZone("
+          + timeZoneOffset + ")";
+    }
+    return null;
+  }
+
+  private TypeMirror getIntType() {
+    return AptUtil.getTypeUtils().getPrimitiveType(TypeKind.INT);
+  }
+
+  private boolean hasDateTimeFormatAndTimeZoneConstructor(TypeMirror type) {
+    TypeElement dateTimeFormatType = AptUtil.getElementUtils()
+        .getTypeElement(DateTimeFormat.class.getName());
+    TypeElement timeZoneType = AptUtil.getElementUtils().getTypeElement(TimeZone.class.getName());
+    return AptUtil
+        .hasCompatibleConstructor(type, dateTimeFormatType.asType(), timeZoneType.asType());
+  }
+
+  private boolean hasDateTimeFormatConstructor(TypeMirror type) {
+    TypeElement dateTimeFormatType = AptUtil.getElementUtils()
+        .getTypeElement(DateTimeFormat.class.getName());
+    return AptUtil.hasCompatibleConstructor(type, dateTimeFormatType.asType());
+  }
+
+  private boolean hasTimeZone(XMLElement elem) {
+    return elem.hasAttribute("timezone") || elem.hasAttribute("timezoneOffset");
+  }
+
+  private String[] makeArgs(String format, String timeZone) {
+    if (timeZone == null) {
+      return new String[]{format};
+    }
+    return new String[]{format, timeZone};
+  }
+
+  private String makeGetFormat(String format) {
+    return DateTimeFormat.class.getCanonicalName() + ".getFormat(" + format
+        + ")";
+  }
+}
