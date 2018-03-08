@@ -2,6 +2,7 @@ package org.gwtproject.uibinder.processor;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -77,7 +79,7 @@ public class AptUtil {
     }
 
     for (AnnotationMirror mirror : annotationMirrors) {
-      if (isSameType(mirror.getAnnotationType(), UiBinderClasses.UITEMPLATE)) {
+      if (isSameType(mirror.getAnnotationType(), annotationClassName)) {
         return mirror;
       }
     }
@@ -196,6 +198,40 @@ public class AptUtil {
     return superTypes;
   }
 
+  /**
+   * Iterates over the most-derived declaration of each unique inheritable method available in the
+   * type hierarchy of the specified type, including those found in superclasses and
+   * superinterfaces. A method is inheritable if its accessibility is <code>public</code>,
+   * <code>protected</code>, or package protected.
+   *
+   * This method offers a convenient way for Generators to find candidate methods to call from a
+   * subclass.
+   *
+   * @param type the type to find methods on.
+   * @return an array of {@link ExecutableElement} objects representing inheritable methods
+   */
+  public static List<? extends ExecutableElement> getInheritableMethods(TypeMirror type) {
+    Map<String, ExecutableElement> inheritableMethods = new HashMap<>();
+
+    Set<TypeMirror> flattenedSupertypeHierarchy = new HashSet<>(
+        getFlattenedSupertypeHierarchy(type));
+    flattenedSupertypeHierarchy.add(type);
+    for (TypeMirror typeMirror : flattenedSupertypeHierarchy) {
+      TypeElement typeElement = asTypeElement(typeMirror);
+      if (typeElement != null) {
+        List<ExecutableElement> methods = ElementFilter
+            .methodsIn(typeElement.getEnclosedElements());
+        for (ExecutableElement method : methods) {
+          String readableDeclaration = getReadableDeclaration(method, true,
+              true, true, true, true, true);
+          inheritableMethods.putIfAbsent(readableDeclaration, method);
+        }
+      }
+    }
+
+    return new ArrayList<>(inheritableMethods.values());
+  }
+
   public static PackageElement getPackageElement(Element element) {
     while (!(element instanceof PackageElement)) {
       element = element.getEnclosingElement();
@@ -207,16 +243,130 @@ public class AptUtil {
     return getPackageElement(asTypeElement(mirror));
   }
 
+  public static String getParameterizedQualifiedSourceName(TypeMirror returnType) {
+    if (returnType.getKind().isPrimitive() || TypeKind.VOID.equals(returnType.getKind())) {
+      return returnType.toString();
+    }
+
+    if (returnType instanceof TypeVariable) {
+      return getParameterizedQualifiedSourceName(((TypeVariable) returnType).getUpperBound());
+    }
+
+    QualifiedNameable qualifiedNameable = asQualifiedNameable(returnType);
+    if (qualifiedNameable == null) {
+      throw new NullPointerException();
+    }
+    return qualifiedNameable.getQualifiedName().toString();
+  }
+
+  /**
+   * Returns a {@code String} representing the source code declaration of this method, containing
+   * access modifiers, type parameters, return type, method name, parameter list, and throws.
+   * Doesn't include the method body or trailing semicolon.
+   *
+   * @param element the element to create readable declaration
+   * @param noAccess if true, print no access modifiers
+   * @param noNative if true, don't print the native modifier
+   * @param noStatic if true, don't print the static modifier
+   * @param noFinal if true, don't print the final modifier
+   * @param noAbstract if true, don't print the abstract modifier
+   */
   public static String getReadableDeclaration(ExecutableElement element, boolean noAccess,
       boolean noNative, boolean noStatic, boolean noFinal, boolean noAbstract) {
-    if (element == null) {
-      return "";
+    return getReadableDeclaration(element, false, noAccess, noNative, noStatic, noFinal,
+        noAbstract);
+  }
+
+  public static String getReadableDeclaration(ExecutableElement element,
+      boolean excludeParameterNames, boolean noAccess, boolean noNative, boolean noStatic,
+      boolean noFinal, boolean noAbstract) {
+    Set<Modifier> modifiers = new HashSet<>(element.getModifiers());
+
+    if (noAccess) {
+      modifiers.remove(Modifier.PUBLIC);
+      modifiers.remove(Modifier.PRIVATE);
+      modifiers.remove(Modifier.PROTECTED);
     }
-    Set<Modifier> modifiers = element.getModifiers();
+    if (noNative) {
+      modifiers.remove(Modifier.NATIVE);
+    }
+    if (noStatic) {
+      modifiers.remove(Modifier.STATIC);
+    }
+    if (noFinal) {
+      modifiers.remove(Modifier.FINAL);
+    }
+    if (noAbstract) {
+      modifiers.remove(Modifier.ABSTRACT);
+    }
+
+    String[] names = modifiersToNamesForMethod(modifiers);
     StringBuilder sb = new StringBuilder();
-    // FIXME
-    throw new NullPointerException();
-    //return null;
+    for (String name : names) {
+      sb.append(name);
+      sb.append(" ");
+    }
+
+    List<? extends TypeMirror> typeArguments = getTypeArguments(element.asType());
+    if (typeArguments != null && typeArguments.size() > 0) {
+      //FIXME toStringTypeParams(sb);
+      sb.append("<");
+      boolean needComma = false;
+      for (TypeMirror typeArgument : typeArguments) {
+        if (needComma) {
+          sb.append(", ");
+        } else {
+          needComma = true;
+        }
+        sb.append(asQualifiedNameable(typeArgument).getQualifiedName().toString());
+      }
+      sb.append(">");
+      sb.append(" ");
+    }
+    sb.append(getParameterizedQualifiedSourceName(element.getReturnType()));
+    sb.append(" ");
+    sb.append(element.getSimpleName());
+
+    // string params and throws
+    List<? extends VariableElement> params = element.getParameters();
+    sb.append("(");
+    boolean needComma = false;
+    for (int i = 0, c = params.size(); i < c; ++i) {
+      VariableElement param = params.get(i);
+      if (needComma) {
+        sb.append(", ");
+      } else {
+        needComma = true;
+      }
+
+      if (element.isVarArgs() && i == c - 1) {
+        sb.append(getParameterizedQualifiedSourceName(
+            getTypeUtils().getArrayType(param.asType()).getComponentType()));
+        sb.append("...");
+      } else {
+        sb.append(getParameterizedQualifiedSourceName(param.asType()));
+      }
+      if (!excludeParameterNames) {
+        sb.append(" ");
+        sb.append(param.getSimpleName());
+      }
+    }
+    sb.append(")");
+
+    if (!element.getThrownTypes().isEmpty()) {
+      sb.append(" throws ");
+      needComma = false;
+      for (TypeMirror thrownType : element.getThrownTypes()) {
+        if (needComma) {
+          sb.append(", ");
+        } else {
+          needComma = true;
+        }
+        sb.append(getParameterizedQualifiedSourceName(thrownType));
+      }
+    }
+
+    return sb.toString();
   }
 
   public static List<? extends TypeMirror> getTypeArguments(TypeMirror typeMirror) {
@@ -417,4 +567,44 @@ public class AptUtil {
     }
   }
 
+
+  private static String[] modifiersToNamesForMethod(Set<Modifier> modifiers) {
+    List<String> strings = modifiersToNamesForMethodsAndFields(modifiers);
+
+    if (modifiers.contains(Modifier.ABSTRACT)) {
+      strings.add("abstract");
+    }
+
+    if (modifiers.contains(Modifier.NATIVE)) {
+      strings.add("native");
+    }
+
+    return strings.toArray(new String[strings.size()]);
+  }
+
+  private static List<String> modifiersToNamesForMethodsAndFields(Set<Modifier> modifiers) {
+    List<String> strings = new ArrayList<>();
+
+    if (modifiers.contains(Modifier.PUBLIC)) {
+      strings.add("public");
+    }
+
+    if (modifiers.contains(Modifier.PRIVATE)) {
+      strings.add("private");
+    }
+
+    if (modifiers.contains(Modifier.PROTECTED)) {
+      strings.add("protected");
+    }
+
+    if (modifiers.contains(Modifier.STATIC)) {
+      strings.add("static");
+    }
+
+    if (modifiers.contains(Modifier.FINAL)) {
+      strings.add("final");
+    }
+
+    return strings;
+  }
 }

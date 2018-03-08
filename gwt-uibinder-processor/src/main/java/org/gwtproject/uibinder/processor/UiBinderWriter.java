@@ -423,7 +423,7 @@ public class UiBinderWriter {
     bundleClass =
         new ImplicitClientBundle(getPackageElement(baseType).getQualifiedName().toString(),
             this.implClassName, CLIENT_BUNDLE_FIELD, logger);
-    handlerEvaluator = new HandlerEvaluator(uiOwnerType, logger);
+    handlerEvaluator = new HandlerEvaluator(ownerClass, logger);
 
     attributeParsers = new AttributeParsers(fieldManager, logger);
   }
