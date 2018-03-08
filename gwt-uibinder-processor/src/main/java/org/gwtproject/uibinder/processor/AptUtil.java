@@ -2,7 +2,9 @@ package org.gwtproject.uibinder.processor;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +20,10 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
@@ -172,6 +177,25 @@ public class AptUtil {
         .collect(toList());
   }
 
+  /**
+   * Returns all of the superclasses and superinterfaces for a given type including the type itself.
+   * The returned set maintains an internal breadth-first ordering of the type, followed by its
+   * interfaces (and their super-interfaces), then the supertype and its interfaces, and so on.
+   */
+  public static Set<? extends TypeMirror> getFlattenedSupertypeHierarchy(TypeMirror type) {
+    Set<TypeMirror> superTypes = new HashSet<>();
+
+    while (type != null && !TypeKind.NONE.equals(type.getKind())) {
+      TypeElement typeElement = asTypeElement(type);
+      type = typeElement.getSuperclass();
+
+      superTypes.add(type);
+      superTypes.addAll(typeElement.getInterfaces());
+    }
+
+    return superTypes;
+  }
+
   public static PackageElement getPackageElement(Element element) {
     while (!(element instanceof PackageElement)) {
       element = element.getEnclosingElement();
@@ -201,6 +225,28 @@ public class AptUtil {
       return declaredType.getTypeArguments();
     }
     return null;
+  }
+
+
+  /**
+   * Check for a constructor which is compatible with the supplied argument types.
+   *
+   * @param type the type
+   * @param argTypes the argument types
+   * @return true if a constructor compatible with the supplied arguments exists
+   */
+  public static boolean hasCompatibleConstructor(TypeMirror type, TypeMirror... argTypes) {
+    for (ExecutableElement ctor : ElementFilter
+        .constructorsIn(asTypeElement(type).getEnclosedElements())) {
+
+      if (typesAreCompatible(
+          ctor.getParameters().stream().map(item -> item.asType()).collect(toList()),
+          Arrays.asList(argTypes), ctor.isVarArgs())) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public static boolean isAnnotationPresent(Element element, String annotationClassname) {
@@ -259,6 +305,78 @@ public class AptUtil {
     return canonicalClassName.equals(qualifiedNameable.getQualifiedName().toString());
   }
 
+  /**
+   * Return true if the supplied argument type is assignment compatible with a declared parameter
+   * type.
+   *
+   * @param paramType the param type
+   * @param argType the arg type
+   * @return true if the argument type is compatible with the parameter type
+   */
+  public static boolean typeIsCompatible(TypeMirror paramType, TypeMirror argType) {
+    if (paramType == argType) {
+      return true;
+    }
+    TypeElement paramClass = asTypeElement(paramType);
+    if (paramClass != null) {
+      TypeElement argClass = asTypeElement(argType);
+      return argClass != null && isAssignableFrom(paramClass, argClass);
+    }
+    if (TypeKind.ARRAY.equals(paramType.getKind())) {
+      ArrayType paramArray = getTypeUtils().getArrayType(paramType);
+      if (TypeKind.ARRAY.equals(argType.getKind())) {
+        ArrayType argArray = getTypeUtils().getArrayType(argType);
+        return typeIsCompatible(paramArray.getComponentType(), argArray.getComponentType());
+      }
+    }
+    if (paramType.getKind().isPrimitive() && argType.getKind().isPrimitive()) {
+      return isWideningPrimitiveConversion((PrimitiveType) paramType, (PrimitiveType) argType);
+    }
+    // TODO: handle autoboxing?
+    return false;
+  }
+
+  /**
+   * Check if the types of supplied arguments are compatible with the parameter types of a method.
+   *
+   * @param paramTypes the param types
+   * @param argTypes the arg types to match against
+   * @param varArgs true if the method is a varargs method
+   * @return true if all argument types are compatible with the parameter types
+   */
+  public static boolean typesAreCompatible(List<? extends TypeMirror> paramTypes,
+      List<? extends TypeMirror> argTypes,
+      boolean varArgs) {
+    int expectedArgs = paramTypes.size();
+    int actualArgs = argTypes.size();
+    int comparedArgs = expectedArgs;
+    if (varArgs) {
+      comparedArgs--;
+      if (actualArgs != expectedArgs
+          || !typeIsCompatible(paramTypes.get(comparedArgs), argTypes.get(comparedArgs))) {
+        if (actualArgs < comparedArgs) {
+          return false;
+        }
+        ArrayType varargsArrayType = getTypeUtils().getArrayType(paramTypes.get(comparedArgs));
+        assert varargsArrayType != null;
+        TypeMirror varargsType = varargsArrayType.getComponentType();
+        for (int i = comparedArgs; i < actualArgs; ++i) {
+          if (!typeIsCompatible(varargsType, argTypes.get(i))) {
+            return false;
+          }
+        }
+      }
+    } else if (actualArgs != expectedArgs) {
+      return false;
+    }
+    for (int i = 0; i < comparedArgs; ++i) {
+      if (!typeIsCompatible(paramTypes.get(i), argTypes.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 
   private static List<ExecutableElement> findMatchingParameters(
       List<ExecutableElement> executableElements, TypeMirror[] paramTypes) {
@@ -278,4 +396,25 @@ public class AptUtil {
           return true;
         }).collect(toList());
   }
+
+  private static boolean isWideningPrimitiveConversion(PrimitiveType paramType,
+      PrimitiveType argType) {
+    switch (paramType.getKind()) {
+      case DOUBLE:
+        return argType.getKind() != TypeKind.BOOLEAN;
+      case FLOAT:
+        return argType.getKind() != TypeKind.BOOLEAN && argType.getKind() != TypeKind.DOUBLE;
+      case LONG:
+        return argType.getKind() != TypeKind.BOOLEAN && argType.getKind() != TypeKind.DOUBLE
+            && argType.getKind() != TypeKind.FLOAT;
+      case INT:
+        return argType.getKind() == TypeKind.BYTE || argType.getKind() == TypeKind.SHORT
+            || argType.getKind() == TypeKind.CHAR;
+      case SHORT:
+        return argType.getKind() == TypeKind.BYTE;
+      default:
+        return false;
+    }
+  }
+
 }

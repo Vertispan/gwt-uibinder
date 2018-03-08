@@ -1351,44 +1351,42 @@ public class UiBinderWriter {
   }
 
   private void registerParsers() {
-    // TODO(rjrjr): Allow third-party parsers to register themselves
-    // automagically
+    // TODO(rjrjr): Allow third-party parsers to register themselves automagically
 
     addElementParser("com.google.gwt.dom.client.Element",
         "com.google.gwt.uibinder.elementparsers.DomElementParser");
 
     // Register widget parsers.
-    // FIXME get these working
     addWidgetParser("UIObject");
     addWidgetParser("HasText");
     addWidgetParser("HasHTML");
-//    addWidgetParser("HasTreeItems");
+    addWidgetParser("HasTreeItems");
     addWidgetParser("HasWidgets");
-//    addWidgetParser("HTMLPanel");
-//    addWidgetParser("FlowPanel");
-//    addWidgetParser("AbsolutePanel");
-//    addWidgetParser("DockPanel");
-//    addWidgetParser("StackPanel");
-//    addWidgetParser("DisclosurePanel");
-//    addWidgetParser("TabPanel");
-//    addWidgetParser("MenuItem");
-//    addWidgetParser("MenuBar");
-//    addWidgetParser("CellPanel");
-//    addWidgetParser("CustomButton");
-//    addWidgetParser("DialogBox");
-//    addWidgetParser("LayoutPanel");
-//    addWidgetParser("DockLayoutPanel");
-//    addWidgetParser("StackLayoutPanel");
-//    addWidgetParser("TabLayoutPanel");
-//    addWidgetParser("Image");
-//    addWidgetParser("ListBox");
-//    addWidgetParser("Grid");
+    addWidgetParser("HTMLPanel");
+    addWidgetParser("FlowPanel");
+    addWidgetParser("AbsolutePanel");
+    addWidgetParser("DockPanel");
+    addWidgetParser("StackPanel");
+    addWidgetParser("DisclosurePanel");
+    addWidgetParser("TabPanel");
+    addWidgetParser("MenuItem");
+    addWidgetParser("MenuBar");
+    addWidgetParser("CellPanel");
+    addWidgetParser("CustomButton");
+    addWidgetParser("DialogBox");
+    addWidgetParser("LayoutPanel");
+    addWidgetParser("DockLayoutPanel");
+    addWidgetParser("StackLayoutPanel");
+    addWidgetParser("TabLayoutPanel");
+    addWidgetParser("Image");
+    addWidgetParser("ListBox");
+    addWidgetParser("Grid");
     addWidgetParser("HasAlignment");
-//    addWidgetParser("DateLabel");
-//    addWidgetParser("NumberLabel");
+    addWidgetParser("DateLabel");
+    addWidgetParser("NumberLabel");
     if (useLazyWidgetBuilders) {
-//      addWidgetParser("LazyPanel");
-//      addWidgetParser("RenderablePanel");
+      addWidgetParser("LazyPanel");
+      addWidgetParser("RenderablePanel");
     }
   }
 
