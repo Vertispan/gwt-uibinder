@@ -11,6 +11,19 @@
 
   <packaging>pom</packaging>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/vertispan/gwt-uibinder.git</connection>
+    <developerConnection>scm:git:ssh://github.com:vertispan/gwt-uibinder.git</developerConnection>
+    <url>https://github.com/vertispan/gwt-uibinder/tree/master</url>
+  </scm>
+
   <properties>
     <!-- Global build settings -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -112,5 +125,56 @@
     <module>gwt-uibinder-processor</module>
     <module>gwt-uibinder-test</module>
   </modules>
+
+  <!-- Specify that we will push snapshots and releases to sonatype's repos -->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <profiles>
+    <!-- release profile to create sources, javadoc, and sign all artifacts before uploading -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- see http://central.sonatype.org/pages/working-with-pgp-signatures.html for more detail -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
