@@ -15,8 +15,6 @@
  */
 package org.gwtproject.uibinder.client;
 
-import com.google.gwt.uibinder.client.UiField;
-
 /**
  * Interface implemented by classes that generate DOM or Widget structures from
  * ui.xml template files, and which inject portions of the generated UI into the
@@ -37,7 +35,7 @@ import com.google.gwt.uibinder.client.UiField;
 public interface UiBinder<U, O> {
   /**
    * Creates and returns the root object of the UI, and fills any fields of owner
-   * tagged with {@link UiField}.
+   * tagged with {@link com.google.gwt.uibinder.client.UiField}.
    *
    * @param owner the object whose {@literal @}UiField needs will be filled
    */
