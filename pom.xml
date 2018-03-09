@@ -30,6 +30,9 @@
 
     <java.version>1.8</java.version>
     <gwt.version>2.8.2</gwt.version>
+
+    <license.orgName>Google Inc.</license.orgName>
+    <license.year>2018</license.year>
   </properties>
 
 
@@ -58,7 +61,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
     <pluginManagement>
       <plugins>
@@ -97,6 +99,36 @@
               <phase>package</phase>
               <goals>
                 <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>3.0</version>
+          <configuration>
+            <mapping>
+              <gss>JAVADOC_STYLE</gss>
+              <java>SLASHSTAR_STYLE</java>
+            </mapping>
+            <includes>
+              <include>**/*.java</include>
+              <include>**/*.gss</include>
+              <include>**/*.gwt.xml</include>
+            </includes>
+            <header>${project.basedir}/../src/main/docs/license/license.txt</header>
+            <properties>
+              <license.year>${license.year}</license.year>
+              <license.orgName>${license.orgName}</license.orgName>
+            </properties>
+          </configuration>
+          <executions>
+            <execution>
+              <id>apply-license</id>
+              <phase>process-sources</phase>
+              <goals>
+                <goal>format</goal>
               </goals>
             </execution>
           </executions>
