@@ -20,6 +20,8 @@ import org.gwtproject.uibinder.processor.XMLElement.Interpreter;
 
 /**
  * A simple {@link Interpreter} that returns a given value to every request.
+ *
+ * @param <T> the interpreter type
  */
 public class SimpleInterpreter<T> implements Interpreter<T> {
 

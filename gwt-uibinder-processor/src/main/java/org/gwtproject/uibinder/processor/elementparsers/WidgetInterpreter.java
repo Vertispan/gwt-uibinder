@@ -64,7 +64,7 @@ class WidgetInterpreter implements XMLElement.Interpreter<String> {
 
   private final UiBinderWriter uiWriter;
 
-  public WidgetInterpreter(String fieldName, UiBinderWriter writer) {
+  WidgetInterpreter(String fieldName, UiBinderWriter writer) {
     this.fieldName = fieldName;
     this.uiWriter = writer;
   }

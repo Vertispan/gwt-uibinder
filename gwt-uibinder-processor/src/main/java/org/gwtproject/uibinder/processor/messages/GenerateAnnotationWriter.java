@@ -53,8 +53,7 @@ class GenerateAnnotationWriter {
   private final String fileName;
   private final String[] locales;
 
-  public GenerateAnnotationWriter(String[] formats, String fileName,
-      String[] locales) {
+  GenerateAnnotationWriter(String[] formats, String fileName, String[] locales) {
     this.formats = formats;
     this.fileName = fileName;
     this.locales = locales;

@@ -22,12 +22,13 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
 /**
- * Simulates the GWT TreeLogger, but with APT in mind
+ * Simulates the GWT TreeLogger, but with APT in mind.
  */
 public class MortalLogger {
 
@@ -65,7 +66,6 @@ public class MortalLogger {
       return " " + context.toString();
     }
   }
-
 
   private final Messager messager;
   private Element currentElement;
@@ -116,7 +116,6 @@ public class MortalLogger {
     message += locationOf(context);
     log(kind, message);
   }
-
 
   /**
    * Post a warning message.

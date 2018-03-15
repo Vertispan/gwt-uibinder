@@ -15,15 +15,16 @@
  */
 package org.gwtproject.uibinder.processor.model;
 
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.UiBinderClasses;
 import org.gwtproject.uibinder.processor.UiBinderContext;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 /**
  * Descriptor for a field of the owner class.
@@ -70,7 +71,6 @@ public class OwnerField {
 
     isProvided = provided == null ? false : (boolean) provided.getValue();
   }
-
 
   /**
    * Returns the name of the field in the owner class.

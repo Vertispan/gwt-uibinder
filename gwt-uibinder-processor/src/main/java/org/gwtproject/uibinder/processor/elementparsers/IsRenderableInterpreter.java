@@ -32,7 +32,7 @@ class IsRenderableInterpreter implements XMLElement.Interpreter<String> {
 
   private final UiBinderWriter uiWriter;
 
-  public IsRenderableInterpreter(String fieldName, UiBinderWriter writer) {
+  IsRenderableInterpreter(String fieldName, UiBinderWriter writer) {
     this.fieldName = fieldName;
     this.uiWriter = writer;
     assert writer.useLazyWidgetBuilders();

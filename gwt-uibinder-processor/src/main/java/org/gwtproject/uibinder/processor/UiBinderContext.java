@@ -15,10 +15,12 @@
  */
 package org.gwtproject.uibinder.processor;
 
+import org.gwtproject.uibinder.processor.model.OwnerFieldClass;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.lang.model.type.TypeMirror;
-import org.gwtproject.uibinder.processor.model.OwnerFieldClass;
 
 /**
  * A shared context cache for UiBinder.

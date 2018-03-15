@@ -26,6 +26,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -34,11 +35,16 @@ import javax.lang.model.type.TypeMirror;
  */
 public class NumberLabelParser implements ElementParser {
 
-  static final String AT_MOST_ONE_SPECIFIED_FORMAT = "May have only one of format, predefinedFormat and customFormat.";
-  static final String AT_MOST_ONE_SPECIFIED_CURRENCY = "May have only one of currencyData and customCode.";
-  static final String NO_CURRENCY_WITH_FORMAT = "May not specify both a NumberFormat and a currency code.";
-  static final String NO_CURRENCY_WITHOUT_SPECIFIED_FORMAT = "May not specify a currency code if no format is given.";
-  static final String NO_CURRENCY_WITH_PREDEFINED_FORMAT = "May not specify a currency code with a predefined format (except the CURRENCY format)";
+  static final String AT_MOST_ONE_SPECIFIED_FORMAT
+      = "May have only one of format, predefinedFormat and customFormat.";
+  static final String AT_MOST_ONE_SPECIFIED_CURRENCY
+      = "May have only one of currencyData and customCode.";
+  static final String NO_CURRENCY_WITH_FORMAT
+      = "May not specify both a NumberFormat and a currency code.";
+  static final String NO_CURRENCY_WITHOUT_SPECIFIED_FORMAT
+      = "May not specify a currency code if no format is given.";
+  static final String NO_CURRENCY_WITH_PREDEFINED_FORMAT
+      = "May not specify a currency code with a predefined format (except the CURRENCY format)";
   static final String UNKNOWN_PREDEFINED_FORMAT = "Unknown predefined format: %s";
 
   private static final Map<String, String> predefinedFormats;

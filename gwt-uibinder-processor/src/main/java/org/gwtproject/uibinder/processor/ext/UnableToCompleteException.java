@@ -16,6 +16,9 @@
 package org.gwtproject.uibinder.processor.ext;
 
 /**
+ * Used to indicate that some part of a multi-step process failed.  Typically, operation can
+ * continue after this exception is caught.
+ *
  * FIXME - carry over javadoc
  */
 public class UnableToCompleteException extends Exception {

@@ -31,9 +31,9 @@ import java.util.Set;
 
 public class HtmlTemplatesWriter {
 
-  private final List<HtmlTemplateMethodWriter> htmlTemplates = new ArrayList<HtmlTemplateMethodWriter>();
-  private final Set<String> safeConstantExpressions = new HashSet<String>();
-  private final Set<String> uriExpressions = new HashSet<String>();
+  private final List<HtmlTemplateMethodWriter> htmlTemplates = new ArrayList<>();
+  private final Set<String> safeConstantExpressions = new HashSet<>();
+  private final Set<String> uriExpressions = new HashSet<>();
   private final FieldManager fieldManager;
   private final MortalLogger logger;
 

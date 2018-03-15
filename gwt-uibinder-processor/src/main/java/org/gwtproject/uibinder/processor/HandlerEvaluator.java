@@ -26,10 +26,10 @@ import org.gwtproject.uibinder.processor.model.OwnerClass;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
 import com.google.gwt.event.shared.EventHandler;
-
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.List;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
@@ -201,7 +201,7 @@ class HandlerEvaluator {
         // Even field is parameterized, it might be a super class. In that case, if we use the field
         // type then we might miss some add handlers methods from the objectType itself; something
         // we don't want to happen!
-        //uiField.getRawType()
+        // uiField.getRawType()
 
         TypeMirror erasedType = AptUtil.getTypeUtils().erasure(uiField.getRawType());
 
@@ -287,8 +287,10 @@ class HandlerEvaluator {
 
   /**
    * Checks if a specific handler is valid for a given object and return the method that ties them.
-   * The object must override a method that returns {@link com.google.gwt.event.shared.HandlerRegistration}
-   * and receives a single input parameter of the same type of handlerType.
+   * The object must override a method that returns
+   *
+   * {@link com.google.gwt.event.shared.HandlerRegistration} and receives a single input parameter
+   * of the same type of handlerType.
    *
    * <p> Output an error in case more than one method match the conditions described above. </p>
    *
@@ -373,7 +375,6 @@ class HandlerEvaluator {
     return (handlerMethod != null) ? handlerMethod
         : (alternativeHandlerMethod != null) ? alternativeHandlerMethod : alternativeHandlerMethod2;
   }
-
 
   /**
    * Retrieves the handler associated with the event.

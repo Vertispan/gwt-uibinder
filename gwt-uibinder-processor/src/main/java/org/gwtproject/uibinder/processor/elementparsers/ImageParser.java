@@ -15,12 +15,12 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.resources.client.ImageResource;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;

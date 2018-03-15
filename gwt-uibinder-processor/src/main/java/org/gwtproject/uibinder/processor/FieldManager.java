@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 import javax.lang.model.type.TypeMirror;
 
 /**
@@ -41,7 +42,7 @@ public class FieldManager {
     final FieldWriter field;
     final XMLElement element;
 
-    public FieldAndSource(FieldWriter field, XMLElement element) {
+    FieldAndSource(FieldWriter field, XMLElement element) {
       this.field = field;
       this.element = element;
     }
@@ -84,7 +85,6 @@ public class FieldManager {
     return fieldName;
   }
 
-
   private final MortalLogger logger;
 
   /**
@@ -104,7 +104,9 @@ public class FieldManager {
 
   /**
    * Counts the number of times a getter field is called, this important to decide which strategy to
-   * take when outputing getters and builders. {@see com.google.gwt.uibinder.rebind.FieldWriter#writeFieldDefinition}.
+   * take when outputing getters and builders.
+   *
+   * {@link FieldWriter#writeFieldDefinition(IndentedWriter, OwnerField, int)}
    */
   private final Map<String, Integer> gettersCounter = new HashMap<String, Integer>();
 

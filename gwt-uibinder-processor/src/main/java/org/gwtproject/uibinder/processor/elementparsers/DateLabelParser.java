@@ -15,14 +15,14 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.i18n.client.TimeZone;
-
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.i18n.client.TimeZone;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
@@ -33,9 +33,12 @@ import javax.lang.model.type.TypeMirror;
  */
 public class DateLabelParser implements ElementParser {
 
-  static final String AT_MOST_ONE_SPECIFIED_FORMAT = "May have at most one of format, predefinedFormat and customFormat.";
-  static final String AT_MOST_ONE_SPECIFIED_TIME_ZONE = "May have at most one of timezone and timezoneOffset.";
-  static final String NO_TIMEZONE_WITHOUT_SPECIFIED_FORMAT = "May not specify a time zone if no format is given.";
+  static final String AT_MOST_ONE_SPECIFIED_FORMAT
+      = "May have at most one of format, predefinedFormat and customFormat.";
+  static final String AT_MOST_ONE_SPECIFIED_TIME_ZONE
+      = "May have at most one of timezone and timezoneOffset.";
+  static final String NO_TIMEZONE_WITHOUT_SPECIFIED_FORMAT
+      = "May not specify a time zone if no format is given.";
 
   public void parse(XMLElement elem, String fieldName, TypeMirror type,
       UiBinderWriter writer) throws UnableToCompleteException {

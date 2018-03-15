@@ -33,7 +33,8 @@ import javax.lang.model.type.TypeMirror;
  */
 public class MenuBarParser implements ElementParser {
 
-  static final String BAD_CHILD = "Only MenuItem or MenuItemSeparator subclasses are valid children";
+  static final String BAD_CHILD
+      = "Only MenuItem or MenuItemSeparator subclasses are valid children";
 
   public void parse(XMLElement elem, String fieldName, TypeMirror type,
       UiBinderWriter writer) throws UnableToCompleteException {

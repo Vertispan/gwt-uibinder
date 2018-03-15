@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.ElementKind;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -177,7 +177,7 @@ public class UiChildParser implements ElementParser {
       if (param.asType().getKind().isPrimitive()) {
         PrimitiveType primitiveType = (PrimitiveType) param.asType();
         // FIXME!!! implement
-        //defaultValue = param.getType().isPrimitive().getUninitializedFieldExpression();
+        // defaultValue = param.getType().isPrimitive().getUninitializedFieldExpression();
       }
 //      String value = element.consumeAttributeWithDefault(param.getName(),
 //          defaultValue, param.getType());

@@ -34,7 +34,6 @@ public class NewSimpleFormView implements IsWidget {
 
   @UiTemplate("org.gwtproject.uibinder.test.view.SimpleFormView.ui.xml")
   interface MyUiBinder extends UiBinder<VerticalPanel, NewSimpleFormView> {
-
   }
 
   private MyUiBinder binder = new NewSimpleFormView_MyUiBinderImpl();
@@ -49,7 +48,6 @@ public class NewSimpleFormView implements IsWidget {
     return widget;
   }
 
-
   @UiFactory
   protected Label createButtonLabel(String theText) {
     return new Label(theText);
@@ -59,6 +57,4 @@ public class NewSimpleFormView implements IsWidget {
   protected void onSimpleButtonClick(ClickEvent event) {
     Window.alert("Button Clicked");
   }
-
-
 }

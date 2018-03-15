@@ -15,13 +15,14 @@
  */
 package org.gwtproject.uibinder.test.view;
 
+import org.gwtproject.uibinder.test.view.newuibinder.NewSimpleFormView;
+import org.gwtproject.uibinder.test.view.olduibinder.OldSimpleFormView;
+
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.gwtproject.uibinder.test.view.newuibinder.NewSimpleFormView;
-import org.gwtproject.uibinder.test.view.olduibinder.OldSimpleFormView;
 
 /**
  *
@@ -36,14 +37,12 @@ public class Shell implements IsWidget {
       constructUi();
     }
     return container;
-
   }
 
   private void constructUi() {
     container = new HorizontalPanel();
     container.setBorderWidth(1);
     container.setWidth("100%");
-    
 
     VerticalPanel oldPanel = new VerticalPanel();
     container.add(oldPanel);

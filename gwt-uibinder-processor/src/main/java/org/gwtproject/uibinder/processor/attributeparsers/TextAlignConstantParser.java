@@ -15,11 +15,11 @@
  */
 package org.gwtproject.uibinder.processor.attributeparsers;
 
-import com.google.gwt.user.client.ui.TextBoxBase;
-
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.user.client.ui.TextBoxBase;
 
 import java.util.HashMap;
 import java.util.Locale;

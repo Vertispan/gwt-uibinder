@@ -48,12 +48,12 @@ class ComputedAttributeInterpreter implements XMLElement.Interpreter<String> {
   private final UiBinderWriter writer;
   private final Delegate delegate;
 
-  public ComputedAttributeInterpreter(UiBinderWriter writer) {
+  ComputedAttributeInterpreter(UiBinderWriter writer) {
     this.writer = writer;
     this.delegate = new DefaultDelegate();
   }
 
-  public ComputedAttributeInterpreter(UiBinderWriter writer, Delegate delegate) {
+  ComputedAttributeInterpreter(UiBinderWriter writer, Delegate delegate) {
     this.delegate = delegate;
     this.writer = writer;
   }

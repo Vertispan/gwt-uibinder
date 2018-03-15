@@ -15,14 +15,14 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DialogBox.Caption;
-
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DialogBox.Caption;
 
 import java.util.Set;
 

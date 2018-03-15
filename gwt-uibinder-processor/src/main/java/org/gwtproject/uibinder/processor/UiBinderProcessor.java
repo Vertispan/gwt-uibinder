@@ -20,10 +20,12 @@ import org.gwtproject.uibinder.processor.messages.MessagesWriter;
 import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXParseException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
@@ -33,7 +35,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import org.xml.sax.SAXParseException;
 
 /**
  *
@@ -44,7 +45,6 @@ public class UiBinderProcessor extends BaseProcessor {
 
   private static final String BINDER_URI = "urn:ui:com.google.gwt.uibinder";
   private static final String TEMPLATE_SUFFIX = ".ui.xml";
-
 
   // TODO - naming strategy
   private static String deduceImplName(Element e) {
@@ -126,7 +126,6 @@ public class UiBinderProcessor extends BaseProcessor {
     return packageName + "." + implName;
   }
 
-
   private void generateOnce(TypeElement interfaceType, String implName,
       PrintWriter binderPrintWriter, MortalLogger logger, PrintWriterManager writerManager)
       throws UnableToCompleteException {
@@ -159,7 +158,6 @@ public class UiBinderProcessor extends BaseProcessor {
 
     writerManager.commit();
   }
-
 
   private Document getW3cDoc(MortalLogger logger, FileObject resource)
       throws UnableToCompleteException {

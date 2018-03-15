@@ -15,16 +15,18 @@
  */
 package org.gwtproject.uibinder.processor;
 
-import java.io.IOException;
-import java.io.StringReader;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  *
@@ -37,7 +39,7 @@ public class W3cDomHelper {
   private final SAXParserFactory factory;
   private final MortalLogger logger;
   private final ProcessingEnvironment processingEnvironment;
-  //private final Pro
+  // private final Pro
 
   public W3cDomHelper(MortalLogger logger, ProcessingEnvironment processingEnvironment) {
     this.logger = logger;
@@ -52,7 +54,6 @@ public class W3cDomHelper {
     }
     factory.setNamespaceAware(true);
   }
-
 
   public Document documentFor(String string, String resourcePath) throws SAXParseException {
     try {

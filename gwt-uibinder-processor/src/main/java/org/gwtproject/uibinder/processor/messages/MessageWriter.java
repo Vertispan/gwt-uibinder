@@ -15,9 +15,10 @@
  */
 package org.gwtproject.uibinder.processor.messages;
 
+import org.gwtproject.uibinder.processor.IndentedWriter;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.gwtproject.uibinder.processor.IndentedWriter;
 
 /**
  * Represents a method in a Messages interface. Can write both the method declaration and its

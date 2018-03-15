@@ -239,7 +239,6 @@ public class BeanParser implements ElementParser {
     }
   }
 
-
   /**
    * Fetch the localized attributes that were stored by the AttributeMessageParser.
    */

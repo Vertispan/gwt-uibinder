@@ -27,7 +27,7 @@ class FieldInterpreter implements XMLElement.Interpreter<String> {
   private final String element;
   private final UiBinderWriter writer;
 
-  public FieldInterpreter(UiBinderWriter writer, String ancestorExpression) {
+  FieldInterpreter(UiBinderWriter writer, String ancestorExpression) {
     this.writer = writer;
     this.element = ancestorExpression;
   }

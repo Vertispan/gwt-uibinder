@@ -21,6 +21,7 @@ import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
 import java.util.Set;
+
 import javax.lang.model.type.TypeMirror;
 
 /**
@@ -33,7 +34,7 @@ class FieldWriterOfGeneratedCssResource extends AbstractFieldWriter {
   private final ImplicitCssResource css;
   private final TypeMirror stringType;
 
-  public FieldWriterOfGeneratedCssResource(FieldManager manager, TypeMirror stringType,
+  FieldWriterOfGeneratedCssResource(FieldManager manager, TypeMirror stringType,
       ImplicitCssResource css, MortalLogger logger) {
     super(manager, FieldWriterType.GENERATED_CSS, css.getName(), logger);
     this.stringType = stringType;

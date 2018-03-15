@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -94,7 +95,6 @@ public class OwnerFieldClass {
     return clazz;
   }
 
-
   private Set<String> ambiguousSetters;
   private final MortalLogger logger;
   private final TypeMirror rawType;
@@ -107,7 +107,6 @@ public class OwnerFieldClass {
   private final Map<String, SimpleEntry<ExecutableElement, Integer>> uiChildren = new HashMap<>();
 
   private ExecutableElement uiConstructor;
-
 
   /**
    * Default constructor. This is package-visible for testing only.
