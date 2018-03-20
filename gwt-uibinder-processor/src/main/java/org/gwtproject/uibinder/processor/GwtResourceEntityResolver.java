@@ -30,7 +30,7 @@ public class GwtResourceEntityResolver implements EntityResolver {
           "http://dl.google.com/gwt/DTD/", "https://dl-ssl.google.com/gwt/DTD/"
       }).collect(toSet()));
 
-  private static final String RESOURCES = "org/gwtproject/uibinder/resources/";
+  private static final String RESOURCES = "org.gwtproject.uibinder.resources";
 
   private final String pathBase;
 
