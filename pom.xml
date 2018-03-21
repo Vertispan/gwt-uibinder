@@ -30,6 +30,7 @@
 
     <java.version>1.8</java.version>
     <gwt.version>2.8.2</gwt.version>
+    <guava.version>24.1-jre</guava.version>
 
     <license.orgName>Google Inc.</license.orgName>
     <license.year>2018</license.year>
@@ -178,7 +179,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>24.0-jre</version>
+        <version>${guava.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

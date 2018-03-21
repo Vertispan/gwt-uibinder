@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Vertispan LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package org.gwtproject.uibinder.test;
 
-import org.gwtproject.uibinder.test.view.Shell;
+import org.gwtproject.uibinder.test.ioc.TestBedModule;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -27,12 +27,26 @@ import com.google.gwt.user.client.ui.RootPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Singleton;
+
+import dagger.Component;
+
 /**
  *
  */
 public class Application implements EntryPoint, UncaughtExceptionHandler {
 
   private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
+
+  /**
+   * Main module for test bed application.
+   */
+  @Singleton
+  @Component(modules = TestBedModule.class)
+  public interface TestBedApp {
+
+    ApplicationController applicationController();
+  }
 
   @Override
   public void onModuleLoad() {
@@ -46,16 +60,18 @@ public class Application implements EntryPoint, UncaughtExceptionHandler {
 
       @Override
       public void onSuccess() {
-        Shell shell = new Shell();
-        RootPanel panel = RootPanel.get();
-        panel.add(shell);
+        RootPanel body = RootPanel.get();
+        DaggerApplication_TestBedApp
+            .create()
+            .applicationController()
+            .start(body);
       }
     });
   }
 
   @Override
   public void onUncaughtException(Throwable throwable) {
-    Window.alert("Error in application.  View console");
     LOGGER.log(Level.SEVERE, "Application error", throwable);
+    Window.alert("Error in application.  View console");
   }
 }
