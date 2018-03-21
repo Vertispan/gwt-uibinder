@@ -159,8 +159,12 @@ public class AttributeParsers {
       if (b.length() > 0) {
         b.append(',');
       }
-      b.append(AptUtil.asTypeElement(t).getQualifiedName().toString());
-      // FIXME b.append(t.getParameterizedQualifiedSourceName());
+      if (t.getKind().isPrimitive()) {
+        b.append(t.toString());
+      } else {
+        // FIXME b.append(t.getParameterizedQualifiedSourceName());
+        b.append(AptUtil.asTypeElement(t).getQualifiedName().toString());
+      }
     }
     return b.toString();
   }

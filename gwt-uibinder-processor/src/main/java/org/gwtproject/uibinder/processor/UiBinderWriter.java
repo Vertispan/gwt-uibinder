@@ -931,7 +931,7 @@ public class UiBinderWriter {
   public void setFieldInitializerAsConstructor(String fieldName, String... args) {
     TypeMirror assignableType = fieldManager.lookup(fieldName).getAssignableType();
     setFieldInitializer(fieldName,
-        formatCode("new %s(%s)", asQualifiedNameable(assignableType).getSimpleName(),
+        formatCode("new %s(%s)", asQualifiedNameable(assignableType).getQualifiedName(),
             asCommaSeparatedList(args)));
   }
 
