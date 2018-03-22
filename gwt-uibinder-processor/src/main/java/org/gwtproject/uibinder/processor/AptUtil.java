@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.gwtproject.uibinder.processor;
 
 import static java.util.stream.Collectors.toList;
@@ -10,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -40,10 +56,8 @@ public class AptUtil {
     throw new UnsupportedOperationException("utility class");
   }
 
-
   private static ThreadLocal<ProcessingEnvironment>
       processingEnvironmentThreadLocal = new ThreadLocal<>();
-
 
   static void setProcessingEnvironment(ProcessingEnvironment processingEnvironment) {
     if (processingEnvironment == null) {
@@ -63,7 +77,6 @@ public class AptUtil {
   public static Types getTypeUtils() {
     return getProcessingEnvironment().getTypeUtils();
   }
-
 
   /**
    * Retrieves annotation from element.
@@ -123,7 +136,6 @@ public class AptUtil {
     }
     return null;
   }
-
 
   public static TypeElement asTypeElement(Element element) {
     if (element instanceof TypeElement) {
@@ -309,7 +321,7 @@ public class AptUtil {
 
     List<? extends TypeMirror> typeArguments = getTypeArguments(element.asType());
     if (typeArguments != null && typeArguments.size() > 0) {
-      //FIXME toStringTypeParams(sb);
+      // FIXME toStringTypeParams(sb);
       sb.append("<");
       boolean needComma = false;
       for (TypeMirror typeArgument : typeArguments) {
@@ -377,7 +389,6 @@ public class AptUtil {
     return null;
   }
 
-
   /**
    * Check for a constructor which is compatible with the supplied argument types.
    *
@@ -425,7 +436,6 @@ public class AptUtil {
   public static boolean isAssignableTo(TypeMirror m1, TypeMirror m2) {
     return isAssignableFrom(m2, m1);
   }
-
 
   public static boolean isEnum(TypeMirror mirror) {
     return isEnum(getTypeUtils().asElement(mirror));
@@ -527,7 +537,6 @@ public class AptUtil {
     return true;
   }
 
-
   private static List<ExecutableElement> findMatchingParameters(
       List<ExecutableElement> executableElements, TypeMirror[] paramTypes) {
     return executableElements.stream()
@@ -566,7 +575,6 @@ public class AptUtil {
         return false;
     }
   }
-
 
   private static String[] modifiersToNamesForMethod(Set<Modifier> modifiers) {
     List<String> strings = modifiersToNamesForMethodsAndFields(modifiers);

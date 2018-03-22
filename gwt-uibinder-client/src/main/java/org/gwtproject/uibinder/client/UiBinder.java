@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,6 @@
  * the License.
  */
 package org.gwtproject.uibinder.client;
-
-import com.google.gwt.uibinder.client.UiField;
 
 /**
  * Interface implemented by classes that generate DOM or Widget structures from
@@ -37,7 +35,7 @@ import com.google.gwt.uibinder.client.UiField;
 public interface UiBinder<U, O> {
   /**
    * Creates and returns the root object of the UI, and fills any fields of owner
-   * tagged with {@link UiField}.
+   * tagged with {@link com.google.gwt.uibinder.client.UiField}.
    *
    * @param owner the object whose {@literal @}UiField needs will be filled
    */
