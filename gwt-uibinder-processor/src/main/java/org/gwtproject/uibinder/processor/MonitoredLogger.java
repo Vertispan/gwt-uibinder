@@ -35,7 +35,7 @@ public class MonitoredLogger {
    */
   public void error(String message, Object... params) {
     hasErrors = true;
-    logger.log(Kind.ERROR, String.format(message, params));
+    logger.getTreeLogger().log(Kind.ERROR, String.format(message, params));
   }
 
   public void error(XMLElement context, String message, Object... params) {

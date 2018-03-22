@@ -15,6 +15,8 @@
  */
 package org.gwtproject.uibinder.processor;
 
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
+
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -37,11 +39,11 @@ public class W3cDomHelper {
       "http://apache.org/xml/features/nonvalidating/load-external-dtd";
 
   private final SAXParserFactory factory;
-  private final MortalLogger logger;
+  private final MyTreeLogger logger;
   private final ProcessingEnvironment processingEnvironment;
   // private final Pro
 
-  public W3cDomHelper(MortalLogger logger, ProcessingEnvironment processingEnvironment) {
+  public W3cDomHelper(MyTreeLogger logger, ProcessingEnvironment processingEnvironment) {
     this.logger = logger;
     this.processingEnvironment = processingEnvironment;
     this.factory = SAXParserFactory.newInstance();

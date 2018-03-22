@@ -15,9 +15,13 @@
  */
 package org.gwtproject.uibinder.processor;
 
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.messages.MessagesWriter;
 import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
+
+import com.google.gwt.resources.rg.GssResourceGenerator.AutoConversionMode;
+import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
@@ -111,7 +115,7 @@ public class UiBinderProcessor extends BaseProcessor {
   private final UiBinderContext uiBinderCtx = new UiBinderContext();
 
   @Override
-  protected String processElement(TypeElement interfaceType, MortalLogger logger)
+  protected String processElement(TypeElement interfaceType, MyTreeLogger logger)
       throws UnableToCompleteException {
     String implName = deduceImplName(interfaceType);
     String packageName = processingEnv.getElementUtils().getPackageOf(interfaceType)
@@ -127,17 +131,19 @@ public class UiBinderProcessor extends BaseProcessor {
   }
 
   private void generateOnce(TypeElement interfaceType, String implName,
-      PrintWriter binderPrintWriter, MortalLogger logger, PrintWriterManager writerManager)
+      PrintWriter binderPrintWriter, MyTreeLogger treeLogger, PrintWriterManager writerManager)
       throws UnableToCompleteException {
-
+    MortalLogger logger = new MortalLogger(treeLogger);
     String templatePath = deduceTemplateFile(logger, interfaceType);
     MessagesWriter messages = new MessagesWriter(BINDER_URI, logger, templatePath,
         AptUtil.getPackageElement(interfaceType).getQualifiedName().toString(), implName);
     FieldManager fieldManager = new FieldManager(logger, true);
 
+    // TODO hardcoded gss options
+    GssOptions gssOptions = new GssOptions(true, AutoConversionMode.STRICT, true);
+
     UiBinderWriter uiBinderWriter = new UiBinderWriter(interfaceType.asType(), implName,
-        templatePath,
-        logger, fieldManager, messages, uiBinderCtx, BINDER_URI);
+        templatePath, logger, fieldManager, messages, uiBinderCtx, BINDER_URI, gssOptions);
 
     FileObject resource = getTemplateResource(logger, templatePath);
 
@@ -170,7 +176,8 @@ public class UiBinderProcessor extends BaseProcessor {
       }
       String content = charContent.toString();
 
-      doc = new W3cDomHelper(logger, processingEnv).documentFor(content, resource.getName());
+      doc = new W3cDomHelper(logger.getTreeLogger(), processingEnv)
+          .documentFor(content, resource.getName());
     } catch (IOException iex) {
       logger.die("Error opening resource: " + resource.getName(), iex);
     } catch (SAXParseException e) {

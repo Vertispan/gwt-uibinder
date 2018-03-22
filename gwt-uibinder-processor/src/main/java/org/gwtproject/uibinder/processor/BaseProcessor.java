@@ -15,6 +15,7 @@
  */
 package org.gwtproject.uibinder.processor;
 
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
 import java.util.Set;
@@ -26,13 +27,13 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 
 /**
- * 
+ *
  */
 public abstract class BaseProcessor extends AbstractProcessor {
 
   @Override
   public final boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-    MortalLogger logger = new MortalLogger(processingEnv.getMessager());
+    MyTreeLogger logger = new MyTreeLogger(processingEnv.getMessager());
     try {
       if (!env.processingOver()) {
         AptUtil.setProcessingEnvironment(processingEnv);
@@ -46,7 +47,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
         return true;
       }
     } catch (Exception e) {
-      logger.log(Kind.ERROR, "Error Processing Annotation", e);
+      logger.log(Kind.NOTE, "Error Processing Annotation", e);
       return false;
     } finally {
       AptUtil.setProcessingEnvironment(null);
@@ -61,6 +62,6 @@ public abstract class BaseProcessor extends AbstractProcessor {
    * @param treeLogger the logger
    * @return canonical classname
    */
-  protected abstract String processElement(TypeElement interfaceType, MortalLogger treeLogger)
+  protected abstract String processElement(TypeElement interfaceType, MyTreeLogger treeLogger)
       throws UnableToCompleteException;
 }

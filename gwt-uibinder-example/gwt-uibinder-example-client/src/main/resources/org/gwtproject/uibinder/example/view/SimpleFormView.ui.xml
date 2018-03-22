@@ -3,9 +3,23 @@
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+  <ui:style>
+    .panel {
+      border: 1px solid red;
+      width: 640px;
+      height: 480px;
+      box-sizing: border-box;
+    }
+  </ui:style>
 
-  <g:VerticalPanel>
-    <g:Label ui:field="buttonLabel" theText="Foo"/>
+  <ui:style field="foo">
+    .label {
+      color: red;
+    }
+  </ui:style>
+
+  <g:VerticalPanel styleName="{style.panel}">
+    <g:Label styleName="{foo.label}" ui:field="buttonLabel" theText="Foo"/>
     <g:Button ui:field="simpleButton" text="Simple Event"/>
 
   </g:VerticalPanel>

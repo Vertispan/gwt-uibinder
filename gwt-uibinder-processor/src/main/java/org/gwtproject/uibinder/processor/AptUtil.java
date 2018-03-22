@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -72,6 +73,10 @@ public class AptUtil {
 
   public static Elements getElementUtils() {
     return getProcessingEnvironment().getElementUtils();
+  }
+
+  public static Filer getFiler() {
+    return getProcessingEnvironment().getFiler();
   }
 
   public static Types getTypeUtils() {

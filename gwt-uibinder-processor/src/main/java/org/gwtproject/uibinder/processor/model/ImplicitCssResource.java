@@ -15,15 +15,25 @@
  */
 package org.gwtproject.uibinder.processor.model;
 
+import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.attributeparsers.CssNameConverter;
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+import org.gwtproject.uibinder.processor.typeinfo.TypeInfoWrapper;
 
-import com.google.gwt.resources.ext.ResourceGeneratorUtil;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.resources.css.ExtractClassNamesVisitor;
+import com.google.gwt.resources.css.GenerateCssAst;
+import com.google.gwt.resources.css.ast.CssStylesheet;
+import com.google.gwt.resources.gss.ClassNamesCollector;
+import com.google.gwt.resources.rg.GssResourceGenerator;
+import com.google.gwt.thirdparty.common.css.SourceCode;
+import com.google.gwt.thirdparty.common.css.compiler.ast.CssTree;
+import com.google.gwt.thirdparty.common.css.compiler.ast.GssParser;
+import com.google.gwt.thirdparty.common.css.compiler.ast.GssParserException;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -36,24 +46,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.processing.Filer;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 
 /**
  * Models a method returning a CssResource on a generated ClientBundle.
  */
 public class ImplicitCssResource {
 
-//  private static Set<String> getCssClassNames(String fileName, String cssSource,
-//      Set<TypeMirror> imports, MortalLogger logger) throws UnableToCompleteException {
-//    SourceCode sourceCode = new SourceCode(fileName, cssSource);
-//    try {
-//      CssTree tree = new GssParser(sourceCode).parse();
-//      return new ClassNamesCollector().getClassNames(tree, imports);
-//    } catch (GssParserException e) {
-//      logger.log(Kind.ERROR, "Unable to parse CSS", e);
-//      throw new UnableToCompleteException();
-//    }
-//  }
+  private static Set<String> getCssClassNames(String fileName, String cssSource,
+      Set<TypeMirror> imports, MyTreeLogger logger) throws UnableToCompleteException {
+    SourceCode sourceCode = new SourceCode(fileName, cssSource);
+    try {
+      CssTree tree = new GssParser(sourceCode).parse();
+      return new ClassNamesCollector().getClassNames(tree, TypeInfoWrapper.wrapJClassType(imports));
+    } catch (GssParserException e) {
+      logger.log(Kind.ERROR, "Unable to parse CSS", e);
+      throw new UnableToCompleteException();
+    }
+  }
 
   private static final CssNameConverter nameConverter = new CssNameConverter();
   private final String packageName;
@@ -66,7 +80,7 @@ public class ImplicitCssResource {
   private final Set<TypeMirror> imports;
   private final boolean gss;
 
-  private File generatedFile;
+  private FileObject generatedFile;
   private Set<String> cssClassNames;
   private Set<String> normalizedCssClassNames;
 
@@ -102,10 +116,10 @@ public class ImplicitCssResource {
   public Set<String> getCssClassNames() throws UnableToCompleteException {
     List<URL> urls = getExternalCss();
     if (cssClassNames == null) {
-      final File bodyFile = getGeneratedFile();
+      final FileObject bodyFile = getGeneratedFile();
       if (bodyFile != null) {
         try {
-          urls.add(bodyFile.toURI().toURL());
+          urls.add(bodyFile.toUri().toURL());
         } catch (MalformedURLException e) {
           throw new RuntimeException(e);
         }
@@ -113,16 +127,25 @@ public class ImplicitCssResource {
       assert urls.size() > 0;
 
       if (gss) {
-        // TODO implement
-//        String gssContent = GssResourceGenerator.concatCssFiles(urls, logger.getTreeLogger());
-//        String fileName = bodyFile != null ? bodyFile.getName() : name;
-//        return getCssClassNames(fileName, gssContent, imports, logger.getTreeLogger());
+        try {
+          String gssContent = GssResourceGenerator
+              .concatCssFiles(urls, logger.getTreeLogger().getAdapted());
+          String fileName = bodyFile != null ? bodyFile.getName() : name;
+          return getCssClassNames(fileName, gssContent, imports, logger.getTreeLogger());
+        } catch (com.google.gwt.core.ext.UnableToCompleteException e) {
+          // upstream UnableToCompleteException throw our own
+          throw new UnableToCompleteException();
+        }
       } else {
-        // TODO implement
-//        CssStylesheet sheet = GenerateCssAst.exec(logger.getTreeLogger(),
-//            urls.toArray(new URL[urls.size()]));
-//        cssClassNames = ExtractClassNamesVisitor.exec(sheet,
-//            imports.toArray(new JClassType[imports.size()]));
+        try {
+          CssStylesheet sheet = GenerateCssAst.exec(logger.getTreeLogger().getAdapted(),
+              urls.toArray(new URL[urls.size()]));
+          cssClassNames = ExtractClassNamesVisitor.exec(sheet,
+              TypeInfoWrapper.wrapJClassType(imports).toArray(new JClassType[imports.size()]));
+        } catch (com.google.gwt.core.ext.UnableToCompleteException e) {
+          // upstream UnableToCompleteException throw our own
+          throw new UnableToCompleteException();
+        }
       }
     }
     return cssClassNames;
@@ -236,25 +259,25 @@ public class ImplicitCssResource {
     return urls;
   }
 
-  private File getGeneratedFile() {
+  private FileObject getGeneratedFile() {
     if (body.length() == 0) {
       return null;
     }
 
     if (generatedFile == null) {
       try {
-        File f = File.createTempFile(String.format("uiBinder_%s_%s", packageName, className),
-            "." + getCssFileExtension());
-        f.deleteOnExit();
+        Filer filer = AptUtil.getFiler();
+        FileObject resource = filer.createResource(StandardLocation.SOURCE_OUTPUT,
+            packageName,
+            String.format("uibinder.%s.%s.%s", packageName, className, getCssFileExtension()));
 
-        BufferedWriter out = new BufferedWriter(new FileWriter(f));
+        BufferedWriter out = new BufferedWriter(resource.openWriter());
         out.write(body);
         out.close();
-        generatedFile = f;
+        generatedFile = resource;
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-      ResourceGeneratorUtil.addNamedFile(getBodyFileName(), generatedFile);
     }
     return generatedFile;
   }

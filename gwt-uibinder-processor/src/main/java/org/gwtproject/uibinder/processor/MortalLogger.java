@@ -16,19 +16,17 @@
 package org.gwtproject.uibinder.processor;
 
 import org.gwtproject.uibinder.processor.XMLElement.Location;
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.annotation.processing.Messager;
-import javax.lang.model.element.Element;
 import javax.tools.Diagnostic.Kind;
 
 /**
- * Simulates the GWT TreeLogger, but with APT in mind.
+ * Wraps a {@link MyTreeLogger} with handy {@link String#format} style methods and can be told to
+ * die. Perhaps we should instead add die(), warn(), etc. to Treelogger.
  */
 public class MortalLogger {
 
@@ -67,42 +65,14 @@ public class MortalLogger {
     }
   }
 
-  private final Messager messager;
-  private Element currentElement;
+  private final MyTreeLogger logger;
 
-  MortalLogger(Messager messager) {
-    this.messager = messager;
-  }
-
-  void setCurrentElement(Element currentElement) {
-    this.currentElement = currentElement;
-  }
-
-  public final void log(Kind kind, String msg) {
-    this.log(kind, msg, (Throwable) null);
-  }
-
-  public final void log(Kind kind, String msg, Throwable caught) {
-    if (msg == null) {
-      msg = "(Null log message)";
-    }
-
-    if (caught != null) {
-      StringWriter stringWriter = new StringWriter();
-      caught.printStackTrace(new PrintWriter(stringWriter));
-      msg += ": " + stringWriter.getBuffer().toString();
-    }
-
-    if (currentElement == null) {
-      messager.printMessage(kind, msg);
-    } else {
-      messager.printMessage(kind, msg, currentElement);
-    }
+  MortalLogger(MyTreeLogger treeLoggerAdapter) {
+    this.logger = treeLoggerAdapter;
   }
 
   public void die(String message, Object... params) throws UnableToCompleteException {
-    log(Kind.ERROR, String.format(message, params));
-    throw new UnableToCompleteException();
+    die(null, message, params);
   }
 
   public void die(XMLElement context, String message, Object... params)
@@ -112,9 +82,16 @@ public class MortalLogger {
     throw new UnableToCompleteException();
   }
 
+  /**
+   * Returns instance of TreeLoggerAdapter.
+   */
+  public final MyTreeLogger getTreeLogger() {
+    return logger;
+  }
+
   public void logLocation(Kind kind, XMLElement context, String message) {
     message += locationOf(context);
-    log(kind, message);
+    logger.log(kind, message);
   }
 
   /**
