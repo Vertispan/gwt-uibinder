@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
@@ -60,9 +61,7 @@ public class MessagesWriter {
   private String generateKeys;
   private GenerateAnnotationWriter generate;
 
-  private Map<XMLElement, Collection<AttributeMessage>> elemToAttributeMessages =
-      new HashMap<XMLElement, Collection<AttributeMessage>>();
-
+  private Map<XMLElement, Collection<AttributeMessage>> elemToAttributeMessages = new HashMap<>();
 
   public MessagesWriter(String nameSpaceUri, MortalLogger mortalLogger, String generatedFrom,
       String packageName, String uiBinderImplClassName) {

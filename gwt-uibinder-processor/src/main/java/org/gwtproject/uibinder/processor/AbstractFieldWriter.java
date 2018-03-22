@@ -15,10 +15,10 @@
  */
 package org.gwtproject.uibinder.processor;
 
-import com.google.gwt.user.client.ui.RenderablePanel;
-
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.OwnerField;
+
+import com.google.gwt.user.client.ui.RenderablePanel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

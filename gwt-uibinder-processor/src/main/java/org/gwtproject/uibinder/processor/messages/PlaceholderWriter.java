@@ -30,7 +30,7 @@ class PlaceholderWriter {
    * @param value The value to provide for this param when writing an invocation of its message
    * method.
    */
-  public PlaceholderWriter(String name, String example, String value) {
+  PlaceholderWriter(String name, String example, String value) {
     this.name = name;
     this.example = inQuotes(example);
     this.value = inQuotes(value);

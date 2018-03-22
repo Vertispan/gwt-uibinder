@@ -62,6 +62,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -70,6 +71,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 
+/**
+ * Writer for UiBinder generated classes.
+ */
 public class UiBinderWriter {
 
   private static final String SAFE_VAR_PREFIX =
@@ -95,7 +99,6 @@ public class UiBinderWriter {
 
     return b.toString();
   }
-
 
   /**
    * Escape text that will be part of a string literal to be interpreted at runtime as an HTML
@@ -180,7 +183,6 @@ public class UiBinderWriter {
   private static String capitalizePropName(String propName) {
     return propName.substring(0, 1).toUpperCase(Locale.ROOT) + propName.substring(1);
   }
-
 
   /**
    * Searches for methods named onBrowserEvent in a {@code type}.
@@ -286,7 +288,6 @@ public class UiBinderWriter {
     return builder.toString();
   }
 
-
   private final MortalLogger logger;
 
   /**
@@ -362,7 +363,6 @@ public class UiBinderWriter {
 
   private final String binderUri;
   private final boolean isRenderer;
-
 
   public UiBinderWriter(TypeMirror baseType, String implClassName, String templatePath,
       MortalLogger logger, FieldManager fieldManager, MessagesWriter messagesWriter,
@@ -442,7 +442,6 @@ public class UiBinderWriter {
 
     attributeParsers = new AttributeParsers(fieldManager, logger);
   }
-
 
   /**
    * Add a statement to be executed right after the current attached element is detached. This is
@@ -545,7 +544,6 @@ public class UiBinderWriter {
 
     return tokenForStringExpression(source, fieldManager.convertFieldToGetter(name));
   }
-
 
   /**
    * Declare a variable that will be filled at runtime with a unique id, safe for use as a dom
@@ -847,7 +845,6 @@ public class UiBinderWriter {
     return AptUtil.isAssignableTo(fieldtype, possibleSupertype);
   }
 
-
   public boolean isImportedElement(XMLElement elem) {
     String uri = elem.getNamespaceUri();
     return uri != null && uri.startsWith(PACKAGE_URI_SCHEME);
@@ -915,7 +912,6 @@ public class UiBinderWriter {
     return field;
   }
 
-
   /**
    * Gives the writer the initializer to use for this field instead of the default GWT.create call.
    *
@@ -942,8 +938,10 @@ public class UiBinderWriter {
   /**
    * Like {@link #tokenForStringExpression}, but used for runtime expressions that we trust to be
    * safe to interpret at runtime as HTML without escaping, like translated messages with simple
-   * formatting. Wrapped in a call to {@link com.google.gwt.safehtml.shared.SafeHtmlUtils#fromSafeConstant}
-   * to keep the expression from being escaped by the SafeHtml template.
+   * formatting. Wrapped in a call to
+   *
+   * {@link com.google.gwt.safehtml.shared.SafeHtmlUtils#fromSafeConstant} to keep the expression
+   * from being escaped by the SafeHtml template.
    *
    * @param expression must resolve to trusted HTML string
    */
@@ -1190,7 +1188,6 @@ public class UiBinderWriter {
     return null;
   }
 
-
   /**
    * Use this method to format code. It forces the use of the en-US locale, so that things like
    * decimal format don't get mangled.
@@ -1244,7 +1241,6 @@ public class UiBinderWriter {
       throw new RuntimeException(parserClassName + " must extend ElementParser");
     }
   }
-
 
   /**
    * Find a set of element parsers for the given ui type.
@@ -1634,7 +1630,7 @@ public class UiBinderWriter {
     writeGwtFields(w);
     w.newline();
 
-    //designTime.writeAttributes(this);
+    // FIXME designTime.writeAttributes(this);
     writeAddedStatements(w);
     w.newline();
 

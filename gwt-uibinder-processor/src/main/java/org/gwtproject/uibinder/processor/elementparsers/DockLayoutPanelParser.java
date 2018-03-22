@@ -15,14 +15,14 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
-
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class DockLayoutPanelParser implements ElementParser {
     final String widgetName;
     final XMLElement child;
 
-    public CenterChild(XMLElement child, String widgetName) {
+    CenterChild(XMLElement child, String widgetName) {
       this.widgetName = widgetName;
       this.child = child;
     }

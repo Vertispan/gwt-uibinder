@@ -17,11 +17,11 @@ package org.gwtproject.uibinder.processor;
 
 import static org.gwtproject.uibinder.processor.AptUtil.asQualifiedNameable;
 
-import com.google.gwt.resources.client.CssResource;
-
 import org.gwtproject.uibinder.processor.attributeparsers.CssNameConverter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
+
+import com.google.gwt.resources.client.CssResource;
 
 import java.io.PrintWriter;
 import java.util.Map;

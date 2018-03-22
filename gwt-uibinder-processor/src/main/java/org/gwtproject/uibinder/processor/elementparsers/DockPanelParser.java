@@ -21,6 +21,7 @@ import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
 import java.util.HashMap;
+
 import javax.lang.model.type.TypeMirror;
 
 /**

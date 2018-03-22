@@ -15,14 +15,14 @@
  */
 package org.gwtproject.uibinder.processor.attributeparsers;
 
+import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.FieldManager;
+import org.gwtproject.uibinder.processor.MortalLogger;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-
-import org.gwtproject.uibinder.processor.AptUtil;
-import org.gwtproject.uibinder.processor.FieldManager;
-import org.gwtproject.uibinder.processor.MortalLogger;
 
 import java.util.HashMap;
 import java.util.Map;

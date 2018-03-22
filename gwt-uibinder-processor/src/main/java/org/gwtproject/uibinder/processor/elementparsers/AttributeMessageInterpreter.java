@@ -23,20 +23,22 @@ import org.gwtproject.uibinder.processor.messages.MessagesWriter;
 
 /**
  * Examines each element for child &lt;ui:attr/&gt; elements, and replaces the corresponding
- * attributes of the examinee with references to the translatable messages created. <p> That is,
- * when examining element foo in
+ * attributes of the examine with references to the translatable messages created.
+ *
+ * <p>That is, when examining element foo in
  * <pre>
  *   &lt;foo bar="baz"&gt;
  *     &lt;ui:attr name="baz"&gt;
  *   &lt;/foo&gt;</pre>
- * cosume the ui:attr element, and declare a method on the Messages interface with {@literal
- * @}Default("baz")
+ * consume the ui:attr element, and declare a method on the Messages interface with
+ *
+ * {@code @Default("baz")}
  */
 class AttributeMessageInterpreter implements XMLElement.Interpreter<String> {
 
   private final UiBinderWriter writer;
 
-  public AttributeMessageInterpreter(UiBinderWriter writer) {
+  AttributeMessageInterpreter(UiBinderWriter writer) {
     this.writer = writer;
   }
 

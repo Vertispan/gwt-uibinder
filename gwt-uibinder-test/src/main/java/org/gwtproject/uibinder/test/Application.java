@@ -15,15 +15,17 @@
  */
 package org.gwtproject.uibinder.test;
 
+import org.gwtproject.uibinder.test.view.Shell;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.gwtproject.uibinder.test.view.Shell;
 
 /**
  *

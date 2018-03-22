@@ -17,6 +17,12 @@ package org.gwtproject.uibinder.processor;
 
 import static org.gwtproject.uibinder.processor.AptUtil.asQualifiedNameable;
 
+import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
+import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
+import org.gwtproject.uibinder.processor.model.ImplicitDataResource;
+import org.gwtproject.uibinder.processor.model.ImplicitImageResource;
+
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource.Import;
 import com.google.gwt.resources.client.DataResource;
@@ -25,12 +31,6 @@ import com.google.gwt.resources.client.DataResource.MimeType;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.ImageResource.ImageOptions;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
-
-import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
-import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
-import org.gwtproject.uibinder.processor.model.ImplicitDataResource;
-import org.gwtproject.uibinder.processor.model.ImplicitImageResource;
 
 import java.util.Collection;
 import java.util.Set;

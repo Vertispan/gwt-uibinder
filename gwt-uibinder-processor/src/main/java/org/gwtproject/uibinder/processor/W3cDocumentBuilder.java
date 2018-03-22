@@ -15,11 +15,6 @@
  */
 package org.gwtproject.uibinder.processor;
 
-import java.util.Stack;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.tools.Diagnostic.Kind;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,6 +24,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ext.DefaultHandler2;
+
+import java.util.Stack;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.tools.Diagnostic.Kind;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Uses SAX events to construct a DOM Document. Each node in the Document will have a {@link
@@ -43,8 +45,7 @@ class W3cDocumentBuilder extends DefaultHandler2 {
   private final MortalLogger logger;
   private final GwtResourceEntityResolver resolver;
 
-
-  public W3cDocumentBuilder(MortalLogger logger, String pathBase,
+  W3cDocumentBuilder(MortalLogger logger, String pathBase,
       ProcessingEnvironment processingEnvironment)
       throws ParserConfigurationException {
     this.logger = logger;

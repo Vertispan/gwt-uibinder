@@ -15,11 +15,11 @@
  */
 package org.gwtproject.uibinder.processor.attributeparsers;
 
-import com.google.gwt.dom.client.Style.Unit;
-
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.dom.client.Style.Unit;
 
 import java.util.Locale;
 import java.util.regex.Matcher;

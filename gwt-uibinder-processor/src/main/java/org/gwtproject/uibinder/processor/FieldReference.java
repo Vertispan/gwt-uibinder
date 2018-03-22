@@ -17,6 +17,7 @@ package org.gwtproject.uibinder.processor;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -29,11 +30,11 @@ public class FieldReference {
   private static class LeftHand {
 
     /**
-     * The type of values acceptible to this LHS, in order of preference
+     * The type of values acceptible to this LHS, in order of preference.
      */
     private final TypeMirror[] types;
     /**
-     * The element on the LHS, for error reporting
+     * The element on the LHS, for error reporting.
      */
     private final XMLElement source;
 

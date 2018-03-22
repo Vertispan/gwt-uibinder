@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -52,6 +53,8 @@ public class XMLElement {
   /**
    * Callback interface used by {@link #consumeInnerHtml(Interpreter)} and {@link
    * #consumeChildElements(Interpreter)}.
+   *
+   * @param <T> the interpreter type.
    */
   public interface Interpreter<T> {
 
@@ -65,6 +68,8 @@ public class XMLElement {
 
   /**
    * Extends {@link Interpreter} with a method to be called after all elements have been processed.
+   *
+   * @param <T> the interpreter type.
    */
   public interface PostProcessingInterpreter<T> extends Interpreter<T> {
 
@@ -393,7 +398,9 @@ public class XMLElement {
    * Consumes all child text nodes, and asserts that this element held only text. Trailing and
    * leading whitespace is trimmed, and escaped for use as a string literal. Notice that HTML
    * entities in the text are also escaped <p> This call requires an interpreter to make sense of
-   * any special children. The odds are you want to use {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * any special children. The odds are you want to use
+   *
+   * {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */
@@ -406,7 +413,9 @@ public class XMLElement {
    * Consumes all child text nodes, and asserts that this element held only text. Trailing and
    * leading whitespace is trimmed, and escaped for use as a string literal. Notice that HTML
    * entities in the text are NOT escaped <p> This call requires an interpreter to make sense of any
-   * special children. The odds are you want to use {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * special children. The odds are you want to use
+   *
+   * {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */
@@ -545,8 +554,9 @@ public class XMLElement {
   }
 
   /**
-   * Convenience method for parsing the named attribute as a {@link com.google.gwt.safehtml.shared.SafeHtml
-   * SafeHtml} value or reference.
+   * Convenience method for parsing the named attribute as a
+   *
+   * {@link com.google.gwt.safehtml.shared.SafeHtml SafeHtml} value or reference.
    *
    * @return an expression that will evaluate to a {@link com.google.gwt.safehtml.shared.SafeHtml
    * SafeHtml} value in the generated code, or null if there is no such attribute
@@ -633,8 +643,9 @@ public class XMLElement {
 
   /**
    * Returns the unprocessed, unescaped, raw inner text of the receiver. Dies if the receiver has
-   * non-text children. <p> You probably want to use {@link #consumeInnerTextEscapedAsHtmlStringLiteral}
-   * instead.
+   * non-text children. <p> You probably want to use
+   *
+   * {@link #consumeInnerTextEscapedAsHtmlStringLiteral} instead.
    *
    * @return the text
    * @throws UnableToCompleteException if it held anything other than text nodes
@@ -762,7 +773,9 @@ public class XMLElement {
    * Consumes all child text nodes, and asserts that this element held only text. Trailing and
    * leading whitespace is trimmed, and escaped for use as a string literal. If escapeHtmlEntities
    * is true, HTML Entities are also escaped. <p> This call requires an interpreter to make sense of
-   * any special children. The odds are you want to use {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * any special children. The odds are you want to use
+   *
+   * {@link org.gwtproject.uibinder.processor.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */

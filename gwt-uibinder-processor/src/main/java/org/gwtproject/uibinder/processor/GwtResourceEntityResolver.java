@@ -17,17 +17,19 @@ package org.gwtproject.uibinder.processor;
 
 import static java.util.stream.Collectors.toSet;
 
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
 
 /**
  * Makes the sax xml parser use the {@link javax.annotation.processing.ProcessingEnvironment}.

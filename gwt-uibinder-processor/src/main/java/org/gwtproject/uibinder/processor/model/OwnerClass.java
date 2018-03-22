@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -88,7 +89,6 @@ public class OwnerClass {
   public TypeMirror getOwnerType() {
     return ownerType;
   }
-
 
   /**
    * Returns the method annotated with @UiFactory which returns the given type.
@@ -213,7 +213,6 @@ public class OwnerClass {
       findUiFields(superclass);
     }
   }
-
 
   /**
    * Scans the owner class to find all methods annotated with @UiHandler, and adds them to their

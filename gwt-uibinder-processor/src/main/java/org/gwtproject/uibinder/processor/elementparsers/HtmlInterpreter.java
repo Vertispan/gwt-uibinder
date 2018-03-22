@@ -15,14 +15,14 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
-import com.google.gwt.safehtml.shared.SafeHtml;
-
 import org.gwtproject.uibinder.processor.FieldWriter;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLAttribute;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.XMLElement.Interpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
+
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 import java.util.Arrays;
 import java.util.Collections;

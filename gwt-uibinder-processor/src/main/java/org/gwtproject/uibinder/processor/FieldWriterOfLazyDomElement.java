@@ -21,6 +21,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
 import java.util.List;
+
 import javax.lang.model.type.TypeMirror;
 
 /**

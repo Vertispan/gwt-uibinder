@@ -32,7 +32,7 @@ public enum FieldWriterType {
    */
   private int buildPrecedence;
 
-  private FieldWriterType(int precedence) {
+  FieldWriterType(int precedence) {
     this.buildPrecedence = precedence;
   }
 

@@ -27,16 +27,16 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Simple form view for the old UiBinder.
+ */
 public class OldSimpleFormView implements IsWidget {
-
 
   @UiTemplate("org.gwtproject.uibinder.test.view.SimpleFormView.ui.xml")
   interface MyUiBinder extends UiBinder<VerticalPanel, OldSimpleFormView> {
-
   }
 
   private final MyUiBinder binder = GWT.create(MyUiBinder.class);
-
 
   private Widget widget;
 

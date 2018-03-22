@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.lang.model.type.TypeMirror;
 
 /**
@@ -68,7 +69,6 @@ public class ImplicitCssResource {
   private File generatedFile;
   private Set<String> cssClassNames;
   private Set<String> normalizedCssClassNames;
-
 
   /**
    * Visible for testing only, get instances from {@link ImplicitClientBundle}.
@@ -141,7 +141,6 @@ public class ImplicitCssResource {
   public Set<TypeMirror> getImports() {
     return imports;
   }
-
 
   /**
    * Returns the name of this resource. This is both its method name in the owning {@link

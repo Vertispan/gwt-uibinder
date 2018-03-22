@@ -36,7 +36,7 @@ public class GridParser implements ElementParser {
     private String content;
     private String styleName;
 
-    public CellContent(String tagName, String content, String styleName) {
+    CellContent(String tagName, String content, String styleName) {
       this.tagName = tagName;
       this.content = content;
       this.styleName = styleName;
@@ -82,7 +82,7 @@ public class GridParser implements ElementParser {
     private int rows;
     private int columns;
 
-    public Size(int rows, int columns) {
+    Size(int rows, int columns) {
       this.rows = rows;
       this.columns = columns;
     }

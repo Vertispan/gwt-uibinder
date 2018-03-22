@@ -35,6 +35,7 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -116,7 +117,6 @@ public class UiBinderParser {
   private final TypeMirror dataResourceType;
   private final String binderUri;
   private final UiBinderContext uiBinderContext;
-
 
   public UiBinderParser(UiBinderWriter writer, MessagesWriter messagesWriter,
       FieldManager fieldManager, ImplicitClientBundle bundleClass,
@@ -540,7 +540,6 @@ public class UiBinderParser {
 //      }
 //    }
 //    return matchingResourceType;
-
   }
 
   private void findResources(XMLElement binderElement)
