@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2018 Google Inc.
+    Copyright 2018 Vertispan LLC
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -28,6 +28,9 @@
   <!-- new UiBinder -->
   <inherits name="org.gwtproject.uibinder.UiBinder"/>
 
+  <inherits name="com.google.common.util.concurrent.Concurrent"/>
+  <inherits name="dagger.Dagger"/>
+  
   <source path=""/>
 
   <!-- Only support recent browsers -->

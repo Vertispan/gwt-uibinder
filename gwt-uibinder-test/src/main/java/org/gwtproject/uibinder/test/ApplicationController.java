@@ -13,13 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.uibinder.test.view;
+package org.gwtproject.uibinder.test;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import org.gwtproject.uibinder.test.view.Shell;
+
+import com.google.gwt.user.client.ui.HasWidgets;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- *
+ * Application controller.
  */
-public interface Shell extends IsWidget {
+@Singleton
+public class ApplicationController {
 
+  private Shell shell;
+
+  @Inject
+  public ApplicationController(Shell shell) {
+    this.shell = shell;
+  }
+
+  public void start(HasWidgets hasWidgets) {
+    hasWidgets.add(shell.asWidget());
+  }
 }
