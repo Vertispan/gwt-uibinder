@@ -17,12 +17,18 @@ done, perform a manual maven build like the following:
 
 `mvn clean install`
 
-Then, add the uibinder dependency to your project:
+Then, add the uibinder dependencies to your Maven module:
 
 ```xml
   <dependency>
     <groupId>org.gwtproject</groupId>
-    <artifactId>gwt-uibinder</artifactId>
+    <artifactId>gwt-uibinder-client</artifactId>
+    <version>1.0.0-SNAPSHOT</version>  
+  </dependency>
+
+  <dependency>
+    <groupId>org.gwtproject</groupId>
+    <artifactId>gwt-uibinder-processor</artifactId>
     <version>1.0.0-SNAPSHOT</version>  
   </dependency>
 ```
@@ -39,6 +45,8 @@ Just import the module in your `gwt.xml` file and you're set
   <inherits name="org.gwtproject.uibinder.UiBinder"/>
 ```
 
+*See:* [Example project](https://github.com/Vertispan/gwt-uibinder/tree/master/gwt-uibinder-example) 
+for further uses.  
 
 ## Changes in the new GWT UiBinder
 
