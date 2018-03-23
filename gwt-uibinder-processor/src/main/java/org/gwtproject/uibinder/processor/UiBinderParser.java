@@ -31,6 +31,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
+import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
 
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -117,10 +118,11 @@ public class UiBinderParser {
   private final TypeMirror dataResourceType;
   private final String binderUri;
   private final UiBinderContext uiBinderContext;
+  private GssOptions gssOptions;
 
   public UiBinderParser(UiBinderWriter writer, MessagesWriter messagesWriter,
       FieldManager fieldManager, ImplicitClientBundle bundleClass,
-      String binderUri, UiBinderContext uiBinderContext) {
+      String binderUri, UiBinderContext uiBinderContext, GssOptions gssOptions) {
     this.writer = writer;
 
     this.messagesWriter = messagesWriter;
@@ -135,6 +137,7 @@ public class UiBinderParser {
     this.dataResourceType = elementUtils.getTypeElement(DataResource.class.getCanonicalName())
         .asType();
     this.binderUri = binderUri;
+    this.gssOptions = gssOptions;
   }
 
   /**
@@ -476,27 +479,26 @@ public class UiBinderParser {
 
   private boolean determineGssForFile(Boolean attributeInUiBinderFile)
       throws UnableToCompleteException {
-    return false;  // TODO implement
-//    if (attributeInUiBinderFile == null) {
-//      if (!gssOptions.isEnabled() && gssOptions.isGssDefaultInUiBinder()) {
-//        writer.die("Invalid combination of configuration properties. "
-//            + "CssResource.enableGss is false, but CssResource.uiBinderGssDefault is true");
-//      }
-//      return gssOptions.isGssDefaultInUiBinder();
-//    }
-//
-//    if (Boolean.TRUE.equals(attributeInUiBinderFile)) {
-//      if (!gssOptions.isEnabled()) {
-//        writer.die("UiBinder file has attribute gss=\"true\", but GSS is disabled globally");
-//      }
-//      return true;
-//    }
-//
-//    if (gssOptions.isEnabled() && gssOptions.isAutoConversionOff()) {
-//      writer.die("UiBinder file has attribute gss=\"false\", "
-//          + "but CssResource.conversionMode is \"off\"");
-//    }
-//    return false;
+    if (attributeInUiBinderFile == null) {
+      if (!gssOptions.isEnabled() && gssOptions.isGssDefaultInUiBinder()) {
+        writer.die("Invalid combination of configuration properties. "
+            + "CssResource.enableGss is false, but CssResource.uiBinderGssDefault is true");
+      }
+      return gssOptions.isGssDefaultInUiBinder();
+    }
+
+    if (Boolean.TRUE.equals(attributeInUiBinderFile)) {
+      if (!gssOptions.isEnabled()) {
+        writer.die("UiBinder file has attribute gss=\"true\", but GSS is disabled globally");
+      }
+      return true;
+    }
+
+    if (gssOptions.isEnabled() && gssOptions.isAutoConversionOff()) {
+      writer.die("UiBinder file has attribute gss=\"false\", "
+          + "but CssResource.conversionMode is \"off\"");
+    }
+    return false;
   }
 
   private TypeMirror findCssResourceType(XMLElement elem, String typeName)

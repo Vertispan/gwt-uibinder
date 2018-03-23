@@ -15,6 +15,8 @@
  */
 package org.gwtproject.uibinder.processor;
 
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -32,11 +34,11 @@ import javax.tools.JavaFileObject;
 public class PrintWriterManager {
 
   private final ProcessingEnvironment processingEnv;
-  private MortalLogger logger;
+  private final MyTreeLogger logger;
   private final String packageName;
   private final Set<PrintWriter> writers = new HashSet<>();
 
-  PrintWriterManager(ProcessingEnvironment processingEnv, MortalLogger logger,
+  PrintWriterManager(ProcessingEnvironment processingEnv, MyTreeLogger logger,
       String packageName) {
 
     this.processingEnv = processingEnv;

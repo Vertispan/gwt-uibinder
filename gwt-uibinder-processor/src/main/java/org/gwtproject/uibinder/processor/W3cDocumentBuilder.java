@@ -15,6 +15,8 @@
  */
 package org.gwtproject.uibinder.processor;
 
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -42,10 +44,10 @@ class W3cDocumentBuilder extends DefaultHandler2 {
   private final Document document;
   private final Stack<Node> eltStack = new Stack<Node>();
   private Locator locator;
-  private final MortalLogger logger;
+  private final MyTreeLogger logger;
   private final GwtResourceEntityResolver resolver;
 
-  W3cDocumentBuilder(MortalLogger logger, String pathBase,
+  W3cDocumentBuilder(MyTreeLogger logger, String pathBase,
       ProcessingEnvironment processingEnvironment)
       throws ParserConfigurationException {
     this.logger = logger;

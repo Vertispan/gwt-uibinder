@@ -38,6 +38,7 @@ import org.gwtproject.uibinder.processor.model.OwnerField;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.LazyDomElement;
 import com.google.gwt.uibinder.client.impl.AbstractUiRenderer;
@@ -364,9 +365,12 @@ public class UiBinderWriter {
   private final String binderUri;
   private final boolean isRenderer;
 
+  private final GssOptions gssOptions;
+
   public UiBinderWriter(TypeMirror baseType, String implClassName, String templatePath,
       MortalLogger logger, FieldManager fieldManager, MessagesWriter messagesWriter,
-      UiBinderContext uiBinderCtx, String binderUri) throws UnableToCompleteException {
+      UiBinderContext uiBinderCtx, String binderUri, GssOptions gssOptions)
+      throws UnableToCompleteException {
 
     this.baseClass = baseType;
     this.implClassName = implClassName;
@@ -376,6 +380,7 @@ public class UiBinderWriter {
     this.messages = messagesWriter;
     this.uiBinderCtx = uiBinderCtx;
     this.binderUri = binderUri;
+    this.gssOptions = gssOptions;
 
     this.htmlTemplates = new HtmlTemplatesWriter(fieldManager, logger);
 
@@ -1340,7 +1345,7 @@ public class UiBinderWriter {
         bundleClass.getPackageName(), bundleClass.getClassName(), bundleClass.getFieldName());
 
     FieldWriter rootField = new UiBinderParser(this, messages, fieldManager, bundleClass,
-        binderUri, uiBinderCtx).parse(elem);
+        binderUri, uiBinderCtx, gssOptions).parse(elem);
 
     fieldManager.validate();
 

@@ -17,6 +17,8 @@ package org.gwtproject.uibinder.processor;
 
 import static java.util.stream.Collectors.toSet;
 
+import org.gwtproject.uibinder.processor.ext.MyTreeLogger;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -52,9 +54,9 @@ public class GwtResourceEntityResolver implements EntityResolver {
   private final String pathBase;
 
   private final ProcessingEnvironment processingEnvironment;
-  private final MortalLogger logger;
+  private final MyTreeLogger logger;
 
-  public GwtResourceEntityResolver(MortalLogger logger, ProcessingEnvironment processingEnvironment,
+  public GwtResourceEntityResolver(MyTreeLogger logger, ProcessingEnvironment processingEnvironment,
       String pathBase) {
     this.logger = logger;
     this.processingEnvironment = processingEnvironment;
