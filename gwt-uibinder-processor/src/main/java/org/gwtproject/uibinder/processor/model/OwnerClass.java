@@ -194,7 +194,7 @@ public class OwnerClass {
     List<VariableElement> fields = ElementFilter.fieldsIn(ownerElement.getEnclosedElements());
     for (VariableElement field : fields) {
       if (AptUtil.isAnnotationPresent(field, UiBinderClasses.UIFIELD)) {
-        TypeMirror ownerFieldType = null;
+        TypeMirror ownerFieldType = field.asType();
 
         if (ownerFieldType == null) {
           logger.die("Field type is not a class in field " + field.getSimpleName());

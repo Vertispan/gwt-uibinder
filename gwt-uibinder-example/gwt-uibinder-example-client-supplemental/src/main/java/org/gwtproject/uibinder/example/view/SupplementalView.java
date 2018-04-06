@@ -13,25 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.uibinder.example.ioc;
+package org.gwtproject.uibinder.example.view;
 
-import org.gwtproject.uibinder.example.view.Shell;
-import org.gwtproject.uibinder.example.view.SupplementalView;
-import org.gwtproject.uibinder.example.view.impl.ShellImpl;
-import org.gwtproject.uibinder.example.view.impl.SupplementalViewImpl;
-
-import dagger.Binds;
-import dagger.Module;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Main module for the test bed application.
+ *
  */
-@Module
-public abstract class TestBedModule {
-
-  @Binds
-  abstract Shell shell(ShellImpl shell);
-
-  @Binds
-  abstract SupplementalView supplementalView(SupplementalViewImpl impl);
+public interface SupplementalView extends IsWidget {
 }

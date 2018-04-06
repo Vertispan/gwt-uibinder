@@ -13,25 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.uibinder.example.ioc;
+package org.gwtproject.uibinder.example.util;
 
-import org.gwtproject.uibinder.example.view.Shell;
-import org.gwtproject.uibinder.example.view.SupplementalView;
-import org.gwtproject.uibinder.example.view.impl.ShellImpl;
-import org.gwtproject.uibinder.example.view.impl.SupplementalViewImpl;
-
-import dagger.Binds;
-import dagger.Module;
+import com.google.gwt.core.client.GWT;
 
 /**
- * Main module for the test bed application.
+ *
  */
-@Module
-public abstract class TestBedModule {
+public class GssUtil {
 
-  @Binds
-  abstract Shell shell(ShellImpl shell);
+  public static String getModuleBasedUrl(String path) {
+    return "url('" + GWT.getModuleBaseURL() + path + "');";
+  }
 
-  @Binds
-  abstract SupplementalView supplementalView(SupplementalViewImpl impl);
+
+  private GssUtil() {
+    throw new UnsupportedOperationException();
+  }
 }

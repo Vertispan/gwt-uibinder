@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style>
+    .panel {
+      border: 1px solid blue;
+      width: 640px;
+      height: 480px;
+      box-sizing: border-box;
+    }
+  </ui:style>
+
+  <g:VerticalPanel styleName="{style.panel}">
+    <g:Label text="This is from the supplemental view"/>
+  </g:VerticalPanel>
+
+</ui:UiBinder>

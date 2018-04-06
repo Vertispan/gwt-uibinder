@@ -16,48 +16,37 @@
 package org.gwtproject.uibinder.example.view.impl;
 
 import org.gwtproject.uibinder.client.UiBinder;
-import org.gwtproject.uibinder.client.UiField;
 import org.gwtproject.uibinder.client.UiTemplate;
-import org.gwtproject.uibinder.example.view.Shell;
 import org.gwtproject.uibinder.example.view.SupplementalView;
 
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  *
  */
-@Singleton
-public class ShellImpl implements Shell {
+public class SupplementalViewImpl implements SupplementalView {
 
   @UiTemplate
-  interface MyUiBinder extends UiBinder<DockLayoutPanel, ShellImpl> {
+  interface MyUiBinder extends UiBinder<Widget, SupplementalViewImpl> {
   }
 
-  private DockLayoutPanel container;
+  private MyUiBinder uiBinder = new SupplementalViewImpl_MyUiBinderImpl();
 
-  @UiField(provided = true)
-  SupplementalView supplementalView;
-
-  @UiField
-  ScrollPanel mainArea;
-
-  private MyUiBinder uiBinder = new ShellImpl_MyUiBinderImpl();
+  private Widget widget;
 
   @Inject
-  public ShellImpl(SupplementalView supplementalView) {
-    this.supplementalView = supplementalView;
+  public SupplementalViewImpl() {
   }
+
 
   @Override
   public Widget asWidget() {
-    if (container == null) {
-      container = uiBinder.createAndBindUi(this);
+    if (widget == null) {
+      widget = uiBinder.createAndBindUi(this);
     }
-    return container;
+
+    return widget;
   }
 }

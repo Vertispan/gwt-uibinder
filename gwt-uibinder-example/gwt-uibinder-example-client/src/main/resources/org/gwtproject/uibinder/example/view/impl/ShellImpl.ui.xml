@@ -1,0 +1,74 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:old="urn:import:org.gwtproject.uibinder.example.view.olduibinder"
+  xmlns:new="urn:import:org.gwtproject.uibinder.example.view.newuibinder"
+  xmlns:view="urn:import:org.gwtproject.uibinder.example.view">
+
+  <ui:style>
+    @def LOGO eval('org.gwtproject.uibinder.example.util.GssUtil.getModuleBasedUrl("images/navLogoBig.png")');
+
+    .container {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .navPanel {
+      background-color: #dbdbdb;
+      border-top: 6px solid #f93535;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      padding-top: 35px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .logo {
+      background-image: LOGO;
+      background-repeat: no-repeat;
+      width: 150px;
+      height: 160px;
+    }
+
+    .navCellList {
+      font-size: large;
+      font-weight: bold;
+      margin-top: 35px;
+    }
+  </ui:style>
+
+  <g:DockLayoutPanel addStyleNames="{style.container}">
+    <g:west size="260">
+      <g:FlowPanel addStyleNames="{style.navPanel}">
+        <g:Label addStyleNames="{style.logo}"/>
+        <!-- currently not a cell list -->
+        <g:Label addStyleNames="{style.navCellList}" text="Old Vs New Comparison"/>
+      </g:FlowPanel>
+    </g:west>
+    <g:center>
+      <g:ScrollPanel ui:field="mainArea">
+        <g:VerticalPanel>
+          <g:HorizontalPanel borderWidth="1" width="100%">
+            <g:VerticalPanel>
+              <g:Label text="Old UiBinder"/>
+              <old:OldSimpleFormView/>
+            </g:VerticalPanel>
+            <g:VerticalPanel>
+              <g:Label text="New UiBinder"/>
+              <new:NewSimpleFormView/>
+            </g:VerticalPanel>
+          </g:HorizontalPanel>
+          <view:SupplementalView ui:field="supplementalView"/>
+        </g:VerticalPanel>
+      </g:ScrollPanel>
+    </g:center>
+  </g:DockLayoutPanel>
+
+</ui:UiBinder>

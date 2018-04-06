@@ -36,6 +36,7 @@ public class ApplicationController {
   }
 
   public void start(HasWidgets hasWidgets) {
+    hasWidgets.clear();
     hasWidgets.add(shell.asWidget());
   }
 }
