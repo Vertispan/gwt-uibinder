@@ -29,13 +29,20 @@ import javax.inject.Singleton;
 public class ApplicationController {
 
   private Shell shell;
+  private NavigationRepository navigationRepository;
 
   @Inject
-  public ApplicationController(Shell shell) {
+  public ApplicationController(Shell shell, NavigationRepository repository) {
     this.shell = shell;
+    navigationRepository = repository;
   }
 
   public void start(HasWidgets hasWidgets) {
+    navigationRepository.initHistoryHandling(shell.getMainDisplay());
+
+    hasWidgets.clear();
     hasWidgets.add(shell.asWidget());
+
+    navigationRepository.handleCurrentHistory();
   }
 }

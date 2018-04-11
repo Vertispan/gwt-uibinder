@@ -15,11 +15,27 @@
  */
 package org.gwtproject.uibinder.example.ioc;
 
+import org.gwtproject.uibinder.example.NavigationRepository.Token;
+import org.gwtproject.uibinder.example.view.HomeView;
+import org.gwtproject.uibinder.example.view.OldVsNewComparisonView;
 import org.gwtproject.uibinder.example.view.Shell;
+import org.gwtproject.uibinder.example.view.SupplementalView;
+import org.gwtproject.uibinder.example.view.impl.HomeViewImpl;
 import org.gwtproject.uibinder.example.view.impl.ShellImpl;
+import org.gwtproject.uibinder.example.view.impl.SupplementalViewImpl;
+
+import com.google.gwt.user.client.ui.IsWidget;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * Main module for the test bed application.
@@ -27,6 +43,29 @@ import dagger.Module;
 @Module
 public abstract class TestBedModule {
 
+  @Provides
+  @Named("navigationMap")
+  @Singleton
+  static Map<Token, Provider<? extends IsWidget>> provideNavigationMapping(
+      Provider<HomeView> homeViewProvider,
+      Provider<OldVsNewComparisonView> oldVsNewComparisonViewProvider,
+      Provider<SupplementalView> supplementalViewProvider) {
+    Map<Token, Provider<? extends IsWidget>> navMap = new LinkedHashMap<>();
+
+    navMap.put(Token.DEFAULT, homeViewProvider);
+    navMap.put(Token.create("simpleCompare", "Old Vs New Comparison"),
+        oldVsNewComparisonViewProvider);
+    navMap.put(Token.create("supplemental", "Supplemental View"), supplementalViewProvider);
+
+    return navMap;
+  }
+
   @Binds
   abstract Shell shell(ShellImpl shell);
+
+  @Binds
+  abstract HomeView homeView(HomeViewImpl homeView);
+
+  @Binds
+  abstract SupplementalView supplementalView(SupplementalViewImpl impl);
 }

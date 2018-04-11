@@ -17,6 +17,7 @@ package org.gwtproject.uibinder.example.view.newuibinder;
 
 import org.gwtproject.uibinder.client.UiBinder;
 import org.gwtproject.uibinder.client.UiFactory;
+import org.gwtproject.uibinder.client.UiField;
 import org.gwtproject.uibinder.client.UiHandler;
 import org.gwtproject.uibinder.client.UiTemplate;
 
@@ -26,6 +27,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import javax.inject.Inject;
 
 /**
  *
@@ -40,6 +43,13 @@ public class NewSimpleFormView implements IsWidget {
 
   private Widget widget;
 
+  @UiField(provided = true)
+  Label sourceLocation = new Label("Source: New UiBinder");
+
+  @Inject
+  public NewSimpleFormView() {
+  }
+
   @Override
   public Widget asWidget() {
     if (widget == null) {
@@ -50,11 +60,12 @@ public class NewSimpleFormView implements IsWidget {
 
   @UiFactory
   protected Label createButtonLabel(String theText) {
+    // silly, but demonstrates passing attributes to factory methods
     return new Label(theText);
   }
 
   @UiHandler("simpleButton")
   protected void onSimpleButtonClick(ClickEvent event) {
-    Window.alert("Button Clicked");
+    Window.alert("Button Clicked: New UiBinder");
   }
 }

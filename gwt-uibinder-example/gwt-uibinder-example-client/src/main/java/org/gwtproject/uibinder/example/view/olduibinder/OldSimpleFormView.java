@@ -19,6 +19,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Window;
@@ -26,6 +27,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import javax.inject.Inject;
 
 /**
  * Simple form view for the old UiBinder.
@@ -39,6 +42,13 @@ public class OldSimpleFormView implements IsWidget {
   private final MyUiBinder binder = GWT.create(MyUiBinder.class);
 
   private Widget widget;
+
+  @UiField(provided = true)
+  Label sourceLocation = new Label("Source: Old UiBinder");
+
+  @Inject
+  public OldSimpleFormView() {
+  }
 
   @Override
   public Widget asWidget() {
@@ -55,7 +65,7 @@ public class OldSimpleFormView implements IsWidget {
 
   @UiHandler("simpleButton")
   protected void onSimpleButtonClick(ClickEvent event) {
-    Window.alert("Button Clicked");
+    Window.alert("Button Clicked: Old UiBinder");
   }
 
 }

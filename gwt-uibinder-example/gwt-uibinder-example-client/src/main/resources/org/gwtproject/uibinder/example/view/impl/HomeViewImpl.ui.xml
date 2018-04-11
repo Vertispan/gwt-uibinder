@@ -1,0 +1,97 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style>
+
+    @def LOGO eval('org.gwtproject.uibinder.example.util.GssUtil.getModuleBasedUrl("images/logoBig.png")');
+
+    .title {
+      font-size: 8.5rem;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container section {
+      width: 100%;
+      height: 929px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .intro {
+      padding-top: 285px;
+      padding-left: 25px;
+      z-index: 1001;
+    }
+
+    .intro h1 {
+      font-size: 4.5rem;
+      margin: 0 0 0.5em;
+      font-weight: bold;
+      line-height: 1em;
+    }
+
+    .intro p {
+      max-width: 550px;
+      margin-bottom: 10px;
+      font-family: "soleil", sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: #000;
+      padding: 0;
+    }
+
+    .bg {
+      height: 0 !important;
+    }
+
+    .bg:after {
+      content: " ";
+      background: LOGO no-repeat;
+      display: block;
+      width: 1084px;
+      height: 665px;
+      position: absolute;
+      top: -660px;
+      right: 35px;
+      z-index: 1000;
+    }
+
+  </ui:style>
+
+  <g:HTMLPanel addStyleNames="{style.container}">
+
+    <section class="{style.intro}">
+
+      <h1 class="{style.title}">GWT Project<br/>New UiBinder</h1>
+      <p>
+        This project is the APT conversion of the GWT 2 UiBinder module in preparation of GWT 3 and
+        J2CL.
+      </p>
+      <p>
+        The goals for this project is to replace/migrate the code generation from the older GWT 2
+        generator
+        API to Java APT. Future goals will include migration to new widget library, added
+        features/functionality for UiBinder templates, etc.
+      </p>
+
+      <p>
+        For the most recent and for more information, please view the
+        <a href="https://github.com/Vertispan/gwt-uibinder/blob/master/README.md#gwt-uibinder">
+          README.md
+        </a>
+        file in the root
+        directory.
+      </p>
+    </section>
+    <section class="{style.bg}"></section>
+
+  </g:HTMLPanel>
+
+
+</ui:UiBinder>

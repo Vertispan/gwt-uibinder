@@ -13,14 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.gwtproject.uibinder.example.view;
+package org.gwtproject.uibinder.example.util;
 
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.core.client.GWT;
 
 /**
- *
+ * General utility for GSS content.
  */
-public interface Shell extends IsWidget {
-  HasWidgets getMainDisplay();
+public class GssUtil {
+
+  public static String getModuleBasedUrl(String path) {
+    return "url('" + GWT.getModuleBaseURL() + path + "');";
+  }
+
+  private GssUtil() {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -186,6 +186,7 @@
     </pluginManagement>
   </build>
   <modules>
+    <module>gwt-uibinder-example-client-supplemental</module>
     <module>gwt-uibinder-example-client</module>
     <module>gwt-uibinder-example-shared</module>
     <module>gwt-uibinder-example-server</module>

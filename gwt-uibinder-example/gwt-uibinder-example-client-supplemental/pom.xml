@@ -10,8 +10,9 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gwt-uibinder-example-client</artifactId>
-  <packaging>gwt-app</packaging>
+  <artifactId>gwt-uibinder-example-client-supplemental</artifactId>
+  <packaging>gwt-lib</packaging>
+  <description>This module is intended to represent a gwt library dependency.</description>
 
   <dependencies>
     <dependency>
@@ -22,17 +23,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>gwt-uibinder-example-shared</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>gwt-uibinder-example-client-supplemental</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>gwt-uibinder-example-client-supplemental</artifactId>
       <version>${project.version}</version>
       <classifier>sources</classifier>
     </dependency>
@@ -97,11 +87,14 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
         <groupId>net.ltgt.gwt.maven</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
-          <moduleName>org.gwtproject.uibinder.example.Application</moduleName>
-          <moduleShortName>uibinderexample</moduleShortName>
+          <moduleName>org.gwtproject.uibinder.example.Supplemental</moduleName>
+          <moduleShortName>examplesupplemental</moduleShortName>
         </configuration>
       </plugin>
       <plugin>
