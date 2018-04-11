@@ -2,9 +2,7 @@
 <ui:UiBinder
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g="urn:import:com.google.gwt.user.client.ui"
-  xmlns:old="urn:import:org.gwtproject.uibinder.example.view.olduibinder"
-  xmlns:new="urn:import:org.gwtproject.uibinder.example.view.newuibinder"
-  xmlns:view="urn:import:org.gwtproject.uibinder.example.view">
+  xmlns:cell="urn:import:com.google.gwt.user.cellview.client">
 
   <ui:style>
     @def LOGO eval('org.gwtproject.uibinder.example.util.GssUtil.getModuleBasedUrl("images/navLogoBig.png")');
@@ -30,44 +28,36 @@
       flex-direction: column;
     }
 
+    .title {
+      font-size: 25px;
+      font-weight: 400;
+      margin-top: 35px;
+    }
+
     .logo {
       background-image: LOGO;
       background-repeat: no-repeat;
       width: 150px;
       height: 160px;
+      cursor: pointer;
     }
 
-    .navCellList {
-      font-size: large;
-      font-weight: bold;
-      margin-top: 35px;
+    .mainArea {
+      padding: 10px;
+      background-color: #f2f2f2;
     }
   </ui:style>
 
   <g:DockLayoutPanel addStyleNames="{style.container}">
     <g:west size="260">
       <g:FlowPanel addStyleNames="{style.navPanel}">
-        <g:Label addStyleNames="{style.logo}"/>
-        <!-- currently not a cell list -->
-        <g:Label addStyleNames="{style.navCellList}" text="Old Vs New Comparison"/>
+        <g:Label addStyleNames="{style.logo}" ui:field="logo"/>
+        <g:Label addStyleNames="{style.title}" text="New UiBinder"/>
+        <cell:CellList ui:field="navigation"/>
       </g:FlowPanel>
     </g:west>
     <g:center>
-      <g:ScrollPanel ui:field="mainArea">
-        <g:VerticalPanel>
-          <g:HorizontalPanel borderWidth="1" width="100%">
-            <g:VerticalPanel>
-              <g:Label text="Old UiBinder"/>
-              <old:OldSimpleFormView/>
-            </g:VerticalPanel>
-            <g:VerticalPanel>
-              <g:Label text="New UiBinder"/>
-              <new:NewSimpleFormView/>
-            </g:VerticalPanel>
-          </g:HorizontalPanel>
-          <view:SupplementalView ui:field="supplementalView"/>
-        </g:VerticalPanel>
-      </g:ScrollPanel>
+      <g:ScrollPanel ui:field="mainArea" addStyleNames="{style.mainArea}"/>
     </g:center>
   </g:DockLayoutPanel>
 

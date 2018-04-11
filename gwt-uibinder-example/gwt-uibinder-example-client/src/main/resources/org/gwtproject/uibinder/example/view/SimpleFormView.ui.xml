@@ -6,8 +6,8 @@
   <ui:style>
     .panel {
       border: 1px solid red;
-      width: 640px;
-      height: 480px;
+      width: 300px;
+      height: 250px;
       box-sizing: border-box;
     }
   </ui:style>
@@ -19,9 +19,13 @@
   </ui:style>
 
   <g:VerticalPanel styleName="{style.panel}">
-    <g:Label styleName="{foo.label}" ui:field="buttonLabel" theText="Foo"/>
+    <g:Label ui:field="sourceLocation"/>
+    <g:Label styleName="{foo.label}" ui:field="buttonLabel" theText="UiFactory with attribute passing"/>
     <g:Button ui:field="simpleButton" text="Simple Event"/>
-
+    <g:HTML>
+      This example demonstrates general usage of UiBinder:<br/>
+      GSS, styling widgets, event binding, UiFactory, etc.
+    </g:HTML>
   </g:VerticalPanel>
 
 </ui:UiBinder>

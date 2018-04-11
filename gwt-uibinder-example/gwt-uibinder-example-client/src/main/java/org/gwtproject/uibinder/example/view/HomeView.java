@@ -15,12 +15,10 @@
  */
 package org.gwtproject.uibinder.example.view;
 
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  *
  */
-public interface Shell extends IsWidget {
-  HasWidgets getMainDisplay();
+public interface HomeView extends IsWidget {
 }

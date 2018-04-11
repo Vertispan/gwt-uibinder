@@ -18,14 +18,13 @@ package org.gwtproject.uibinder.example.util;
 import com.google.gwt.core.client.GWT;
 
 /**
- *
+ * General utility for GSS content.
  */
 public class GssUtil {
 
   public static String getModuleBasedUrl(String path) {
     return "url('" + GWT.getModuleBaseURL() + path + "');";
   }
-
 
   private GssUtil() {
     throw new UnsupportedOperationException();
