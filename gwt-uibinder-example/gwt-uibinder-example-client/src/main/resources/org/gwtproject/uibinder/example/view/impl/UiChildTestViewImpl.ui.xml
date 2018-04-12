@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:custom="urn:import:org.gwtproject.uibinder.example.view.impl.UiChildTestViewImpl">
+
+  <g:VerticalPanel>
+    <g:Label text="Vertical Panel with widgets"/>
+    <custom:MyCustomWidget>
+      <custom:customchild>
+        <g:Button text="button inside custom widget"/>
+      </custom:customchild>
+    </custom:MyCustomWidget>
+  </g:VerticalPanel>
+
+</ui:UiBinder>

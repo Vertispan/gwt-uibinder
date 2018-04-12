@@ -47,7 +47,7 @@ public abstract class BaseProcessor extends AbstractProcessor {
         return true;
       }
     } catch (Exception e) {
-      logger.log(Kind.NOTE, "Error Processing Annotation", e);
+      logger.log(Kind.ERROR, "Error Processing Annotation", e);
       return false;
     } finally {
       AptUtil.setProcessingEnvironment(null);

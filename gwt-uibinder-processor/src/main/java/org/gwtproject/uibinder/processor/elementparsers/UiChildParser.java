@@ -98,7 +98,7 @@ public class UiChildParser implements ElementParser {
 
   private TypeMirror getFirstParamType(ExecutableElement method) {
     VariableElement variableElement = method.getParameters().get(0);
-    TypeElement typeElement = AptUtil.asTypeElement(variableElement);
+    TypeElement typeElement = AptUtil.asTypeElement(variableElement.asType());
     return typeElement != null ? typeElement.asType() : null;
   }
 
