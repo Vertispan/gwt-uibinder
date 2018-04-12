@@ -461,6 +461,20 @@ public class AptUtil {
     return false;
   }
 
+  /**
+   * Determines if TypeMirror is a raw type (outcome of erasure).
+   */
+  public static boolean isRaw(TypeMirror mirror) {
+    if (TypeKind.DECLARED.equals(mirror.getKind())) {
+      DeclaredType declaredType = (DeclaredType) mirror;
+      if (declaredType.getTypeArguments().isEmpty()) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public static boolean isSameType(DeclaredType declaredType, String canonicalName) {
     if (declaredType == null) {
       return false;

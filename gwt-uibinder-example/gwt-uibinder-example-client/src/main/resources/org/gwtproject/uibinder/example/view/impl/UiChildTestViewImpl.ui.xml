@@ -2,7 +2,18 @@
 <ui:UiBinder
   xmlns:ui='urn:ui:com.google.gwt.uibinder'
   xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:e="urn:import:com.google.gwt.editor.ui.client"
   xmlns:custom="urn:import:org.gwtproject.uibinder.example.view.impl.UiChildTestViewImpl">
+
+  <ui:style>
+    .deco {
+      margin-top: 25px;
+    }
+
+    .deco:before {
+      content: "ValueBoxEditorDecorator";
+    }
+  </ui:style>
 
   <g:VerticalPanel>
     <g:Label text="Vertical Panel with widgets"/>
@@ -11,6 +22,11 @@
         <g:Button text="button inside custom widget"/>
       </custom:customchild>
     </custom:MyCustomWidget>
+    <e:ValueBoxEditorDecorator addStyleNames="{style.deco}">
+      <e:valuebox>
+        <g:TextBox width="200px"/>
+      </e:valuebox>
+    </e:ValueBoxEditorDecorator>
   </g:VerticalPanel>
 
 </ui:UiBinder>

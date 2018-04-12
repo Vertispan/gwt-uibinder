@@ -37,8 +37,8 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses any children of widgets that use the {@link com.google.gwt.uibinder.client.UiChild
- * UIChild} annotation.
+ * Parses any children of widgets that use the {@code org.gwtproject.uibinder.client.UiChild}
+ * annotation.
  */
 public class UiChildParser implements ElementParser {
 

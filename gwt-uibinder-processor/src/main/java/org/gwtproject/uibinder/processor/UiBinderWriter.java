@@ -506,7 +506,8 @@ public class UiBinderWriter {
 
   /**
    * Declare a field that will hold an Element instance. Returns a token that the caller must set as
-   * the id attribute of that element in whatever innerHTML expression will reproduce it at runtime.
+   * the id attribute of that element in whatever innerHTML expression will reproduce it at
+   * runtime.
    * <P> In the generated code, this token will be replaced by an expression to generate a unique
    * dom id at runtime. Further code will be generated to be run after widgets are instantiated, to
    * use that dom id in a getElementById call and assign the Element instance to its field.
@@ -831,6 +832,7 @@ public class UiBinderWriter {
           return false;
         }
       }
+      return true;
     }
 
     /*
@@ -838,8 +840,7 @@ public class UiBinderWriter {
      * playing with parameterized types. We're happy enough if the raw types
      * match, and rely on them to make sure the specific types really do work.
      */
-    if (possibleSupertypeElement != null
-        && !possibleSupertypeElement.getTypeParameters().isEmpty()) {
+    if (!AptUtil.isRaw(possibleSupertype)) {
       return isElementAssignableTo(elem, AptUtil.getTypeUtils().erasure(possibleSupertype));
     }
 
