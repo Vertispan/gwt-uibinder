@@ -37,8 +37,8 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses any children of widgets that use the {@link com.google.gwt.uibinder.client.UiChild
- * UIChild} annotation.
+ * Parses any children of widgets that use the {@code org.gwtproject.uibinder.client.UiChild}
+ * annotation.
  */
 public class UiChildParser implements ElementParser {
 
@@ -98,7 +98,7 @@ public class UiChildParser implements ElementParser {
 
   private TypeMirror getFirstParamType(ExecutableElement method) {
     VariableElement variableElement = method.getParameters().get(0);
-    TypeElement typeElement = AptUtil.asTypeElement(variableElement);
+    TypeElement typeElement = AptUtil.asTypeElement(variableElement.asType());
     return typeElement != null ? typeElement.asType() : null;
   }
 

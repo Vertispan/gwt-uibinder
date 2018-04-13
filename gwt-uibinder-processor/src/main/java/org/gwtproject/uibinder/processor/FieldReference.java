@@ -52,8 +52,7 @@ public class FieldReference {
       } else if (i > 0) {
         b.append(", ");
       }
-
-      b.append(AptUtil.asTypeElement(types[i]).getQualifiedName().toString());
+      b.append(AptUtil.getParameterizedQualifiedSourceName(types[i]));
     }
 
     return b.toString();

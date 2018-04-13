@@ -40,6 +40,8 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
@@ -276,6 +278,10 @@ public class OwnerFieldClass {
       List<ExecutableElement> methods = ElementFilter.methodsIn(ownerElement.getEnclosedElements());
       for (ExecutableElement method : methods) {
         AnnotationMirror annotation = AptUtil.getAnnotation(method, UiBinderClasses.UICHILD);
+        if (annotation == null) {
+          // if it's null, let's check for legacy annotation
+          annotation = AptUtil.getAnnotation(method, UiBinderClasses.Legacy.UICHILD);
+        }
         if (annotation != null) {
           Map<String, ? extends AnnotationValue> annotationValues = AptUtil
               .getAnnotationValues(annotation);
@@ -374,9 +380,12 @@ public class OwnerFieldClass {
           cost = TYPE_RANK.get(paramTypeMirror.getKind().name().toLowerCase());
         }
       } else {
-        TypeElement paramType = AptUtil.asTypeElement(paramTypeMirror);
-        if (TYPE_RANK.containsKey(paramType.getQualifiedName().toString())) {
-          cost = TYPE_RANK.get(paramType.getQualifiedName().toString());
+        QualifiedNameable nameable = AptUtil.asQualifiedNameable(paramTypeMirror);
+        if (nameable != null) {
+          Name qualifiedName = nameable.getQualifiedName();
+          if (qualifiedName != null && TYPE_RANK.containsKey(qualifiedName.toString())) {
+            cost = TYPE_RANK.get(qualifiedName.toString());
+          }
         }
       }
       assert (cost >= 0 && cost <= 0x07);

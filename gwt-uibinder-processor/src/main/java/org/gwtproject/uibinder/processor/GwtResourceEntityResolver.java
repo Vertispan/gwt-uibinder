@@ -49,7 +49,7 @@ public class GwtResourceEntityResolver implements EntityResolver {
           "http://dl.google.com/gwt/DTD/", "https://dl-ssl.google.com/gwt/DTD/"
       }).collect(toSet()));
 
-  private static final String RESOURCES = "org/gwtproject/uibinder/resources/";
+  private static final String RESOURCES = "org.gwtproject.uibinder.resources";
 
   private final String pathBase;
 
@@ -72,7 +72,7 @@ public class GwtResourceEntityResolver implements EntityResolver {
 
       try {
         resource = processingEnvironment.getFiler()
-            .getResource(StandardLocation.CLASS_OUTPUT, RESOURCES,
+            .getResource(StandardLocation.CLASS_PATH, RESOURCES,
                 systemId.substring(matchingPrefix.length()));
       } catch (IOException e) {
         // empty catch

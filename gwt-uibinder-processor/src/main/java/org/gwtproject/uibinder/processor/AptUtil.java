@@ -111,9 +111,17 @@ public class AptUtil {
 
     Map<String, AnnotationValue> values = new HashMap<>();
 
+    // get details from real annotation (defaults)
+    List<ExecutableElement> annotationAttributes = ElementFilter
+        .methodsIn(annotationMirror.getAnnotationType().asElement().getEnclosedElements());
+    for (ExecutableElement annotationAttribute : annotationAttributes) {
+      values.put(annotationAttribute.getSimpleName().toString(),
+          annotationAttribute.getDefaultValue());
+    }
+
+    // get the set values set on the annotationMirror
     for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror
         .getElementValues().entrySet()) {
-
       values.put(entry.getKey().getSimpleName().toString(), entry.getValue());
     }
     return values;
@@ -450,6 +458,20 @@ public class AptUtil {
     if (element != null) {
       return ElementKind.ENUM.equals(element.getKind());
     }
+    return false;
+  }
+
+  /**
+   * Determines if TypeMirror is a raw type (outcome of erasure).
+   */
+  public static boolean isRaw(TypeMirror mirror) {
+    if (TypeKind.DECLARED.equals(mirror.getKind())) {
+      DeclaredType declaredType = (DeclaredType) mirror;
+      if (declaredType.getTypeArguments().isEmpty()) {
+        return true;
+      }
+    }
+
     return false;
   }
 

@@ -35,6 +35,8 @@ import java.util.Map.Entry;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 
 /**
@@ -165,7 +167,7 @@ public class BeanParser implements ElementParser {
         ExecutableElement setter = ownerFieldClass.getSetter(propertyName);
         if (setter != null) {
           String n = attribute.getName();
-          String value = elem.consumeAttributeWithDefault(n, null, getParamTypes(setter));
+          String value = elem.consumeAttributeWithDefault(n, null, getParamTypes(type, setter));
 
           if (value == null) {
             writer.die(elem, "Unable to parse %s.", attribute);
@@ -259,13 +261,12 @@ public class BeanParser implements ElementParser {
     return localizedValues;
   }
 
-  private TypeMirror[] getParamTypes(ExecutableElement setter) {
-    List<? extends VariableElement> params = setter.getParameters();
-    TypeMirror[] types = new TypeMirror[params.size()];
-    for (int i = 0; i < params.size(); i++) {
-      types[i] = params.get(i).asType();
-    }
-    return types;
+  private TypeMirror[] getParamTypes(TypeMirror ownerType, ExecutableElement setter) {
+    DeclaredType declaredType = AptUtil.asDeclaredType(ownerType);
+    TypeMirror declaredSetter = AptUtil.getTypeUtils().asMemberOf(declaredType, setter);
+    ExecutableType method = (ExecutableType) declaredSetter;
+
+    return method.getParameterTypes().toArray(new TypeMirror[0]);
   }
 
   private String initialCap(String propertyName) {

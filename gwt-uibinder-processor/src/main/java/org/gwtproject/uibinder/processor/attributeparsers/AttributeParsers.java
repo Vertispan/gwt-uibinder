@@ -162,8 +162,7 @@ public class AttributeParsers {
       if (t.getKind().isPrimitive()) {
         b.append(t.toString());
       } else {
-        // FIXME b.append(t.getParameterizedQualifiedSourceName());
-        b.append(AptUtil.asTypeElement(t).getQualifiedName().toString());
+        b.append(AptUtil.getParameterizedQualifiedSourceName(t));
       }
     }
     return b.toString();
