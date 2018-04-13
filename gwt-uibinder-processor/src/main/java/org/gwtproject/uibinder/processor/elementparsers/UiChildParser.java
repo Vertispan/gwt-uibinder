@@ -176,12 +176,11 @@ public class UiChildParser implements ElementParser {
 
       if (param.asType().getKind().isPrimitive()) {
         PrimitiveType primitiveType = (PrimitiveType) param.asType();
-        // FIXME!!! implement
-        // defaultValue = param.getType().isPrimitive().getUninitializedFieldExpression();
+        defaultValue = AptUtil.getUninitializedFieldExpression(primitiveType);
       }
-//      String value = element.consumeAttributeWithDefault(param.getName(),
-//          defaultValue, param.getType());
-//      args[index] = value;
+      String value = element.consumeAttributeWithDefault(param.getSimpleName().toString(),
+          defaultValue, param.asType());
+      args[index] = value;
     }
 
     if (element.getAttributeCount() > 0) {

@@ -82,5 +82,20 @@ public class UiChildTestViewImpl implements UiChildTestView {
     public void addCustomChild(Widget childWidget) {
       container.add(childWidget);
     }
+
+    @UiChild(tagname = "anotherchild")
+    public void addAnotherChildWithArgs(Label label, String text) {
+      label.setText(text);
+      container.add(label);
+    }
+
+    @UiChild(tagname = "third")
+    public void addThirdWithSomePrimitive(Label label, double borderWidth, String borderColor) {
+      Style style = label.getElement().getStyle();
+      style.setBorderWidth(borderWidth, Unit.PX);
+      style.setBorderStyle(BorderStyle.SOLID);
+      style.setBorderColor(borderColor);
+      container.add(label);
+    }
   }
 }
