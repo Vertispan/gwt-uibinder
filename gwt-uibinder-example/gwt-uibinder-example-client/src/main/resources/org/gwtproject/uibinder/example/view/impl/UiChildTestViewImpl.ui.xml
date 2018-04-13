@@ -24,7 +24,7 @@
     </custom:MyCustomWidget>
     <e:ValueBoxEditorDecorator addStyleNames="{style.deco}">
       <e:valuebox>
-        <g:TextBox width="200px"/>
+        <g:TextBox value="Legacy @UiChild TextBox" width="200px"/>
       </e:valuebox>
     </e:ValueBoxEditorDecorator>
   </g:VerticalPanel>
