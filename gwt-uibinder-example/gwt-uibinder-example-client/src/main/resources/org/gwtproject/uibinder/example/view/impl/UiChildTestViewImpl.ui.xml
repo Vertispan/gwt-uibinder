@@ -21,6 +21,12 @@
       <custom:customchild>
         <g:Button text="button inside custom widget"/>
       </custom:customchild>
+      <custom:anotherchild text="ui child parameter">
+        <g:Label text="from ui - should be overwritten"/>
+      </custom:anotherchild>
+      <custom:third borderWidth="2" borderColor="blue">
+        <g:Label text="primitive arg"/>
+      </custom:third>
     </custom:MyCustomWidget>
     <e:ValueBoxEditorDecorator addStyleNames="{style.deco}">
       <e:valuebox>

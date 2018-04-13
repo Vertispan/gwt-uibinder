@@ -729,7 +729,7 @@ public class UiBinderWriter {
     String tagName = elem.getLocalName();
 
     if (!isImportedElement(elem)) {
-      return null;// FIXME - findDomElementTypeForTag(tagName);
+      return findDomElementTypeForTag(tagName);
     }
 
     String ns = elem.getNamespaceUri();

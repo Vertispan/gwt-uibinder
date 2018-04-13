@@ -402,6 +402,16 @@ public class AptUtil {
     return null;
   }
 
+  public static String getUninitializedFieldExpression(PrimitiveType primitiveType) {
+    TypeKind kind = primitiveType.getKind();
+    switch (kind) {
+      case BOOLEAN:
+        return "false";
+      default:
+        return "0";
+    }
+  }
+
   /**
    * Check for a constructor which is compatible with the supplied argument types.
    *
