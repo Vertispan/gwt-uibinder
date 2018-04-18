@@ -82,7 +82,7 @@ public class GwtResourceEntityResolver implements EntityResolver {
     if (resource == null) {
       try {
         resource = processingEnvironment.getFiler()
-            .getResource(StandardLocation.CLASS_OUTPUT, pathBase, systemId);
+            .getResource(StandardLocation.CLASS_PATH, pathBase, systemId);
       } catch (IOException e) {
         // empty catch
       }
