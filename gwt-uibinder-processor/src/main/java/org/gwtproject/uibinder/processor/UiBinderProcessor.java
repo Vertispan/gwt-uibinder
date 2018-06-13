@@ -150,6 +150,7 @@ public class UiBinderProcessor extends BaseProcessor {
     // Ensure that generated uibinder source is modified at least as often as synthesized .cssmap
     // resources, otherwise it would be possible to synthesize a modified .cssmap resource but fail
     // to retrigger the InlineClientBundleGenerator that processes it.
+    binderPrintWriter.println("// Template file: " + templatePath);
     binderPrintWriter.println("// .ui.xml template last modified: " + resource.getLastModified());
     Document doc = getW3cDoc(logger, resource);
 
