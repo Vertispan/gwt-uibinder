@@ -21,13 +21,13 @@ Then, add the uibinder dependencies to your Maven module:
 
 ```xml
   <dependency>
-    <groupId>org.gwtproject</groupId>
+    <groupId>org.gwtproject.uibinder</groupId>
     <artifactId>gwt-uibinder-client</artifactId>
     <version>1.0.0-SNAPSHOT</version>  
   </dependency>
 
   <dependency>
-    <groupId>org.gwtproject</groupId>
+    <groupId>org.gwtproject.uibinder</groupId>
     <artifactId>gwt-uibinder-processor</artifactId>
     <version>1.0.0-SNAPSHOT</version>  
   </dependency>
