@@ -20,6 +20,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.messages.MessagesWriter;
 import org.gwtproject.uibinder.processor.model.ImplicitClientBundle;
 
+import com.google.gwt.dev.util.Util;
 import com.google.gwt.resources.rg.GssResourceGenerator.AutoConversionMode;
 import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
 
@@ -38,7 +39,6 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 
 /**
  *
@@ -173,7 +173,7 @@ public class UiBinderProcessor extends BaseProcessor {
       CharSequence charContent = resource.getCharContent(false);
 
       if (charContent == null) {
-        logger.die("Error opening resource: " + resource.getName());
+        charContent = Util.readStreamAsString(resource.openInputStream());
       }
       String content = charContent.toString();
 
@@ -190,23 +190,7 @@ public class UiBinderProcessor extends BaseProcessor {
 
   private FileObject getTemplateResource(MortalLogger logger, String templatePath)
       throws UnableToCompleteException {
-    FileObject resource = null;
-
-    String packageName = "";
-    String relativeName = templatePath;
-
-    int index = templatePath.lastIndexOf('/');
-    if (index >= 0) {
-      packageName = templatePath.substring(0, index)
-          .replace('/', '.');
-      relativeName = templatePath.substring(index + 1);
-    }
-    try {
-      resource = processingEnv.getFiler()
-          .getResource(StandardLocation.CLASS_OUTPUT, packageName, relativeName);
-    } catch (IOException e) {
-      // empty catch
-    }
+    FileObject resource = AptUtil.findResource(templatePath);
     if (null == resource) {
       logger.die("Unable to find resource: " + templatePath);
     }

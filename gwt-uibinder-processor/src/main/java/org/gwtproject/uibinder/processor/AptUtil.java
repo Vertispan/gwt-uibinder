@@ -17,6 +17,7 @@ package org.gwtproject.uibinder.processor;
 
 import static java.util.stream.Collectors.toList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,6 +48,9 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.FileObject;
+import javax.tools.JavaFileManager.Location;
+import javax.tools.StandardLocation;
 
 /**
  *
@@ -192,6 +196,76 @@ public class AptUtil {
     }
 
     return matchingMethods.get(0);
+  }
+
+  /**
+   * Locates a resource by searching multiple locations.
+   *
+   * <p>This method assumes that the path is a full package path such as
+   * <code>org/gwtproject/uibinder/example/view/SimpleFormView.ui.xml</code>
+   *
+   * @return FileObject or null if file is not found.
+   * @see #findResource(CharSequence, CharSequence)
+   */
+  public static FileObject findResource(CharSequence path) {
+    String packageName = "";
+    String relativeName = path.toString();
+
+    int index = relativeName.lastIndexOf('/');
+    if (index >= 0) {
+      packageName = relativeName.substring(0, index)
+          .replace('/', '.');
+      relativeName = relativeName.substring(index + 1);
+    }
+
+    return findResource(packageName, relativeName);
+  }
+
+  /**
+   * Locates a resource by searching multiple locations.
+   *
+   * <p>Searches in the order of</p>
+   * <ul>
+   * <li>{@link StandardLocation#SOURCE_PATH}</li>
+   * <li>{@link StandardLocation#CLASS_PATH}</li>
+   * <li>{@link StandardLocation#CLASS_OUTPUT}</li>
+   * </ul>
+   *
+   * @return FileObject or null if file is not found.
+   */
+  public static FileObject findResource(CharSequence pkg, CharSequence relativeName) {
+    return findResource(
+        Arrays.asList(
+            StandardLocation.SOURCE_PATH,
+            StandardLocation.CLASS_PATH,
+            StandardLocation.CLASS_OUTPUT
+        ), pkg, relativeName);
+  }
+
+  /**
+   * Locates a resource by searching multiple locations.
+   *
+   * @return FileObject or null if file is not found in given locations.
+   */
+  public static FileObject findResource(List<Location> searchLocations, CharSequence pkg,
+      CharSequence relativeName) {
+    if (searchLocations == null || searchLocations.isEmpty()) {
+      return null;
+    }
+
+    for (Location location : searchLocations) {
+      try {
+        FileObject fileObject = getFiler().getResource(location, pkg, relativeName);
+        if (fileObject != null) {
+          return fileObject;
+        }
+      } catch (IOException ignored) {
+        // ignored
+      }
+    }
+
+    // unable to locate, return null.
+    return null;
   }
 
   public static List<Element> getEnumValues(TypeElement enumTypeElement) {
