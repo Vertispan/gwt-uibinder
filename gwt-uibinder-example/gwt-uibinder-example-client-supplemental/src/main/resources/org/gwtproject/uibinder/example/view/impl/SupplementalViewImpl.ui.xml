@@ -10,10 +10,18 @@
       height: 480px;
       box-sizing: border-box;
     }
+    .innerPanel {
+      border: 1px solid darkblue;
+    }
   </ui:style>
 
   <g:VerticalPanel styleName="{style.panel}">
     <g:Label text="This is from the supplemental view"/>
+    <g:HTMLPanel>
+      <div class="{style.innerPanel}" ui:field="innerPanel">
+        Inner HTMLPanel
+      </div>
+    </g:HTMLPanel>
   </g:VerticalPanel>
 
 </ui:UiBinder>

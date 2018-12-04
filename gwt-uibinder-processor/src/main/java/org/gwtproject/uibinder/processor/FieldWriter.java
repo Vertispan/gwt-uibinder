@@ -166,6 +166,11 @@ public interface FieldWriter {
   void setInitializer(String initializer);
 
   /**
+   * Used to provide the statement string for assigning back to the owner field.
+   */
+  void setOwnerAssignmentStatement(String ownerAssignmentStatement);
+
+  /**
    * Write the field declaration.
    */
   void write(IndentedWriter w) throws UnableToCompleteException;

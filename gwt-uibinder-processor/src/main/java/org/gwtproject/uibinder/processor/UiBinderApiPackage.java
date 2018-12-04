@@ -40,7 +40,8 @@ public enum UiBinderApiPackage {
       "com.google.gwt.dom.client",
       "com.google.gwt.user.client.ui",
       "com.google.gwt.i18n.client",
-      "com.google.gwt.safehtml"
+      "com.google.gwt.safehtml",
+      "com.google.gwt.resources.client"
   ),
   ORG_GWTPROJECT_UIBINDER(
       true, //FIXME- update- this will have issues with GSS, Messages, etc.
@@ -49,7 +50,8 @@ public enum UiBinderApiPackage {
       "org.gwtproject.dom.client",
       "org.gwtproject.user.client.ui",
       "com.google.gwt.i18n.client",
-      "org.gwtproject.safehtml"
+      "org.gwtproject.safehtml",
+      "com.google.gwt.resources.client"
   );
 
   /**
@@ -96,11 +98,14 @@ public enum UiBinderApiPackage {
   private final String widgetsPackageName;
   private final String i18nPackageName;
   private final String safeHtmlPackageName;
+  private final String resourcesPackageName;
+
 
   UiBinderApiPackage(String uiBinderPackageName) {
     this(true,
         null,
         uiBinderPackageName,
+        null,
         null,
         null,
         null,
@@ -114,7 +119,8 @@ public enum UiBinderApiPackage {
       String domPackageName,
       String widgetsPackageName,
       String i18nPackageName,
-      String safeHtmlPackageName) {
+      String safeHtmlPackageName,
+      String resourcesPackageName) {
     this.gwtCreateSupported = isGwtCreateSupported;
     this.binderUri = binderUri;
     this.uiBinderPackageName = uiBinderPackageName;
@@ -122,6 +128,8 @@ public enum UiBinderApiPackage {
     this.widgetsPackageName = widgetsPackageName;
     this.i18nPackageName = i18nPackageName;
     this.safeHtmlPackageName = safeHtmlPackageName;
+
+    this.resourcesPackageName = resourcesPackageName;
   }
 
   public String getBinderUri() {
@@ -146,12 +154,24 @@ public enum UiBinderApiPackage {
     return "org.gwtproject.uibinder.processor.elementparsers";
   }
 
+  public String getDomDocumentFqn() {
+    return domPackageName + ".Document";
+  }
+
   public String getDomElementFqn() {
     return domPackageName + ".Element";
   }
 
+  public String getDomUnitFqn() {
+    return domPackageName + ".Unit";
+  }
+
   public String getI18nMessagesInterfaceFqn() {
     return i18nPackageName + ".Messages";
+  }
+
+  public String getImageResourceFqn() {
+    return resourcesPackageName + ".ImageResource";
   }
 
   public String getLazyDomElementFqn() {
@@ -191,6 +211,11 @@ public enum UiBinderApiPackage {
   }
 
   public String getUiBinderUtilFqn() {
+    // this is one place that we have to use the old vs new appropriately
+    // TODO - make sure we synchronize with enum
+    if (this == COM_GOOGLE_GWT_UIBINDER) {
+      return LEGACY.getUiBinderUtilFqn();
+    }
     return uiBinderPackageName + ".UiBinderUtil";
   }
 

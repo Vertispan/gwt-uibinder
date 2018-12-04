@@ -20,10 +20,6 @@ import org.gwtproject.uibinder.processor.attributeparsers.AttributeParsers;
 import org.gwtproject.uibinder.processor.elementparsers.SimpleInterpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtml;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -827,7 +823,7 @@ public class XMLElement {
   private TypeMirror getImageResourceType() {
     if (imageResourceType == null) {
       TypeElement typeElement = AptUtil.getElementUtils()
-          .getTypeElement(ImageResource.class.getCanonicalName());
+          .getTypeElement(UiBinderApiPackage.current().getImageResourceFqn());
       imageResourceType = typeElement.asType();
     }
     return imageResourceType;
@@ -855,7 +851,8 @@ public class XMLElement {
 
   private TypeMirror getSafeHtmlType() {
     if (safeHtmlType == null) {
-      safeHtmlType = AptUtil.getElementUtils().getTypeElement(SafeHtml.class.getName()).asType();
+      safeHtmlType = AptUtil.getElementUtils()
+          .getTypeElement(UiBinderApiPackage.current().getSafeHtmlInterfaceFqn()).asType();
     }
     return safeHtmlType;
   }
@@ -869,6 +866,7 @@ public class XMLElement {
   }
 
   private TypeMirror getUnitType() {
-    return AptUtil.getElementUtils().getTypeElement(Unit.class.getCanonicalName()).asType();
+    return AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getDomUnitFqn()).asType();
   }
 }

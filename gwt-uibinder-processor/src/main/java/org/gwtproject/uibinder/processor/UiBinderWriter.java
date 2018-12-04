@@ -533,7 +533,10 @@ public class UiBinderWriter {
       } else {
 
         field.setInitializer(formatCode("new %s(%s).get().cast()",
-            LazyDomElement.class.getCanonicalName(), fieldManager.convertFieldToGetter(name)));
+            UiBinderApiPackage.current().getLazyDomElementFqn(),
+            fieldManager.convertFieldToGetter(name)));
+
+        field.setOwnerAssignmentStatement(fieldName + ".cast()");
 
         // The dom must be created by its ancestor.
         fieldManager.require(ancestorField).addAttachStatement(
@@ -541,8 +544,8 @@ public class UiBinderWriter {
       }
     } else {
       setFieldInitializer(fieldName, "null");
-      addInitStatement("%s = com.google.gwt.dom.client.Document.get().getElementById(%s).cast();",
-          fieldName, name);
+      addInitStatement("%1$s = %3$s.get().getElementById(%2$s).cast();",
+          fieldName, name, UiBinderApiPackage.current().getDomDocumentFqn());
       addInitStatement("%s.removeAttribute(\"id\");", fieldName);
     }
 
@@ -1145,7 +1148,7 @@ public class UiBinderWriter {
    */
   private TypeMirror findDomElementTypeForTag(String tag) {
     TypeElement elementClass = AptUtil.getElementUtils()
-        .getTypeElement("com.google.gwt.dom.client.Element");
+        .getTypeElement(UiBinderApiPackage.current().getDomElementFqn());
     // TODO implement getting subtypes.
 //    JClassType[] types = elementClass.getSubtypes();
 //    for (JClassType type : types) {
@@ -1434,7 +1437,7 @@ public class UiBinderWriter {
           formatMethodError(eventMethod));
     }
 
-    String elementName = com.google.gwt.dom.client.Element.class.getCanonicalName();
+    String elementName = UiBinderApiPackage.current().getDomElementFqn();
     TypeElement elementType = AptUtil.getElementUtils().getTypeElement(elementName);
     if (!AptUtil.getTypeUtils().isSameType(elementType.asType(), parameters.get(2).asType())) {
       die("Third parameter must be of type %s in %s", elementName,

@@ -15,12 +15,12 @@
  */
 package org.gwtproject.uibinder.client;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.safehtml.shared.annotations.IsSafeHtml;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.UIObject;
+import org.gwtproject.dom.client.Document;
+import org.gwtproject.dom.client.Element;
+import org.gwtproject.dom.client.Node;
+import org.gwtproject.dom.client.Style.Display;
+import org.gwtproject.safehtml.shared.annotations.IsSafeHtml;
+
 
 /**
  * Static helper methods used by UiBinder. These methods are likely to move,
@@ -94,8 +94,8 @@ public class UiBinderUtil {
     // If the hidden DIV has not been created, create it.
     if (hiddenDiv == null) {
       hiddenDiv = Document.get().createDivElement();
-      UIObject.setVisible(hiddenDiv, false);
-      RootPanel.getBodyElement().appendChild(hiddenDiv);
+      hiddenDiv.getStyle().setDisplay(Display.NONE);
+      Document.get().getBody().appendChild(hiddenDiv);
     }
   }
 

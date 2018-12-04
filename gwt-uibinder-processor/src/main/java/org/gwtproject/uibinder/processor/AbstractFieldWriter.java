@@ -48,6 +48,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
   private final List<String> detachStatements = new ArrayList<String>();
 
   private final String name;
+  private String ownerAssignmentStatement;
   private String initializer;
   private boolean written;
   private int buildPrecedence;
@@ -62,6 +63,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
     }
     this.manager = manager;
     this.name = name;
+    this.ownerAssignmentStatement = name;
     this.logger = logger;
     this.buildPrecedence = 1;
     this.fieldType = fieldType;
@@ -139,6 +141,11 @@ abstract class AbstractFieldWriter implements FieldWriter {
 
   public void setInitializer(String initializer) {
     this.initializer = initializer;
+  }
+
+  @Override
+  public void setOwnerAssignmentStatement(String ownerAssignmentStatement) {
+    this.ownerAssignmentStatement = ownerAssignmentStatement;
   }
 
   @Override
@@ -346,7 +353,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
             "this.owner.%1$s = (%2$s) (Object) %1$s;", name,
             AptUtil.asTypeElement(rawType).getQualifiedName());
       } else {
-        w.write("this.owner.%1$s = %1$s;", name);
+        w.write("this.owner.%1$s = %2$s;", name, ownerAssignmentStatement);
       }
     }
 
