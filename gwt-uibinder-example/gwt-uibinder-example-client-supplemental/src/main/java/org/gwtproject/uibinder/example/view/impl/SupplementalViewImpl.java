@@ -28,7 +28,7 @@ import javax.inject.Inject;
  */
 public class SupplementalViewImpl implements SupplementalView {
 
-  @UiTemplate
+  @UiTemplate(legacyWidgets = true)
   interface MyUiBinder extends UiBinder<Widget, SupplementalViewImpl> {
   }
 

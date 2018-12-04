@@ -20,32 +20,34 @@ package org.gwtproject.uibinder.processor;
  */
 public enum UiBinderApiPackage {
   /**
-   * Intended to bridge
+   * Completely legacy api.
+   *
+   * <p>This is really intended for the "fallback" of some of the UiBinder annotations.  Since
+   * legacy widgets were most likely coded with the old namespaced @UiChild, etc, we need to be able
+   * to fallback to those as necessary.
    */
-  BRIDGE(
-      true,
-      "urn:ui:com.google.gwt.uibinder",
-      "org.gwtproject.uibinder.client",
-      "com.google.gwt.dom.client",
-      "com.google.gwt.user.client.ui",
-      "com.google.gwt.i18n.client",
-      "com.google.gwt.safehtml"
-  ),
+  LEGACY("com.google.gwt.uibinder.client"),
+  /**
+   * Use majority of the legacy classes for generation.
+   *
+   * <p>Note that the uibinder package is the new one.  If a user wanted ALL legacy, they would
+   * have used the GWT.create mechanism rather than using the new @UiTemplate annotation.
+   */
   COM_GOOGLE_GWT_UIBINDER(
       true,
       "urn:ui:com.google.gwt.uibinder",
-      "com.google.gwt.uibinder.client",
+      "org.gwtproject.uibinder.client",
       "com.google.gwt.dom.client",
       "com.google.gwt.user.client.ui",
       "com.google.gwt.i18n.client",
       "com.google.gwt.safehtml"
   ),
   ORG_GWTPROJECT_UIBINDER(
-      false, // this will have issues with GSS, Messages, etc.
+      true, //FIXME- update- this will have issues with GSS, Messages, etc.
       "urn:ui:com.google.gwt.uibinder",
       "org.gwtproject.uibinder.client",
       "org.gwtproject.dom.client",
-      "com.google.gwt.user.client.ui",
+      "org.gwtproject.user.client.ui",
       "com.google.gwt.i18n.client",
       "org.gwtproject.safehtml"
   );
@@ -95,6 +97,16 @@ public enum UiBinderApiPackage {
   private final String i18nPackageName;
   private final String safeHtmlPackageName;
 
+  UiBinderApiPackage(String uiBinderPackageName) {
+    this(true,
+        null,
+        uiBinderPackageName,
+        null,
+        null,
+        null,
+        null);
+  }
+
   UiBinderApiPackage(
       boolean isGwtCreateSupported,
       String binderUri,
@@ -131,10 +143,7 @@ public enum UiBinderApiPackage {
   }
 
   public String getElementParserPackageName() {
-    if (ORG_GWTPROJECT_UIBINDER.equals(this)) {
-      return "org.gwtproject.uibinder.processor.elementparsers";
-    }
-    return "com.google.gwt.uibinder.elementparsers";
+    return "org.gwtproject.uibinder.processor.elementparsers";
   }
 
   public String getDomElementFqn() {

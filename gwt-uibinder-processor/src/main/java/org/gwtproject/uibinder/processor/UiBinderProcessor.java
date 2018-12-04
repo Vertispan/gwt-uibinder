@@ -30,8 +30,6 @@ import org.xml.sax.SAXParseException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -39,7 +37,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 
@@ -115,26 +112,16 @@ public class UiBinderProcessor extends BaseProcessor {
    */
   private static UiBinderApiPackage deduceApi(MortalLogger logger, TypeElement interfaceType)
       throws UnableToCompleteException {
-    if (true) {
-      return UiBinderApiPackage.BRIDGE;
-    }
 
-    // FIXME - put in place
-    Optional<String> superType = interfaceType.getInterfaces()
-        .stream()
-        .map(AptUtil::asQualifiedNameable)
-        .filter(Objects::nonNull)
-        .map(QualifiedNameable::getQualifiedName)
-        .map(Objects::toString)
-        .filter(qualifiedNameable ->
-            qualifiedNameable.endsWith(".UiBinder")
-        ).findFirst();
-    try {
-      return UiBinderApiPackage.fromInterfaceName(superType.get());
-    } catch (IllegalArgumentException e) {
-      logger.die("Unable to find UiBinder interface on type: %s", interfaceType.getQualifiedName());
-      return null;
+    AnnotationMirror uiTemplate = AptUtil
+        .getAnnotation(interfaceType, UiBinderApiPackage.UITEMPLATE);
+
+    AnnotationValue legacyWidgets = AptUtil.getAnnotationValues(uiTemplate).get("legacyWidgets");
+
+    if (legacyWidgets != null && Boolean.TRUE.equals(legacyWidgets.getValue())) {
+      return UiBinderApiPackage.COM_GOOGLE_GWT_UIBINDER;
     }
+    return UiBinderApiPackage.ORG_GWTPROJECT_UIBINDER;
   }
 
   private static String slashify(String s) {

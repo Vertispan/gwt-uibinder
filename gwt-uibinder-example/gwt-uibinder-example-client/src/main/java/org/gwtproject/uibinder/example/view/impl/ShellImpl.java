@@ -52,7 +52,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ShellImpl implements Shell {
 
-  @UiTemplate
+  @UiTemplate(legacyWidgets = true)
   interface MyUiBinder extends UiBinder<DockLayoutPanel, ShellImpl> {
   }
 

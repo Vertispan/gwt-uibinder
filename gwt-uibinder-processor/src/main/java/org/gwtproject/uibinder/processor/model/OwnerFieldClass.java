@@ -281,10 +281,10 @@ public class OwnerFieldClass {
             .getAnnotation(method, UiBinderApiPackage.current().getUiChildFqn());
         if (annotation == null) {
           // FIXME - this is only for backwards compatibility
-          //  - any legay widgets would have the old @UiChild annotation, not the new
+          //  - any legacy widgets would have the old @UiChild annotation, not the new
           // if it's null, let's check for legacy annotation
           annotation = AptUtil
-              .getAnnotation(method, UiBinderApiPackage.COM_GOOGLE_GWT_UIBINDER.getUiChildFqn());
+              .getAnnotation(method, UiBinderApiPackage.LEGACY.getUiChildFqn());
         }
         if (annotation != null) {
           Map<String, ? extends AnnotationValue> annotationValues = AptUtil

@@ -35,7 +35,7 @@ import javax.inject.Inject;
  */
 public class NewSimpleFormView implements IsWidget {
 
-  @UiTemplate("org.gwtproject.uibinder.example.view.SimpleFormView.ui.xml")
+  @UiTemplate(value = "org.gwtproject.uibinder.example.view.SimpleFormView.ui.xml", legacyWidgets = true)
   interface MyUiBinder extends UiBinder<VerticalPanel, NewSimpleFormView> {
   }
 

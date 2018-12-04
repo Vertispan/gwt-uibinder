@@ -1058,8 +1058,13 @@ public class UiBinderWriter {
   }
 
   private void addWidgetParser(String className) {
+    // FIXME - legacy widget package
     String gwtClass = "com.google.gwt.user.client.ui." + className;
     String parser = "org.gwtproject.uibinder.processor.elementparsers." + className + "Parser";
+    addElementParser(gwtClass, parser);
+
+    // adding parser for parallel widgets (legacy and new)
+    gwtClass = "org.gwtproject.user.client.ui." + className;
     addElementParser(gwtClass, parser);
   }
 
@@ -1371,8 +1376,8 @@ public class UiBinderWriter {
   private void registerParsers() {
     // TODO(rjrjr): Allow third-party parsers to register themselves automagically
 
-    addElementParser("com.google.gwt.dom.client.Element",
-        "com.google.gwt.uibinder.elementparsers.DomElementParser");
+    addElementParser(UiBinderApiPackage.current().getDomElementFqn(),
+        UiBinderApiPackage.current().getElementParserPackageName() + ".DomElementParser");
 
     // Register widget parsers.
     addWidgetParser("UIObject");
