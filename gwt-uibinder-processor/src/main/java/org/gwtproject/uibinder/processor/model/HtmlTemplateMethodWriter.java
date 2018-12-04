@@ -21,6 +21,7 @@ import org.gwtproject.uibinder.processor.IndentedWriter;
 import org.gwtproject.uibinder.processor.Tokenator;
 import org.gwtproject.uibinder.processor.Tokenator.Resolver;
 import org.gwtproject.uibinder.processor.Tokenator.ValueAndInfo;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.attributeparsers.SafeUriAttributeParser;
 
@@ -80,6 +81,7 @@ public class HtmlTemplateMethodWriter {
     }
   }
 
+  private final UiBinderApiPackage api;
   private final List<String> strings = new ArrayList<String>();
   private final String methodName;
   private final ArrayList<Argument> methodArgs = new ArrayList<Argument>();
@@ -88,12 +90,14 @@ public class HtmlTemplateMethodWriter {
   private final Tokenator tokenator;
   private boolean argumentsResolved = false;
 
-  public HtmlTemplateMethodWriter(String html, Tokenator tokenator, HtmlTemplatesWriter templates)
+  public HtmlTemplateMethodWriter(UiBinderApiPackage api, String html, Tokenator tokenator,
+      HtmlTemplatesWriter templates)
       throws IllegalArgumentException {
     assertNotNull("html", html);
     assertNotNull("tokenator", tokenator);
     assertNotNull("templates", templates);
 
+    this.api = api;
     this.templates = templates;
     methodName = "html" + this.templates.nextTemplateId();
 
@@ -126,7 +130,7 @@ public class HtmlTemplateMethodWriter {
   public void writeTemplateCaller(IndentedWriter w) {
     ensureArgumentsResolved();
 
-    w.write("SafeHtml template_%s() {", methodName);
+    w.write("%s template_%s() {", api.getSafeHtmlInterfaceFqn(), methodName);
     w.indent();
     w.write("return %s;", getDirectTemplateCall());
     w.outdent();
@@ -210,7 +214,8 @@ public class HtmlTemplateMethodWriter {
     }
 
     strings.add("@Template(\"" + addTemplatePlaceholders(html) + "\")");
-    strings.add("SafeHtml " + methodName + "(" + addTemplateParameters() + ");");
+    strings.add(
+        api.getSafeHtmlInterfaceFqn() + " " + methodName + "(" + addTemplateParameters() + ");");
     strings.add(" ");
 
     argumentsResolved = true;
@@ -238,7 +243,7 @@ public class HtmlTemplateMethodWriter {
     String raw = arg.expression;
     if (arg.type == ArgumentType.URI) {
       if (isStringReference(arg)) {
-        return SafeUriAttributeParser.wrapUnsafeStringAndWarn(templates.getLogger(),
+        return SafeUriAttributeParser.wrapUnsafeStringAndWarn(api, templates.getLogger(),
             arg.getSource(), raw);
       }
     }

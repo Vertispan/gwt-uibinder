@@ -20,7 +20,6 @@ import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.MortalLogger;
 
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
@@ -47,7 +46,6 @@ public class AttributeParsers {
   private static final String DOUBLE = "double";
   private static final String BOOLEAN = "boolean";
   private static final String UNIT = Unit.class.getCanonicalName();
-  private static final String SAFE_URI = SafeUri.class.getCanonicalName();
 
   private final MortalLogger logger;
   private final FieldReferenceConverter converter;
@@ -98,12 +96,13 @@ public class AttributeParsers {
     addAttributeParser(DOUBLE + "," + UNIT, new LengthAttributeParser(
         doubleParser, unitParser, logger));
 
-    SafeUriAttributeParser uriParser = new SafeUriAttributeParser(stringParser,
-        converter, elements.getTypeElement(SAFE_URI).asType(), logger);
-    addAttributeParser(SAFE_URI, uriParser);
+    SafeUriAttributeParser uriParser = new SafeUriAttributeParser(fieldManager.api, stringParser,
+        converter, elements.getTypeElement(fieldManager.api.getSafeUriInterfaceFqn()).asType(),
+        logger);
+    addAttributeParser(fieldManager.api.getSafeUriInterfaceFqn(), uriParser);
 
-    safeUriInHtmlParser = new SafeUriAttributeParser(stringParser,
-        converter, elements.getTypeElement(SAFE_URI).asType(),
+    safeUriInHtmlParser = new SafeUriAttributeParser(fieldManager.api, stringParser, converter,
+        elements.getTypeElement(fieldManager.api.getSafeUriInterfaceFqn()).asType(),
         elements.getTypeElement(STRING).asType(), logger);
   }
 

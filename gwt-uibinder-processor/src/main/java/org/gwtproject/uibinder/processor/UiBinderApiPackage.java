@@ -23,23 +23,29 @@ public enum UiBinderApiPackage {
    * Intended to bridge
    */
   BRIDGE(
+      true,
       "urn:ui:com.google.gwt.uibinder",
       "org.gwtproject.uibinder.client",
       "com.google.gwt.dom.client",
+      "com.google.gwt.user.client.ui",
       "com.google.gwt.i18n.client",
       "com.google.gwt.safehtml"
   ),
   COM_GOOGLE_GWT_UIBINDER(
+      true,
       "urn:ui:com.google.gwt.uibinder",
       "com.google.gwt.uibinder.client",
       "com.google.gwt.dom.client",
+      "com.google.gwt.user.client.ui",
       "com.google.gwt.i18n.client",
       "com.google.gwt.safehtml"
   ),
   ORG_GWTPROJECT_UIBINDER(
+      false, // this will have issues with GSS, Messages, etc.
       "urn:ui:com.google.gwt.uibinder",
       "org.gwtproject.uibinder.client",
       "org.gwtproject.dom.client",
+      "com.google.gwt.user.client.ui",
       "com.google.gwt.i18n.client",
       "org.gwtproject.safehtml"
   );
@@ -63,27 +69,47 @@ public enum UiBinderApiPackage {
     throw new IllegalArgumentException();
   }
 
+  private final boolean gwtCreateSupported;
   private final String binderUri;
   private final String uiBinderPackageName;
   private final String domPackageName;
+  private final String widgetsPackageName;
   private final String i18nPackageName;
   private final String safeHtmlPackageName;
 
   UiBinderApiPackage(
+      boolean isGwtCreateSupported,
       String binderUri,
       String uiBinderPackageName,
       String domPackageName,
+      String widgetsPackageName,
       String i18nPackageName,
       String safeHtmlPackageName) {
+    this.gwtCreateSupported = isGwtCreateSupported;
     this.binderUri = binderUri;
     this.uiBinderPackageName = uiBinderPackageName;
     this.domPackageName = domPackageName;
+    this.widgetsPackageName = widgetsPackageName;
     this.i18nPackageName = i18nPackageName;
     this.safeHtmlPackageName = safeHtmlPackageName;
   }
 
   public String getBinderUri() {
     return binderUri;
+  }
+
+  public boolean isGwtCreateSupported() {
+    return gwtCreateSupported;
+  }
+
+  /**
+   * Gets the GWT fully qualified name.
+   *
+   * @deprecated shouldn't use GWT.create moving forward.
+   */
+  @Deprecated
+  public String getGWTFqn() {
+    return "com.google.gwt.core.client.GWT";
   }
 
   public String getElementParserPackageName() {
@@ -105,12 +131,32 @@ public enum UiBinderApiPackage {
     return uiBinderPackageName + ".LazyDomElement";
   }
 
+  public String getRenderablePanelFqn() {
+    return widgetsPackageName + ".RenderablePanel";
+  }
+
+  public String getSafeHtmlBuilderFqn() {
+    return safeHtmlPackageName + ".shared.SafeHtmlBuilder";
+  }
+
   public String getSafeHtmlInterfaceFqn() {
     return safeHtmlPackageName + ".shared.SafeHtml";
   }
 
   public String getSafeHtmlTemplatesInterfaceFqn() {
     return safeHtmlPackageName + ".client.SafeHtmlTemplates";
+  }
+
+  public String getSafeHtmlUtilsFqn() {
+    return safeHtmlPackageName + ".shared.SafeHtmlUtils";
+  }
+
+  public String getSafeHtmlUriUtilsFqn() {
+    return safeHtmlPackageName + ".shared.UriUtils";
+  }
+
+  public String getSafeUriInterfaceFqn() {
+    return safeHtmlPackageName + ".shared.SafeUri";
   }
 
   public String getUiBinderInterfaceFqn() {

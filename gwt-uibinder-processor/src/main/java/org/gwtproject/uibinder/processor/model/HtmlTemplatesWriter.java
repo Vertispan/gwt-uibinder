@@ -59,7 +59,7 @@ public class HtmlTemplatesWriter {
       throw new IllegalArgumentException("Template tokenator cannot be null");
     }
 
-    HtmlTemplateMethodWriter method = new HtmlTemplateMethodWriter(html, t, this);
+    HtmlTemplateMethodWriter method = new HtmlTemplateMethodWriter(fieldManager.api, html, t, this);
     htmlTemplates.add(method);
 
     return method;
@@ -97,7 +97,8 @@ public class HtmlTemplatesWriter {
    * Write the SafeHtmlTemplates interface and its GWT.create() call.
    */
   public void writeInterface(IndentedWriter w) {
-    w.write("interface Template extends SafeHtmlTemplates {");
+    w.write("interface Template extends %s {",
+        fieldManager.api.getSafeHtmlTemplatesInterfaceFqn());
     w.indent();
     for (HtmlTemplateMethodWriter t : htmlTemplates) {
       t.writeTemplateMethod(w);
@@ -105,7 +106,7 @@ public class HtmlTemplatesWriter {
     w.outdent();
     w.write("}");
     w.newline();
-    w.write("Template template = GWT.create(Template.class);");
+    w.write("Template template = %s.create(Template.class);", fieldManager.api.getGWTFqn());
   }
 
   /**

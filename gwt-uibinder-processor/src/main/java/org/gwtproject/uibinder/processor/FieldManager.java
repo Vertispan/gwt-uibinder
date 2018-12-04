@@ -85,6 +85,7 @@ public class FieldManager {
     return fieldName;
   }
 
+  public final UiBinderApiPackage api;
   private final MortalLogger logger;
 
   /**
@@ -115,7 +116,8 @@ public class FieldManager {
    */
   private final boolean useLazyWidgetBuilders;
 
-  public FieldManager(MortalLogger logger, boolean useLazyWidgetBuilders) {
+  public FieldManager(UiBinderApiPackage api, MortalLogger logger, boolean useLazyWidgetBuilders) {
+    this.api = api;
     this.logger = logger;
     this.useLazyWidgetBuilders = useLazyWidgetBuilders;
   }

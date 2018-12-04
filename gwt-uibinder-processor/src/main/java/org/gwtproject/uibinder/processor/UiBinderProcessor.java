@@ -167,7 +167,7 @@ public class UiBinderProcessor extends BaseProcessor {
     String templatePath = deduceTemplateFile(logger, interfaceType);
     MessagesWriter messages = new MessagesWriter(api.getBinderUri(), logger, templatePath,
         AptUtil.getPackageElement(interfaceType).getQualifiedName().toString(), implName);
-    FieldManager fieldManager = new FieldManager(logger, true);
+    FieldManager fieldManager = new FieldManager(api, logger, true);
 
     // TODO hardcoded gss options
     GssOptions gssOptions = new GssOptions(true, AutoConversionMode.STRICT, true);

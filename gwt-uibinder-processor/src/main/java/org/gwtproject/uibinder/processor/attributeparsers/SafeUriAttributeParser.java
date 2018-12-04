@@ -16,14 +16,14 @@
 package org.gwtproject.uibinder.processor.attributeparsers;
 
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.safehtml.shared.SafeUri SafeUri} literals or
- * references.
+ * Parses {@link com.google.gwt.safehtml.shared.SafeUri SafeUri} literals or references.
  *
  * <p>Simple String literals are passed through
  * {@link com.google.gwt.safehtml.shared.UriUtils#fromSafeConstant(String)
@@ -35,34 +35,38 @@ import javax.lang.model.type.TypeMirror;
  * UriUtils.fromString(String)}
  */
 public class SafeUriAttributeParser extends StrictAttributeParser {
-  public static String wrapUnsafeStringAndWarn(MortalLogger logger, XMLElement source,
-      String expression) {
+  public static String wrapUnsafeStringAndWarn(UiBinderApiPackage api, MortalLogger logger,
+      XMLElement source, String expression) {
     logger.warn(source, "Escaping unsafe runtime String expression "
         + "used for URI with UriUtils.fromString(). Use SafeUri instead");
-    return "UriUtils.fromString(" + expression + ")";
+    return api.getSafeHtmlUriUtilsFqn() + ".fromString(" + expression + ")";
   }
 
+  private final UiBinderApiPackage api;
   private final boolean runtimeStringsAllowed;
   private final StringAttributeParser stringParser;
 
   /**
-   * Constructs an instance for particular use in html contexts, where
-   * {string.references} are acceptible.
+   * Constructs an instance for particular use in html contexts, where {string.references} are
+   * acceptible.
    */
-  SafeUriAttributeParser(StringAttributeParser stringParser, FieldReferenceConverter converter,
-      TypeMirror safeUriType, TypeMirror stringType, MortalLogger logger) {
+  SafeUriAttributeParser(UiBinderApiPackage api, StringAttributeParser stringParser,
+      FieldReferenceConverter converter, TypeMirror safeUriType, TypeMirror stringType,
+      MortalLogger logger) {
     super(converter, logger, safeUriType, stringType);
+    this.api = api;
     this.stringParser = stringParser;
     runtimeStringsAllowed = true;
   }
 
   /**
-   * Constructs an instance for normal use, where String literals are okay but
-   * {string.references} are not.
+   * Constructs an instance for normal use, where String literals are okay but {string.references}
+   * are not.
    */
-  SafeUriAttributeParser(StringAttributeParser stringParser, FieldReferenceConverter converter,
-      TypeMirror safeUriType, MortalLogger logger) {
+  SafeUriAttributeParser(UiBinderApiPackage api, StringAttributeParser stringParser,
+      FieldReferenceConverter converter, TypeMirror safeUriType, MortalLogger logger) {
     super(converter, logger, safeUriType);
+    this.api = api;
     this.stringParser = stringParser;
     runtimeStringsAllowed = false;
   }
@@ -81,7 +85,8 @@ public class SafeUriAttributeParser extends StrictAttributeParser {
      */
     if (howManyFieldRefs == 0) {
       // String literal, convert it for the nice people
-      return "UriUtils.fromSafeConstant(" + stringParser.parse(source, value) + ")";
+      return api.getSafeHtmlUriUtilsFqn()
+          + ".fromSafeConstant(" + stringParser.parse(source, value) + ")";
     }
 
     /*
@@ -93,6 +98,6 @@ public class SafeUriAttributeParser extends StrictAttributeParser {
       return super.parse(source, value);
     }
 
-    return wrapUnsafeStringAndWarn(logger, source, stringParser.parse(source, value));
+    return wrapUnsafeStringAndWarn(api, logger, source, stringParser.parse(source, value));
   }
 }

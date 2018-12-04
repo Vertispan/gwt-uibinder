@@ -39,7 +39,6 @@ import org.gwtproject.uibinder.processor.model.OwnerField;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.LazyDomElement;
 import com.google.gwt.uibinder.client.impl.AbstractUiRenderer;
 import com.google.gwt.user.client.ui.IsRenderable;
@@ -703,7 +702,8 @@ public class UiBinderWriter {
     String attachSectionElement = attachSectionElements.getFirst();
     if (!attachedVars.containsKey(attachSectionElement)) {
       String attachedVar = "attachRecord" + nextAttachVar;
-      addInitStatement("UiBinderUtil.TempAttachment %s = UiBinderUtil.attachToDom(%s);",
+      addInitStatement("%1$s.TempAttachment %2$s = %1$s.attachToDom(%3$s);",
+          api.getUiBinderUtilFqn(),
           attachedVar, attachSectionElement);
       attachedVars.put(attachSectionElement, attachedVar);
       nextAttachVar++;
@@ -959,7 +959,7 @@ public class UiBinderWriter {
       return tokenForStringExpression(source, expression);
     }
 
-    expression = "SafeHtmlUtils.fromSafeConstant(" + expression + ")";
+    expression = api.getSafeHtmlUtilsFqn() + ".fromSafeConstant(" + expression + ")";
     htmlTemplates.noteSafeConstant(expression);
     return nextToken(source, expression);
   }
@@ -1618,7 +1618,6 @@ public class UiBinderWriter {
       throws UnableToCompleteException {
     writePackage(w);
 
-    writeImports(w);
     w.newline();
 
     writeClassOpen(w);
@@ -1669,7 +1668,6 @@ public class UiBinderWriter {
       throws UnableToCompleteException {
     writePackage(w);
 
-    writeImports(w);
     w.newline();
 
     writeClassOpen(w);
@@ -1735,7 +1733,8 @@ public class UiBinderWriter {
         UiBinderProcessor.class.getCanonicalName(),
         LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
     if (!isRenderer) {
-      w.write("public class %s implements UiBinder<%s, %s>, %s {", implClassName,
+      w.write("public class %s implements %s<%s, %s>, %s {", implClassName,
+          api.getUiBinderInterfaceFqn(),
           asQualifiedNameable(uiRootType),//.getParameterizedQualifiedSourceName(),
           asQualifiedNameable(uiOwnerType),//.getParameterizedQualifiedSourceName(),
           asQualifiedNameable(baseClass)); //.getParameterizedQualifiedSourceName());
@@ -1788,29 +1787,6 @@ public class UiBinderWriter {
 
   private void writeHandlers(IndentedWriter w) throws UnableToCompleteException {
     handlerEvaluator.run(w, fieldManager, "owner");
-  }
-
-  private void writeImports(IndentedWriter w) {
-    w.write("import com.google.gwt.core.client.GWT;");
-    w.write("import com.google.gwt.dom.client.Element;");
-    if (!(htmlTemplates.isEmpty())) {
-      w.write("import com.google.gwt.safehtml.client.SafeHtmlTemplates;");
-      w.write("import com.google.gwt.safehtml.shared.SafeHtml;");
-      w.write("import com.google.gwt.safehtml.shared.SafeHtmlUtils;");
-      w.write("import com.google.gwt.safehtml.shared.SafeHtmlBuilder;");
-      w.write("import com.google.gwt.safehtml.shared.SafeUri;");
-      w.write("import com.google.gwt.safehtml.shared.UriUtils;");
-      w.write("import com.google.gwt.uibinder.client.UiBinderUtil;");
-    }
-
-    if (!isRenderer) {
-      w.write("import com.google.gwt.uibinder.client.UiBinder;");
-      w.write("import com.google.gwt.uibinder.client.UiBinderUtil;");
-      w.write("import %s.%s;", getPackageElement(uiRootType).getQualifiedName().toString(),
-          asQualifiedNameable(uiRootType).getSimpleName().toString());
-    } else {
-      w.write("import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;");
-    }
   }
 
   /**
@@ -1879,7 +1855,6 @@ public class UiBinderWriter {
 
     writePackage(w);
 
-    writeImports(w);
     w.newline();
 
     writeClassOpen(w);
@@ -1918,7 +1893,7 @@ public class UiBinderWriter {
     w.newline();
 
     String renderParameterDeclarations = renderMethodParameters(renderParameters);
-    w.write("public void render(final %s sb%s%s) {", SafeHtmlBuilder.class.getName(),
+    w.write("public void render(final %s sb%s%s) {", api.getSafeHtmlBuilderFqn(),
         renderParameterDeclarations.length() != 0 ? ", " : "", renderParameterDeclarations);
     w.indent();
     w.newline();
