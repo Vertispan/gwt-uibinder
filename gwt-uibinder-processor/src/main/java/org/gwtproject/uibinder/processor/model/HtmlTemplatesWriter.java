@@ -19,6 +19,7 @@ import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.IndentedWriter;
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.Tokenator;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,7 +60,7 @@ public class HtmlTemplatesWriter {
       throw new IllegalArgumentException("Template tokenator cannot be null");
     }
 
-    HtmlTemplateMethodWriter method = new HtmlTemplateMethodWriter(fieldManager.api, html, t, this);
+    HtmlTemplateMethodWriter method = new HtmlTemplateMethodWriter(html, t, this);
     htmlTemplates.add(method);
 
     return method;
@@ -98,7 +99,7 @@ public class HtmlTemplatesWriter {
    */
   public void writeInterface(IndentedWriter w) {
     w.write("interface Template extends %s {",
-        fieldManager.api.getSafeHtmlTemplatesInterfaceFqn());
+        UiBinderApiPackage.current().getSafeHtmlTemplatesInterfaceFqn());
     w.indent();
     for (HtmlTemplateMethodWriter t : htmlTemplates) {
       t.writeTemplateMethod(w);
@@ -106,7 +107,8 @@ public class HtmlTemplatesWriter {
     w.outdent();
     w.write("}");
     w.newline();
-    w.write("Template template = %s.create(Template.class);", fieldManager.api.getGWTFqn());
+    w.write("Template template = %s.create(Template.class);",
+        UiBinderApiPackage.current().getGWTFqn());
   }
 
   /**

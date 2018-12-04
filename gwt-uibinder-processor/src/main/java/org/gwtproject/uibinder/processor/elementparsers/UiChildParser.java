@@ -53,7 +53,7 @@ public class UiChildParser implements ElementParser {
   private final UiBinderContext uiBinderCtx;
 
   /**
-   * @param uiBinderCtx
+   *
    */
   public UiChildParser(UiBinderContext uiBinderCtx) {
     this.uiBinderCtx = uiBinderCtx;
@@ -64,7 +64,7 @@ public class UiChildParser implements ElementParser {
     this.fieldName = fieldName;
     this.writer = writer;
 
-    OwnerFieldClass ownerFieldClass = OwnerFieldClass.getFieldClass(writer.api, type,
+    OwnerFieldClass ownerFieldClass = OwnerFieldClass.getFieldClass(type,
         writer.getLogger(), uiBinderCtx);
 
     uiChildMethods = ownerFieldClass.getUiChildMethods();

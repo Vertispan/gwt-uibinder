@@ -55,6 +55,24 @@ public enum UiBinderApiPackage {
    */
   public static final String UITEMPLATE = "org.gwtproject.uibinder.client.UiTemplate";
 
+  /**
+   * ThreadLocal for processing API.
+   *
+   * <p>Rather than passing this class around, we'll keep in a thread local to be available where
+   * needed.
+   */
+  private static ThreadLocal<UiBinderApiPackage> uiBinderApiPackageThreadLocal = new ThreadLocal<>();
+
+  public static void setUiBinderApiPackage(UiBinderApiPackage api) {
+    if (api == null) {
+      uiBinderApiPackageThreadLocal.remove();
+    }
+    uiBinderApiPackageThreadLocal.set(api);
+  }
+
+  public static UiBinderApiPackage current() {
+    return uiBinderApiPackageThreadLocal.get();
+  }
 
   /**
    * Determines which API by the old vs new UiBinder interface.

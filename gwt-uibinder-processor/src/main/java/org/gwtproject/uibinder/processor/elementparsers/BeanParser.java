@@ -79,7 +79,7 @@ public class BeanParser implements ElementParser {
     final Map<String, String> requiredValues = new HashMap<>();
     final Map<String, TypeMirror> unfilledRequiredParams = new HashMap<>();
 
-    final OwnerFieldClass ownerFieldClass = OwnerFieldClass.getFieldClass(writer.api, type,
+    final OwnerFieldClass ownerFieldClass = OwnerFieldClass.getFieldClass(type,
         writer.getLogger(), context);
 
     /*

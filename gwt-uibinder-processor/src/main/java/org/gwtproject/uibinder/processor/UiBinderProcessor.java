@@ -164,15 +164,16 @@ public class UiBinderProcessor extends BaseProcessor {
       throws UnableToCompleteException {
     MortalLogger logger = new MortalLogger(treeLogger);
     UiBinderApiPackage api = deduceApi(logger, interfaceType);
+    UiBinderApiPackage.setUiBinderApiPackage(api);
     String templatePath = deduceTemplateFile(logger, interfaceType);
     MessagesWriter messages = new MessagesWriter(api.getBinderUri(), logger, templatePath,
         AptUtil.getPackageElement(interfaceType).getQualifiedName().toString(), implName);
-    FieldManager fieldManager = new FieldManager(api, logger, true);
+    FieldManager fieldManager = new FieldManager(logger, true);
 
     // TODO hardcoded gss options
     GssOptions gssOptions = new GssOptions(true, AutoConversionMode.STRICT, true);
 
-    UiBinderWriter uiBinderWriter = new UiBinderWriter(api, interfaceType.asType(), implName,
+    UiBinderWriter uiBinderWriter = new UiBinderWriter(interfaceType.asType(), implName,
         templatePath, logger, fieldManager, messages, uiBinderCtx, api.getBinderUri(), gssOptions);
 
     FileObject resource = getTemplateResource(logger, templatePath);

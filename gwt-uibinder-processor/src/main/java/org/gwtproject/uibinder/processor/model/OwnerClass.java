@@ -65,8 +65,6 @@ public class OwnerClass {
    */
   private final List<ExecutableElement> uiHandlers = new ArrayList<>();
 
-  private final UiBinderApiPackage api;
-
   private final MortalLogger logger;
 
   private final TypeMirror ownerType;
@@ -78,10 +76,9 @@ public class OwnerClass {
    *
    * @param ownerType the type of the owner class
    */
-  public OwnerClass(UiBinderApiPackage api, TypeMirror ownerType, MortalLogger logger,
+  public OwnerClass(TypeMirror ownerType, MortalLogger logger,
       UiBinderContext context)
       throws UnableToCompleteException {
-    this.api = api;
     this.logger = logger;
     this.ownerType = ownerType;
     this.context = context;
@@ -156,7 +153,7 @@ public class OwnerClass {
     List<ExecutableElement> methods =
         ElementFilter.methodsIn(AptUtil.getTypeUtils().asElement(ownerType).getEnclosedElements());
     for (ExecutableElement method : methods) {
-      if (AptUtil.isAnnotationPresent(method, api.getUiFactoryFqn())) {
+      if (AptUtil.isAnnotationPresent(method, UiBinderApiPackage.current().getUiFactoryFqn())) {
         TypeElement factoryType = AptUtil.asTypeElement(method.getReturnType());
         if (factoryType == null) {
           logger.die("Factory return type is not a class in method "
@@ -197,14 +194,14 @@ public class OwnerClass {
 
     List<VariableElement> fields = ElementFilter.fieldsIn(ownerElement.getEnclosedElements());
     for (VariableElement field : fields) {
-      if (AptUtil.isAnnotationPresent(field, api.getUiFieldFqn())) {
+      if (AptUtil.isAnnotationPresent(field, UiBinderApiPackage.current().getUiFieldFqn())) {
         TypeMirror ownerFieldType = field.asType();
 
         if (ownerFieldType == null) {
           logger.die("Field type is not a class in field " + field.getSimpleName());
         }
 
-        OwnerField ownerField = new OwnerField(api, field, logger, context);
+        OwnerField ownerField = new OwnerField(field, logger, context);
         String ownerFieldName = field.getSimpleName().toString();
         uiFields.put(ownerFieldName, ownerField);
         uiFieldTypes.put(ownerFieldType, ownerField);
@@ -229,7 +226,7 @@ public class OwnerClass {
     List<ExecutableElement> methods =
         ElementFilter.methodsIn(AptUtil.getTypeUtils().asElement(ownerType).getEnclosedElements());
     for (ExecutableElement method : methods) {
-      if (AptUtil.isAnnotationPresent(method, api.getUiHandlerFqn())) {
+      if (AptUtil.isAnnotationPresent(method, UiBinderApiPackage.current().getUiHandlerFqn())) {
         uiHandlers.add(method);
       }
     }

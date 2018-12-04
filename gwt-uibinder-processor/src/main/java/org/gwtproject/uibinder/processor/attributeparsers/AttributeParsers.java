@@ -18,6 +18,7 @@ package org.gwtproject.uibinder.processor.attributeparsers;
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
@@ -96,13 +97,15 @@ public class AttributeParsers {
     addAttributeParser(DOUBLE + "," + UNIT, new LengthAttributeParser(
         doubleParser, unitParser, logger));
 
-    SafeUriAttributeParser uriParser = new SafeUriAttributeParser(fieldManager.api, stringParser,
-        converter, elements.getTypeElement(fieldManager.api.getSafeUriInterfaceFqn()).asType(),
+    SafeUriAttributeParser uriParser = new SafeUriAttributeParser(stringParser,
+        converter,
+        elements.getTypeElement(UiBinderApiPackage.current().getSafeUriInterfaceFqn()).asType(),
         logger);
-    addAttributeParser(fieldManager.api.getSafeUriInterfaceFqn(), uriParser);
+    addAttributeParser(UiBinderApiPackage.current().getSafeUriInterfaceFqn(), uriParser);
 
-    safeUriInHtmlParser = new SafeUriAttributeParser(fieldManager.api, stringParser, converter,
-        elements.getTypeElement(fieldManager.api.getSafeUriInterfaceFqn()).asType(),
+    safeUriInHtmlParser = new SafeUriAttributeParser(stringParser,
+        converter,
+        elements.getTypeElement(UiBinderApiPackage.current().getSafeUriInterfaceFqn()).asType(),
         elements.getTypeElement(STRING).asType(), logger);
   }
 
