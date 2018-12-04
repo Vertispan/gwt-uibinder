@@ -64,7 +64,7 @@ public class UiChildParser implements ElementParser {
     this.fieldName = fieldName;
     this.writer = writer;
 
-    OwnerFieldClass ownerFieldClass = OwnerFieldClass.getFieldClass(type,
+    OwnerFieldClass ownerFieldClass = OwnerFieldClass.getFieldClass(writer.api, type,
         writer.getLogger(), uiBinderCtx);
 
     uiChildMethods = ownerFieldClass.getUiChildMethods();

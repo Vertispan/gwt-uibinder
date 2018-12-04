@@ -18,7 +18,6 @@ package org.gwtproject.uibinder.processor.elementparsers;
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.FieldWriter;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
@@ -128,7 +127,7 @@ class WidgetPlaceholderInterpreter extends HtmlPlaceholderInterpreter {
 
       if (uiWriter.useLazyWidgetBuilders()) {
         // Register a DOM id field.
-        String lazyDomElementPath = UiBinderClasses.LAZYDOMELEMENT;
+        String lazyDomElementPath = uiWriter.api.getLazyDomElementFqn();
         String elementPointer = idHolder + "Element";
         FieldWriter elementWriter = fieldManager.registerField(
             lazyDomElementPath, elementPointer);

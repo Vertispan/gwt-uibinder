@@ -17,7 +17,7 @@ package org.gwtproject.uibinder.processor.model;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.MortalLogger;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderContext;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
@@ -87,17 +87,18 @@ public class OwnerFieldClass {
    * @param logger TODO
    * @return the descriptor
    */
-  public static OwnerFieldClass getFieldClass(TypeMirror forType, MortalLogger logger,
-      UiBinderContext context) throws UnableToCompleteException {
+  public static OwnerFieldClass getFieldClass(UiBinderApiPackage api, TypeMirror forType,
+      MortalLogger logger, UiBinderContext context) throws UnableToCompleteException {
     OwnerFieldClass clazz = context.getOwnerFieldClass(forType);
     if (clazz == null) {
-      clazz = new OwnerFieldClass(forType, logger, context);
+      clazz = new OwnerFieldClass(api, forType, logger, context);
       context.putOwnerFieldClass(forType, clazz);
     }
     return clazz;
   }
 
   private Set<String> ambiguousSetters;
+  private final UiBinderApiPackage api;
   private final MortalLogger logger;
   private final TypeMirror rawType;
   private final UiBinderContext context;
@@ -113,12 +114,15 @@ public class OwnerFieldClass {
   /**
    * Default constructor. This is package-visible for testing only.
    *
+   * @param api for package names
    * @param forType the type of the field class
    * @param logger the logger
    * @throws UnableToCompleteException if the class is not valid
    */
-  OwnerFieldClass(TypeMirror forType, MortalLogger logger, UiBinderContext context)
+  OwnerFieldClass(UiBinderApiPackage api, TypeMirror forType, MortalLogger logger,
+      UiBinderContext context)
       throws UnableToCompleteException {
+    this.api = api;
     this.rawType = forType;
     this.logger = logger;
     this.context = context;
@@ -277,10 +281,13 @@ public class OwnerFieldClass {
       TypeElement ownerElement = AptUtil.asTypeElement(ownerType);
       List<ExecutableElement> methods = ElementFilter.methodsIn(ownerElement.getEnclosedElements());
       for (ExecutableElement method : methods) {
-        AnnotationMirror annotation = AptUtil.getAnnotation(method, UiBinderClasses.UICHILD);
+        AnnotationMirror annotation = AptUtil.getAnnotation(method, api.getUiChildFqn());
         if (annotation == null) {
+          // FIXME - this is only for backwards compatibility
+          //  - any legay widgets would have the old @UiChild annotation, not the new
           // if it's null, let's check for legacy annotation
-          annotation = AptUtil.getAnnotation(method, UiBinderClasses.Legacy.UICHILD);
+          annotation = AptUtil
+              .getAnnotation(method, UiBinderApiPackage.COM_GOOGLE_GWT_UIBINDER.getUiChildFqn());
         }
         if (annotation != null) {
           Map<String, ? extends AnnotationValue> annotationValues = AptUtil
@@ -327,7 +334,7 @@ public class OwnerFieldClass {
 
     for (ExecutableElement ctor : ElementFilter
         .constructorsIn(fieldElement.getEnclosedElements())) {
-      if (AptUtil.isAnnotationPresent(ctor, UiBinderClasses.UICONSTRUCTOR)) {
+      if (AptUtil.isAnnotationPresent(ctor, api.getUiConstructorFqn())) {
         if (uiConstructor != null) {
           logger.die(fieldElement.getSimpleName().toString()
               + " has more than one constructor annotated with @UiConstructor");

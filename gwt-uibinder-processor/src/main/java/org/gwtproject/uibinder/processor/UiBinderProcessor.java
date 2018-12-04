@@ -30,6 +30,8 @@ import org.xml.sax.SAXParseException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -37,17 +39,17 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 
 /**
  *
  */
-@SupportedAnnotationTypes(UiBinderClasses.UITEMPLATE)
+@SupportedAnnotationTypes(UiBinderApiPackage.UITEMPLATE)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class UiBinderProcessor extends BaseProcessor {
 
-  private static final String BINDER_URI = "urn:ui:com.google.gwt.uibinder";
   private static final String TEMPLATE_SUFFIX = ".ui.xml";
 
   // TODO - naming strategy
@@ -71,7 +73,7 @@ public class UiBinderProcessor extends BaseProcessor {
       throws UnableToCompleteException {
     String templateName = "";
     AnnotationMirror uiTemplate = AptUtil
-        .getAnnotation(interfaceType, UiBinderClasses.UITEMPLATE);
+        .getAnnotation(interfaceType, UiBinderApiPackage.UITEMPLATE);
 
     Map<String, ? extends AnnotationValue> annotationValues = AptUtil
         .getAnnotationValues(uiTemplate);
@@ -108,6 +110,33 @@ public class UiBinderProcessor extends BaseProcessor {
     return templateName;
   }
 
+  /**
+   * Determine the api to use based on interface extension.
+   */
+  private static UiBinderApiPackage deduceApi(MortalLogger logger, TypeElement interfaceType)
+      throws UnableToCompleteException {
+    if (true) {
+      return UiBinderApiPackage.BRIDGE;
+    }
+
+    // FIXME - put in place
+    Optional<String> superType = interfaceType.getInterfaces()
+        .stream()
+        .map(AptUtil::asQualifiedNameable)
+        .filter(Objects::nonNull)
+        .map(QualifiedNameable::getQualifiedName)
+        .map(Objects::toString)
+        .filter(qualifiedNameable ->
+            qualifiedNameable.endsWith(".UiBinder")
+        ).findFirst();
+    try {
+      return UiBinderApiPackage.fromInterfaceName(superType.get());
+    } catch (IllegalArgumentException e) {
+      logger.die("Unable to find UiBinder interface on type: %s", interfaceType.getQualifiedName());
+      return null;
+    }
+  }
+
   private static String slashify(String s) {
     return s.replace(".", "/").replace("$", ".");
   }
@@ -134,16 +163,17 @@ public class UiBinderProcessor extends BaseProcessor {
       PrintWriter binderPrintWriter, MyTreeLogger treeLogger, PrintWriterManager writerManager)
       throws UnableToCompleteException {
     MortalLogger logger = new MortalLogger(treeLogger);
+    UiBinderApiPackage api = deduceApi(logger, interfaceType);
     String templatePath = deduceTemplateFile(logger, interfaceType);
-    MessagesWriter messages = new MessagesWriter(BINDER_URI, logger, templatePath,
+    MessagesWriter messages = new MessagesWriter(api.getBinderUri(), logger, templatePath,
         AptUtil.getPackageElement(interfaceType).getQualifiedName().toString(), implName);
     FieldManager fieldManager = new FieldManager(logger, true);
 
     // TODO hardcoded gss options
     GssOptions gssOptions = new GssOptions(true, AutoConversionMode.STRICT, true);
 
-    UiBinderWriter uiBinderWriter = new UiBinderWriter(interfaceType.asType(), implName,
-        templatePath, logger, fieldManager, messages, uiBinderCtx, BINDER_URI, gssOptions);
+    UiBinderWriter uiBinderWriter = new UiBinderWriter(api, interfaceType.asType(), implName,
+        templatePath, logger, fieldManager, messages, uiBinderCtx, api.getBinderUri(), gssOptions);
 
     FileObject resource = getTemplateResource(logger, templatePath);
 

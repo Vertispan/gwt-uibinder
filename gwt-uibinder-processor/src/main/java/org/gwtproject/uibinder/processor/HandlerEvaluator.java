@@ -92,6 +92,7 @@ class HandlerEvaluator {
    */
   private int varCounter = 0;
 
+  private final UiBinderApiPackage api;
   private final MortalLogger logger;
 
   private final TypeMirror handlerRegistrationJClass;
@@ -105,7 +106,8 @@ class HandlerEvaluator {
    * @param ownerClass a descriptor of the UI owner class
    * @param logger the logger for warnings and errors
    */
-  HandlerEvaluator(OwnerClass ownerClass, MortalLogger logger) {
+  HandlerEvaluator(UiBinderApiPackage api, OwnerClass ownerClass, MortalLogger logger) {
+    this.api = api;
     this.ownerClass = ownerClass;
     this.logger = logger;
 
@@ -158,7 +160,7 @@ class HandlerEvaluator {
           boundMethod);
 
       // Adds the handler created above.
-      AnnotationMirror annotation = AptUtil.getAnnotation(method, UiBinderClasses.UIHANDLER);
+      AnnotationMirror annotation = AptUtil.getAnnotation(method, api.getUiHandlerFqn());
       List<AnnotationValue> values = (List<AnnotationValue>) AptUtil.getAnnotationValues(annotation)
           .get("value").getValue();
 

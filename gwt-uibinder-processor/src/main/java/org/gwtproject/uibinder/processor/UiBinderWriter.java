@@ -244,13 +244,13 @@ public class UiBinderWriter {
   /**
    * Finds methods annotated with {@code @UiHandler} in a {@code type}.
    */
-  private static ExecutableElement[] findUiHandlerMethods(TypeMirror type) {
+  private static ExecutableElement[] findUiHandlerMethods(UiBinderApiPackage api, TypeMirror type) {
     ArrayList<ExecutableElement> result = new ArrayList<>();
     List<ExecutableElement> allMethods = ElementFilter
         .methodsIn(asTypeElement(type).getEnclosedElements());
 
     for (ExecutableElement jMethod : allMethods) {
-      if (AptUtil.getAnnotation(jMethod, UiBinderClasses.UIHANDLER) != null) {
+      if (AptUtil.getAnnotation(jMethod, api.getUiHandlerFqn()) != null) {
         result.add(jMethod);
       }
     }
@@ -367,11 +367,14 @@ public class UiBinderWriter {
 
   private final GssOptions gssOptions;
 
-  public UiBinderWriter(TypeMirror baseType, String implClassName, String templatePath,
-      MortalLogger logger, FieldManager fieldManager, MessagesWriter messagesWriter,
-      UiBinderContext uiBinderCtx, String binderUri, GssOptions gssOptions)
-      throws UnableToCompleteException {
+  public final UiBinderApiPackage api;
 
+  public UiBinderWriter(UiBinderApiPackage api, TypeMirror baseType, String implClassName,
+      String templatePath, MortalLogger logger, FieldManager fieldManager,
+      MessagesWriter messagesWriter, UiBinderContext uiBinderCtx, String binderUri,
+      GssOptions gssOptions)
+      throws UnableToCompleteException {
+    this.api = api;
     this.baseClass = baseType;
     this.implClassName = implClassName;
     this.logger = logger;
@@ -387,7 +390,7 @@ public class UiBinderWriter {
     Types typeUtils = AptUtil.getTypeUtils();
 
     TypeElement uiBinderItself = AptUtil.getElementUtils()
-        .getTypeElement(UiBinderClasses.UIBINDER);
+        .getTypeElement(api.getUiBinderInterfaceFqn());
 
     TypeElement baseTypeElement = AptUtil.asTypeElement(baseType);
     List<? extends TypeMirror> uiBinderTypeMirrors = baseTypeElement.getInterfaces();
@@ -404,7 +407,7 @@ public class UiBinderWriter {
         .toString();
 
     TypeElement uiRendererElement = AptUtil.getElementUtils()
-        .getTypeElement(UiBinderClasses.UIRENDERER);
+        .getTypeElement(api.getUiRendererInterfaceFqn());
     if (typeUtils.isAssignable(uiBinderTypeErasure, uiBinderItself.asType())) {
       if (typeArgs.size() < 2) {
         throw new RuntimeException("Root and owner type parameters are required for type %s"
@@ -437,13 +440,13 @@ public class UiBinderWriter {
     isRenderableClassType = AptUtil.getElementUtils()
         .getTypeElement(IsRenderable.class.getCanonicalName()).asType();
     lazyDomElementClass = AptUtil.getElementUtils()
-        .getTypeElement(UiBinderClasses.LAZYDOMELEMENT).asType();
+        .getTypeElement(api.getLazyDomElementFqn()).asType();
 
-    ownerClass = new OwnerClass(uiOwnerType, logger, uiBinderCtx);
+    ownerClass = new OwnerClass(api, uiOwnerType, logger, uiBinderCtx);
     bundleClass =
         new ImplicitClientBundle(getPackageElement(baseType).getQualifiedName().toString(),
             this.implClassName, CLIENT_BUNDLE_FIELD, logger);
-    handlerEvaluator = new HandlerEvaluator(ownerClass, logger);
+    handlerEvaluator = new HandlerEvaluator(api, ownerClass, logger);
 
     attributeParsers = new AttributeParsers(fieldManager, logger);
   }
@@ -2074,7 +2077,7 @@ public class UiBinderWriter {
     for (int i = 0; i < uiHandlerMethods.length; i++) {
       ExecutableElement jMethod = uiHandlerMethods[i];
       String eventType = findEventTypeName(jMethod);
-      String[] fieldNames = (String[]) AptUtil.getAnnotation(jMethod, UiBinderClasses.UIHANDLER)
+      String[] fieldNames = (String[]) AptUtil.getAnnotation(jMethod, api.getUiHandlerFqn())
           .getElementValues().get("value").getValue();
       for (String fieldName : fieldNames) {
         if (rootFieldName.equals(fieldName)) {
@@ -2149,7 +2152,7 @@ public class UiBinderWriter {
       TypeElement eventTargetType = asTypeElement(jMethod.getParameters().get(0));
       String eventTargetSimpleName = eventTargetType.getSimpleName().toString();
       String dispatcherClassName = UI_RENDERER_DISPATCHER_PREFIX + eventTargetSimpleName;
-      ExecutableElement[] uiHandlerMethods = findUiHandlerMethods(eventTargetType.asType());
+      ExecutableElement[] uiHandlerMethods = findUiHandlerMethods(api, eventTargetType.asType());
 
       // public void onBrowserEvent(Foo f, NativeEvent event, Element parent, A a, B b ...) {
       w.write("@Override");
