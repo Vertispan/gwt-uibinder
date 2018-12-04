@@ -174,8 +174,20 @@ public enum UiBinderApiPackage {
     return resourcesPackageName + ".ImageResource";
   }
 
+  public String getImageFqn() {
+    return widgetsPackageName + ".Image";
+  }
+
+  public String getIsWidgetFqn() {
+    return widgetsPackageName + ".IsWidget";
+  }
+
   public String getLazyDomElementFqn() {
     return uiBinderPackageName + ".LazyDomElement";
+  }
+
+  public String getLazyPanelFqn() {
+    return widgetsPackageName + ".LazyPanel";
   }
 
   public String getRenderablePanelFqn() {
@@ -241,5 +253,9 @@ public enum UiBinderApiPackage {
 
   public String getUiRendererInterfaceFqn() {
     return uiBinderPackageName + ".UiRenderer";
+  }
+
+  public String getWidgetFqn() {
+    return widgetsPackageName + ".Widget";
   }
 }

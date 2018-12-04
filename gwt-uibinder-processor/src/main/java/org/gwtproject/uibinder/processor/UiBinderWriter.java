@@ -39,10 +39,8 @@ import org.gwtproject.uibinder.processor.model.OwnerField;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
-import com.google.gwt.uibinder.client.LazyDomElement;
 import com.google.gwt.uibinder.client.impl.AbstractUiRenderer;
 import com.google.gwt.user.client.ui.IsRenderable;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RenderableStamper;
 
 import org.w3c.dom.Document;
@@ -570,7 +568,8 @@ public class UiBinderWriter {
     if (isRenderer && fieldName != null) {
       domField.setInitializer("buildInnerId(\"" + fieldName + "\", uiId)");
     } else {
-      domField.setInitializer("com.google.gwt.dom.client.Document.get().createUniqueId()");
+      domField.setInitializer(
+          UiBinderApiPackage.current().getDomDocumentFqn() + ".get().createUniqueId()");
     }
 
     return domHolderName;
@@ -613,8 +612,8 @@ public class UiBinderWriter {
             AptUtil.getElementUtils().getTypeElement(RenderableStamper.class.getName()).asType(),
             renderableStamperName);
     domField.setInitializer(formatCode(
-        "new %s(com.google.gwt.dom.client.Document.get().createUniqueId())",
-        RenderableStamper.class.getName()));
+        "new %s(%s.get().createUniqueId())",
+        RenderableStamper.class.getName(), UiBinderApiPackage.current().getDomDocumentFqn()));
 
     return renderableStamperName;
   }
@@ -811,6 +810,12 @@ public class UiBinderWriter {
     return uri != null && binderUri.equals(uri);
   }
 
+  public boolean isElementAssignableTo(XMLElement elem, String possibleSuperclass)
+      throws UnableToCompleteException {
+    TypeElement classType = AptUtil.getElementUtils().getTypeElement(possibleSuperclass);
+    return isElementAssignableTo(elem, classType.asType());
+  }
+
   public boolean isElementAssignableTo(XMLElement elem, Class<?> possibleSuperclass)
       throws UnableToCompleteException {
     TypeElement classType = AptUtil.getElementUtils()
@@ -880,7 +885,7 @@ public class UiBinderWriter {
   }
 
   public boolean isWidgetElement(XMLElement elem) throws UnableToCompleteException {
-    return isElementAssignableTo(elem, IsWidget.class);
+    return isElementAssignableTo(elem, UiBinderApiPackage.current().getIsWidgetFqn());
   }
 
   /**
@@ -1907,7 +1912,7 @@ public class UiBinderWriter {
 
     writeRenderParameterInitializers(w, renderParameters);
 
-    w.write("uiId = com.google.gwt.dom.client.Document.get().createUniqueId();");
+    w.write("uiId = %s.get().createUniqueId();", UiBinderApiPackage.current().getDomDocumentFqn());
     w.newline();
 
     w.write("build_fields();");

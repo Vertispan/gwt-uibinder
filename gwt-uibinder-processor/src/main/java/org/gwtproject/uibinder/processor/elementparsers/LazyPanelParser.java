@@ -16,12 +16,10 @@
 package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.LazyPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import javax.lang.model.type.TypeMirror;
 
@@ -54,8 +52,8 @@ public class LazyPanelParser implements ElementParser {
 
     FieldWriter childField = writer.parseElementToField(child);
 
-    String lazyPanelClassPath = LazyPanel.class.getName();
-    String widgetClassPath = Widget.class.getName();
+    String lazyPanelClassPath = UiBinderApiPackage.current().getLazyPanelFqn();
+    String widgetClassPath = UiBinderApiPackage.current().getWidgetFqn();
 
     String code = String.format(INITIALIZER_FORMAT, lazyPanelClassPath,
         widgetClassPath, childField.getNextReference());

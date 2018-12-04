@@ -15,12 +15,11 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.XMLElement.Interpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.Image;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -34,7 +33,6 @@ import javax.lang.model.type.TypeMirror;
 public class CustomButtonParser implements ElementParser {
 
   private static final Set<String> faceNames = new HashSet<String>();
-  private static final String IMAGE_CLASS = Image.class.getCanonicalName();
 
   static {
     faceNames.add("upFace");
@@ -79,7 +77,7 @@ public class CustomButtonParser implements ElementParser {
         if (child.hasAttribute("image")) {
           String image = child.consumeImageResourceAttribute("image");
           writer.addStatement("%s.%s().setImage(new %s(%s));", fieldName,
-              faceNameGetter(faceName), IMAGE_CLASS, image);
+              faceNameGetter(faceName), UiBinderApiPackage.current().getImageFqn(), image);
         }
         return true; // We consumed it
       }

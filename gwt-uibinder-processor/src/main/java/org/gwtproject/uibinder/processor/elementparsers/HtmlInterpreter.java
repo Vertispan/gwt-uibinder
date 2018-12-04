@@ -15,19 +15,21 @@
  */
 package org.gwtproject.uibinder.processor.elementparsers;
 
+import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLAttribute;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.XMLElement.Interpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
-import com.google.gwt.safehtml.shared.SafeHtml;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.lang.model.type.TypeMirror;
 
 /**
  * This is the most generally useful interpreter, and the most likely to be used by a custom parser
@@ -92,6 +94,7 @@ public class HtmlInterpreter implements XMLElement.Interpreter<String> {
 
   private final UiBinderWriter writer;
   private final InterpreterPipe<String> pipe;
+  private final TypeMirror safeHtmlType;
 
   /**
    * Rather than using this constructor, you probably want to use the {@link
@@ -105,6 +108,9 @@ public class HtmlInterpreter implements XMLElement.Interpreter<String> {
   public HtmlInterpreter(UiBinderWriter writer, String ancestorExpression,
       Interpreter<String> messageInterpreter) {
     this.writer = writer;
+
+    this.safeHtmlType = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getSafeHtmlInterfaceFqn()).asType();
 
     this.pipe = new InterpreterPipe<String>();
 
@@ -121,7 +127,7 @@ public class HtmlInterpreter implements XMLElement.Interpreter<String> {
   }
 
   public String interpretElement(XMLElement elem) throws UnableToCompleteException {
-    if (writer.useLazyWidgetBuilders() && writer.isElementAssignableTo(elem, SafeHtml.class)) {
+    if (writer.useLazyWidgetBuilders() && writer.isElementAssignableTo(elem, safeHtmlType)) {
       FieldWriter childField = writer.parseElementToField(elem);
       return writer.tokenForSafeHtmlExpression(elem, childField.getNextReference());
     }
