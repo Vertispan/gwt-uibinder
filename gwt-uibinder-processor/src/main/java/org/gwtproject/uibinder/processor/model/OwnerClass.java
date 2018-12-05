@@ -17,7 +17,7 @@ package org.gwtproject.uibinder.processor.model;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.MortalLogger;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderContext;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
@@ -76,7 +76,8 @@ public class OwnerClass {
    *
    * @param ownerType the type of the owner class
    */
-  public OwnerClass(TypeMirror ownerType, MortalLogger logger, UiBinderContext context)
+  public OwnerClass(TypeMirror ownerType, MortalLogger logger,
+      UiBinderContext context)
       throws UnableToCompleteException {
     this.logger = logger;
     this.ownerType = ownerType;
@@ -152,7 +153,7 @@ public class OwnerClass {
     List<ExecutableElement> methods =
         ElementFilter.methodsIn(AptUtil.getTypeUtils().asElement(ownerType).getEnclosedElements());
     for (ExecutableElement method : methods) {
-      if (AptUtil.isAnnotationPresent(method, UiBinderClasses.UIFACTORY)) {
+      if (AptUtil.isAnnotationPresent(method, UiBinderApiPackage.current().getUiFactoryFqn())) {
         TypeElement factoryType = AptUtil.asTypeElement(method.getReturnType());
         if (factoryType == null) {
           logger.die("Factory return type is not a class in method "
@@ -193,7 +194,7 @@ public class OwnerClass {
 
     List<VariableElement> fields = ElementFilter.fieldsIn(ownerElement.getEnclosedElements());
     for (VariableElement field : fields) {
-      if (AptUtil.isAnnotationPresent(field, UiBinderClasses.UIFIELD)) {
+      if (AptUtil.isAnnotationPresent(field, UiBinderApiPackage.current().getUiFieldFqn())) {
         TypeMirror ownerFieldType = field.asType();
 
         if (ownerFieldType == null) {
@@ -225,7 +226,7 @@ public class OwnerClass {
     List<ExecutableElement> methods =
         ElementFilter.methodsIn(AptUtil.getTypeUtils().asElement(ownerType).getEnclosedElements());
     for (ExecutableElement method : methods) {
-      if (AptUtil.isAnnotationPresent(method, UiBinderClasses.UIHANDLER)) {
+      if (AptUtil.isAnnotationPresent(method, UiBinderApiPackage.current().getUiHandlerFqn())) {
         uiHandlers.add(method);
       }
     }

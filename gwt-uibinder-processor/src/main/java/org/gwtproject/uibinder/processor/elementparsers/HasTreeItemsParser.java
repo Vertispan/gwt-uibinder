@@ -17,19 +17,16 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.Widget;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.Tree} widgets.
+ * Parses Tree widgets.
  */
 public class HasTreeItemsParser implements ElementParser {
 
@@ -38,9 +35,12 @@ public class HasTreeItemsParser implements ElementParser {
   public void parse(XMLElement elem, String fieldName, TypeMirror type,
       UiBinderWriter writer) throws UnableToCompleteException {
     // Prepare base types.
-    TypeElement itemType = AptUtil.getElementUtils().getTypeElement(TreeItem.class.getName());
-    TypeElement widgetType = AptUtil.getElementUtils().getTypeElement(Widget.class.getName());
-    TypeElement isWidgetType = AptUtil.getElementUtils().getTypeElement(IsWidget.class.getName());
+    TypeElement itemType = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getTreeItemFqn());
+    TypeElement widgetType = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getWidgetFqn());
+    TypeElement isWidgetType = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getIsWidgetFqn());
 
     // Parse children.
     for (XMLElement child : elem.consumeChildElements()) {

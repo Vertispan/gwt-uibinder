@@ -18,15 +18,12 @@ package org.gwtproject.uibinder.processor.elementparsers;
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.FieldWriter;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.messages.MessageWriter;
 import org.gwtproject.uibinder.processor.messages.MessagesWriter;
-
-import com.google.gwt.user.client.ui.HasHTML;
-import com.google.gwt.user.client.ui.HasText;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,13 +95,15 @@ class WidgetPlaceholderInterpreter extends HtmlPlaceholderInterpreter {
     idToWidgetElement.put(idHolder, elem);
 
     if (AptUtil.isAssignableFrom(
-        AptUtil.getElementUtils().getTypeElement(HasHTML.class.getName()).asType(),
+        AptUtil.getElementUtils()
+            .getTypeElement(UiBinderApiPackage.current().getHasHTMLFqn()).asType(),
         type)) {
       return handleHasHTMLPlaceholder(elem, name, idHolder);
     }
 
     if (AptUtil.isAssignableFrom(
-        AptUtil.getElementUtils().getTypeElement(HasText.class.getName()).asType(),
+        AptUtil.getElementUtils()
+            .getTypeElement(UiBinderApiPackage.current().getHasText()).asType(),
         type)) {
       return handleHasTextPlaceholder(elem, name, idHolder);
     }
@@ -128,7 +127,7 @@ class WidgetPlaceholderInterpreter extends HtmlPlaceholderInterpreter {
 
       if (uiWriter.useLazyWidgetBuilders()) {
         // Register a DOM id field.
-        String lazyDomElementPath = UiBinderClasses.LAZYDOMELEMENT;
+        String lazyDomElementPath = UiBinderApiPackage.current().getLazyDomElementFqn();
         String elementPointer = idHolder + "Element";
         FieldWriter elementWriter = fieldManager.registerField(
             lazyDomElementPath, elementPointer);

@@ -16,20 +16,17 @@
 package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.i18n.client.TimeZone;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.DateLabel} widgets.
+ * Parses DateLabel widgets.
  */
 public class DateLabelParser implements ElementParser {
 
@@ -62,10 +59,11 @@ public class DateLabelParser implements ElementParser {
   private String consumeFormat(XMLElement elem, UiBinderWriter writer)
       throws UnableToCompleteException {
     String format = elem.consumeAttribute("format",
-        AptUtil.getElementUtils().getTypeElement(DateTimeFormat.class.getCanonicalName())
-            .asType());
+        AptUtil.getElementUtils()
+            .getTypeElement(UiBinderApiPackage.current().getI18nDateTimeFormatFqn()).asType());
     String predefinedFormat = elem.consumeAttribute("predefinedFormat",
-        AptUtil.getElementUtils().getTypeElement(PredefinedFormat.class.getCanonicalName())
+        AptUtil.getElementUtils()
+            .getTypeElement(UiBinderApiPackage.current().getI18nDateTimeFormatPredefinedFormatFqn())
             .asType());
     String customFormat = elem.consumeStringAttribute("customFormat");
 
@@ -90,7 +88,8 @@ public class DateLabelParser implements ElementParser {
   private String consumeTimeZone(XMLElement elem, UiBinderWriter writer)
       throws UnableToCompleteException {
     String timeZone = elem.consumeAttribute("timezone",
-        AptUtil.getElementUtils().getTypeElement(TimeZone.class.getCanonicalName()).asType());
+        AptUtil.getElementUtils()
+            .getTypeElement(UiBinderApiPackage.current().getI18nTimeZoneFqn()).asType());
     String timeZoneOffset = elem.consumeAttribute("timezoneOffset",
         getIntType());
     if (timeZone != null && timeZoneOffset != null) {
@@ -100,7 +99,7 @@ public class DateLabelParser implements ElementParser {
       return timeZone;
     }
     if (timeZoneOffset != null) {
-      return TimeZone.class.getCanonicalName() + ".createTimeZone("
+      return UiBinderApiPackage.current().getI18nTimeZoneFqn() + ".createTimeZone("
           + timeZoneOffset + ")";
     }
     return null;
@@ -112,15 +111,16 @@ public class DateLabelParser implements ElementParser {
 
   private boolean hasDateTimeFormatAndTimeZoneConstructor(TypeMirror type) {
     TypeElement dateTimeFormatType = AptUtil.getElementUtils()
-        .getTypeElement(DateTimeFormat.class.getName());
-    TypeElement timeZoneType = AptUtil.getElementUtils().getTypeElement(TimeZone.class.getName());
+        .getTypeElement(UiBinderApiPackage.current().getI18nDateTimeFormatFqn());
+    TypeElement timeZoneType = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getI18nTimeZoneFqn());
     return AptUtil
         .hasCompatibleConstructor(type, dateTimeFormatType.asType(), timeZoneType.asType());
   }
 
   private boolean hasDateTimeFormatConstructor(TypeMirror type) {
     TypeElement dateTimeFormatType = AptUtil.getElementUtils()
-        .getTypeElement(DateTimeFormat.class.getName());
+        .getTypeElement(UiBinderApiPackage.current().getI18nDateTimeFormatFqn());
     return AptUtil.hasCompatibleConstructor(type, dateTimeFormatType.asType());
   }
 
@@ -136,7 +136,7 @@ public class DateLabelParser implements ElementParser {
   }
 
   private String makeGetFormat(String format) {
-    return DateTimeFormat.class.getCanonicalName() + ".getFormat(" + format
+    return UiBinderApiPackage.current().getI18nDateTimeFormatFqn() + ".getFormat(" + format
         + ")";
   }
 }

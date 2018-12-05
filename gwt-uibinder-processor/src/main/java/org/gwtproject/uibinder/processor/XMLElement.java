@@ -20,10 +20,6 @@ import org.gwtproject.uibinder.processor.attributeparsers.AttributeParsers;
 import org.gwtproject.uibinder.processor.elementparsers.SimpleInterpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtml;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -358,8 +354,8 @@ public class XMLElement {
    * possible replacement. Escaping is performed to allow the returned text to serve as a Java
    * string literal used as input to a setInnerHTML call. <p> This call requires an interpreter to
    * make sense of any special children. The odds are you want to use {@link
-   * com.google.gwt.uibinder.elementparsers.HtmlInterpreter} for an HTML value, or {@link
-   * com.google.gwt.uibinder.elementparsers.TextInterpreter} for text.
+   * org.gwtproject.uibinder.processor.elementparsers.HtmlInterpreter} for an HTML value, or {@link
+   * org.gwtproject.uibinder.processor.elementparsers.TextInterpreter} for text.
    *
    * @param interpreter Called for each element, expected to return a string replacement for it, or
    * null if it should be left as is
@@ -400,7 +396,7 @@ public class XMLElement {
    * entities in the text are also escaped <p> This call requires an interpreter to make sense of
    * any special children. The odds are you want to use
    *
-   * {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * {@link org.gwtproject.uibinder.processor.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */
@@ -415,7 +411,7 @@ public class XMLElement {
    * entities in the text are NOT escaped <p> This call requires an interpreter to make sense of any
    * special children. The odds are you want to use
    *
-   * {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * {@link org.gwtproject.uibinder.processor.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */
@@ -556,9 +552,9 @@ public class XMLElement {
   /**
    * Convenience method for parsing the named attribute as a
    *
-   * {@link com.google.gwt.safehtml.shared.SafeHtml SafeHtml} value or reference.
+   * {@link org.gwtproject.safehtml.shared.SafeHtml SafeHtml} value or reference.
    *
-   * @return an expression that will evaluate to a {@link com.google.gwt.safehtml.shared.SafeHtml
+   * @return an expression that will evaluate to a {@link org.gwtproject.safehtml.shared.SafeHtml
    * SafeHtml} value in the generated code, or null if there is no such attribute
    * @throws UnableToCompleteException on unparseable value
    */
@@ -827,7 +823,7 @@ public class XMLElement {
   private TypeMirror getImageResourceType() {
     if (imageResourceType == null) {
       TypeElement typeElement = AptUtil.getElementUtils()
-          .getTypeElement(ImageResource.class.getCanonicalName());
+          .getTypeElement(UiBinderApiPackage.current().getImageResourceFqn());
       imageResourceType = typeElement.asType();
     }
     return imageResourceType;
@@ -855,7 +851,8 @@ public class XMLElement {
 
   private TypeMirror getSafeHtmlType() {
     if (safeHtmlType == null) {
-      safeHtmlType = AptUtil.getElementUtils().getTypeElement(SafeHtml.class.getName()).asType();
+      safeHtmlType = AptUtil.getElementUtils()
+          .getTypeElement(UiBinderApiPackage.current().getSafeHtmlInterfaceFqn()).asType();
     }
     return safeHtmlType;
   }
@@ -869,6 +866,7 @@ public class XMLElement {
   }
 
   private TypeMirror getUnitType() {
-    return AptUtil.getElementUtils().getTypeElement(Unit.class.getCanonicalName()).asType();
+    return AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getDomStyleUnitFqn()).asType();
   }
 }

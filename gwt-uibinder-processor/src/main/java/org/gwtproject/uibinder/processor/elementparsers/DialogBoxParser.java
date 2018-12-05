@@ -17,12 +17,10 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DialogBox.Caption;
 
 import java.util.Set;
 
@@ -30,7 +28,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link DialogBox} widgets.
+ * Parses DialogBox widgets.
  */
 public class DialogBoxParser implements ElementParser {
 
@@ -100,7 +98,7 @@ public class DialogBoxParser implements ElementParser {
 
     Set<? extends TypeMirror> classes = AptUtil.getFlattenedSupertypeHierarchy(type);
     TypeElement captionType = AptUtil.getElementUtils().getTypeElement(
-        Caption.class.getCanonicalName());
+        UiBinderApiPackage.current().getDialogBoxCaptionFqn());
     return classes.contains(captionType);
   }
 
@@ -110,7 +108,7 @@ public class DialogBoxParser implements ElementParser {
   protected boolean isCustomWidget(UiBinderWriter writer, TypeMirror type) {
     return !AptUtil.getTypeUtils().isSameType(type,
         AptUtil.getElementUtils().getTypeElement(
-            DialogBox.class.getCanonicalName()).asType());
+            UiBinderApiPackage.current().getDialogBoxFqn()).asType());
   }
 
   /**
@@ -133,7 +131,7 @@ public class DialogBoxParser implements ElementParser {
         if (!isCaption(writer, customCaption)) {
           writer.die(customCaption, "<%s:%s> must implement %s",
               customCaption.getPrefix(), CUSTOM_CAPTION,
-              Caption.class.getCanonicalName());
+              UiBinderApiPackage.current().getDialogBoxCaptionFqn());
         }
         FieldWriter fieldElement = writer.parseElementToField(customCaption);
 

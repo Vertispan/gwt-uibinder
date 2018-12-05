@@ -19,6 +19,8 @@
 <module>
   <inherits name="com.google.gwt.resources.Resources"/>
 
+  <inherits name="org.gwtproject.dom.DOM"/>
+
   <source path="client"/>
   <resource path="resources"/>
   <public path="public"/>

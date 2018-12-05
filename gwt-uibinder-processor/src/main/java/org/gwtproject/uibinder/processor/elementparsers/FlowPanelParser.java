@@ -23,7 +23,7 @@ import org.gwtproject.uibinder.processor.model.OwnerField;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.FlowPanel} widgets.
+ * Parses FlowPanel widgets.
  */
 public class FlowPanelParser implements ElementParser {
 

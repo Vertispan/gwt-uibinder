@@ -15,7 +15,7 @@
  */
 package org.gwtproject.uibinder.client;
 
-import com.google.gwt.dom.client.Element;
+import org.gwtproject.dom.client.Element;
 
 /**
  * Marker interface for classes whose implementation is to be provided via UiBinder code generation

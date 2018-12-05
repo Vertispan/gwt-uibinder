@@ -43,11 +43,10 @@ import javax.tools.FileObject;
 /**
  *
  */
-@SupportedAnnotationTypes(UiBinderClasses.UITEMPLATE)
+@SupportedAnnotationTypes(UiBinderApiPackage.UITEMPLATE)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class UiBinderProcessor extends BaseProcessor {
 
-  private static final String BINDER_URI = "urn:ui:com.google.gwt.uibinder";
   private static final String TEMPLATE_SUFFIX = ".ui.xml";
 
   // TODO - naming strategy
@@ -71,7 +70,7 @@ public class UiBinderProcessor extends BaseProcessor {
       throws UnableToCompleteException {
     String templateName = "";
     AnnotationMirror uiTemplate = AptUtil
-        .getAnnotation(interfaceType, UiBinderClasses.UITEMPLATE);
+        .getAnnotation(interfaceType, UiBinderApiPackage.UITEMPLATE);
 
     Map<String, ? extends AnnotationValue> annotationValues = AptUtil
         .getAnnotationValues(uiTemplate);
@@ -108,6 +107,23 @@ public class UiBinderProcessor extends BaseProcessor {
     return templateName;
   }
 
+  /**
+   * Determine the api to use based on interface extension.
+   */
+  private static UiBinderApiPackage deduceApi(MortalLogger logger, TypeElement interfaceType)
+      throws UnableToCompleteException {
+
+    AnnotationMirror uiTemplate = AptUtil
+        .getAnnotation(interfaceType, UiBinderApiPackage.UITEMPLATE);
+
+    AnnotationValue legacyWidgets = AptUtil.getAnnotationValues(uiTemplate).get("legacyWidgets");
+
+    if (legacyWidgets != null && Boolean.TRUE.equals(legacyWidgets.getValue())) {
+      return UiBinderApiPackage.COM_GOOGLE_GWT_UIBINDER;
+    }
+    return UiBinderApiPackage.ORG_GWTPROJECT_UIBINDER;
+  }
+
   private static String slashify(String s) {
     return s.replace(".", "/").replace("$", ".");
   }
@@ -134,8 +150,10 @@ public class UiBinderProcessor extends BaseProcessor {
       PrintWriter binderPrintWriter, MyTreeLogger treeLogger, PrintWriterManager writerManager)
       throws UnableToCompleteException {
     MortalLogger logger = new MortalLogger(treeLogger);
+    UiBinderApiPackage api = deduceApi(logger, interfaceType);
+    UiBinderApiPackage.setUiBinderApiPackage(api);
     String templatePath = deduceTemplateFile(logger, interfaceType);
-    MessagesWriter messages = new MessagesWriter(BINDER_URI, logger, templatePath,
+    MessagesWriter messages = new MessagesWriter(api.getBinderUri(), logger, templatePath,
         AptUtil.getPackageElement(interfaceType).getQualifiedName().toString(), implName);
     FieldManager fieldManager = new FieldManager(logger, true);
 
@@ -143,7 +161,7 @@ public class UiBinderProcessor extends BaseProcessor {
     GssOptions gssOptions = new GssOptions(true, AutoConversionMode.STRICT, true);
 
     UiBinderWriter uiBinderWriter = new UiBinderWriter(interfaceType.asType(), implName,
-        templatePath, logger, fieldManager, messages, uiBinderCtx, BINDER_URI, gssOptions);
+        templatePath, logger, fieldManager, messages, uiBinderCtx, api.getBinderUri(), gssOptions);
 
     FileObject resource = getTemplateResource(logger, templatePath);
 

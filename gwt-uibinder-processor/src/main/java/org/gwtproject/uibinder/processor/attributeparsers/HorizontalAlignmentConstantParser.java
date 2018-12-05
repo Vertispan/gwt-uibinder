@@ -16,10 +16,9 @@
 package org.gwtproject.uibinder.processor.attributeparsers;
 
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,11 +26,12 @@ import java.util.Locale;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses a {@link HasHorizontalAlignment.HorizontalAlignmentConstant} .
+ * Parses a HasHorizontalAlignment.HorizontalAlignmentConstant.
  */
 class HorizontalAlignmentConstantParser extends StrictAttributeParser {
 
-  private static final String PREFIX = HasHorizontalAlignment.class.getCanonicalName() + ".ALIGN_";
+  private static final String PREFIX = UiBinderApiPackage.current().getHasHorizontalAlignmentFqn()
+      + ".ALIGN_";
   private static final HashMap<String, String> values = new HashMap<>();
 
   static {

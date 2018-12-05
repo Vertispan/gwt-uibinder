@@ -351,11 +351,7 @@ public class AptUtil {
       return getParameterizedQualifiedSourceName(((TypeVariable) returnType).getUpperBound());
     }
 
-    QualifiedNameable qualifiedNameable = asQualifiedNameable(returnType);
-    if (qualifiedNameable == null) {
-      throw new NullPointerException();
-    }
-    return qualifiedNameable.getQualifiedName().toString();
+    return returnType.toString();
   }
 
   /**

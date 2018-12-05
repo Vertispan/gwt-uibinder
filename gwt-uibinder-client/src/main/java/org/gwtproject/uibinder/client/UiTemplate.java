@@ -30,4 +30,9 @@ public @interface UiTemplate {
    * Returns the template name.
    */
   String value() default "";
+
+  /**
+   * Determines if legacy widgets should be used.
+   */
+  boolean legacyWidgets() default false;
 }

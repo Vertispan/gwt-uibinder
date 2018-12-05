@@ -17,12 +17,10 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +29,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.DockLayoutPanel} widgets.
+ * Parses DockLayoutPanel widgets.
  *
  * TODO(jgw): The code that explicitly excludes SplitLayoutPanel in a fairly awkward way could be
  * greatly simplified if we hoisted the "dock-ness" into an interface implemented by both
@@ -69,7 +67,7 @@ public class DockLayoutPanelParser implements ElementParser {
     // (Don't generate a ctor for the SplitLayoutPanel, it has its own parser).
     if (type != getSplitLayoutPanelType(writer)) {
       TypeElement unitEnumType = AptUtil.getElementUtils().getTypeElement(
-          Unit.class.getCanonicalName());
+          UiBinderApiPackage.current().getDomStyleUnitFqn());
       String unit = elem.consumeAttributeWithDefault("unit",
           String
               .format("%s.%s", AptUtil.asQualifiedNameable(unitEnumType).getQualifiedName(), "PX"),
@@ -120,7 +118,8 @@ public class DockLayoutPanelParser implements ElementParser {
   }
 
   private TypeElement getSplitLayoutPanelType(UiBinderWriter writer) {
-    return AptUtil.getElementUtils().getTypeElement(SplitLayoutPanel.class.getName());
+    return AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getSplitLayoutPanelFqn());
   }
 
   private boolean isValidChildElement(XMLElement parent, XMLElement child) {

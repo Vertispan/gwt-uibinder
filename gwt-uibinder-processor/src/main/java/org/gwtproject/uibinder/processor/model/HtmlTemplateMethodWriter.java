@@ -21,6 +21,7 @@ import org.gwtproject.uibinder.processor.IndentedWriter;
 import org.gwtproject.uibinder.processor.Tokenator;
 import org.gwtproject.uibinder.processor.Tokenator.Resolver;
 import org.gwtproject.uibinder.processor.Tokenator.ValueAndInfo;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.attributeparsers.SafeUriAttributeParser;
 
@@ -126,7 +127,8 @@ public class HtmlTemplateMethodWriter {
   public void writeTemplateCaller(IndentedWriter w) {
     ensureArgumentsResolved();
 
-    w.write("SafeHtml template_%s() {", methodName);
+    w.write("%s template_%s() {", UiBinderApiPackage.current().getSafeHtmlInterfaceFqn(),
+        methodName);
     w.indent();
     w.write("return %s;", getDirectTemplateCall());
     w.outdent();
@@ -210,7 +212,9 @@ public class HtmlTemplateMethodWriter {
     }
 
     strings.add("@Template(\"" + addTemplatePlaceholders(html) + "\")");
-    strings.add("SafeHtml " + methodName + "(" + addTemplateParameters() + ");");
+    strings.add(
+        UiBinderApiPackage.current().getSafeHtmlInterfaceFqn() + " " + methodName + "("
+            + addTemplateParameters() + ");");
     strings.add(" ");
 
     argumentsResolved = true;

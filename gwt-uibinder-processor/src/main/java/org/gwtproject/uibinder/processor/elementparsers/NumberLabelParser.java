@@ -16,12 +16,10 @@
 package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.i18n.client.CurrencyData;
-import com.google.gwt.i18n.client.NumberFormat;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +29,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.DateLabel} widgets.
+ * Parses DateLabel widgets.
  */
 public class NumberLabelParser implements ElementParser {
 
@@ -50,7 +48,7 @@ public class NumberLabelParser implements ElementParser {
   private static final Map<String, String> predefinedFormats;
 
   static {
-    String prefix = NumberFormat.class.getCanonicalName();
+    String prefix = UiBinderApiPackage.current().getI18nNumberFormatFqn();
     Map<String, String> formats = new HashMap<String, String>(4);
     formats.put("DECIMAL", prefix + ".getDecimalFormat()");
     formats.put("PERCENT", prefix + ".getPercentFormat()");
@@ -74,7 +72,7 @@ public class NumberLabelParser implements ElementParser {
       throws UnableToCompleteException {
     String currencyData = elem.consumeAttribute("currencyData",
         AptUtil.getElementUtils().getTypeElement(
-            CurrencyData.class.getCanonicalName()).asType());
+            UiBinderApiPackage.current().getI18nCurrencyDataFqn()).asType());
     String currencyCode = elem.consumeStringAttribute("currencyCode");
 
     if (currencyData != null && currencyCode != null) {
@@ -87,7 +85,7 @@ public class NumberLabelParser implements ElementParser {
       throws UnableToCompleteException {
     String format = elem.consumeAttribute("format",
         AptUtil.getElementUtils().getTypeElement(
-            NumberFormat.class.getCanonicalName()).asType());
+            UiBinderApiPackage.current().getI18nNumberFormatFqn()).asType());
     String predefinedFormat = elem.consumeRawAttribute("predefinedFormat");
     String customFormat = elem.consumeStringAttribute("customFormat");
 
@@ -106,7 +104,7 @@ public class NumberLabelParser implements ElementParser {
       }
       if ("CURRENCY".equals(predefinedFormat)) {
         String currency = consumeCurrency(elem, writer);
-        return NumberFormat.class.getCanonicalName() + ".getCurrencyFormat("
+        return UiBinderApiPackage.current().getI18nNumberFormatFqn() + ".getCurrencyFormat("
             + (currency != null ? currency : "") + ")";
       }
       if (hasCurrency(elem)) {
@@ -120,7 +118,7 @@ public class NumberLabelParser implements ElementParser {
     }
     if (customFormat != null) {
       String currency = consumeCurrency(elem, writer);
-      return NumberFormat.class.getCanonicalName() + ".getFormat(" + customFormat
+      return UiBinderApiPackage.current().getI18nNumberFormatFqn() + ".getFormat(" + customFormat
           + (currency != null ? ", " + currency : "") + ")";
     }
     if (hasCurrency(elem)) {
@@ -136,7 +134,7 @@ public class NumberLabelParser implements ElementParser {
 
   private boolean hasNumberFormatConstructor(TypeMirror type) {
     TypeElement numberFormatType = AptUtil.getElementUtils()
-        .getTypeElement(NumberFormat.class.getName());
+        .getTypeElement(UiBinderApiPackage.current().getI18nNumberFormatFqn());
     return AptUtil.findConstructor(type, new TypeMirror[]{numberFormatType.asType()}) != null;
   }
 }

@@ -17,7 +17,7 @@ package org.gwtproject.uibinder.processor.model;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.MortalLogger;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderContext;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
@@ -29,10 +29,10 @@ import javax.lang.model.type.TypeMirror;
 /**
  * Descriptor for a field of the owner class.
  *
- * <p>Please notice that some fields defined in the XML and in the generated binder class may not be
- * present in the owner class - for instance, they may not be relevant to the code of the owner
+ * <p>Please notice that some fields defined in the XML and in the generated binder class may not
+ * be present in the owner class - for instance, they may not be relevant to the code of the owner
  * class. The fields in the binder class are instead represented by an instance of {@link
- * com.google.gwt.uibinder.rebind.FieldWriter}.
+ * org.gwtproject.uibinder.processor.FieldWriter}.
  */
 public class OwnerField {
 
@@ -60,7 +60,8 @@ public class OwnerField {
     this.fieldType = OwnerFieldClass.getFieldClass(fieldTypeMirror, logger, context);
 
     // Get the UiField annotation and process it
-    AnnotationMirror annotation = AptUtil.getAnnotation(field, UiBinderClasses.UIFIELD);
+    AnnotationMirror annotation = AptUtil
+        .getAnnotation(field, UiBinderApiPackage.current().getUiFieldFqn());
 
     if (annotation == null) {
       logger.die("Field " + name + " is not annotated with @UiField");

@@ -17,7 +17,7 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.FieldWriter;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
@@ -88,16 +88,17 @@ class WidgetInterpreter implements XMLElement.Interpreter<String> {
     FieldWriter childFieldWriter = uiWriter.parseElementToField(elem);
     String elementPointer = idHolder + "Element";
     uiWriter.addInitStatement(
-        "Element %s = com.google.gwt.dom.client.Document.get().getElementById(%s);",
-        elementPointer, idHolder);
+        "Element %s = %s.get().getElementById(%s);",
+        elementPointer, UiBinderApiPackage.current().getDomDocumentFqn(), idHolder);
 
     if (uiWriter.useLazyWidgetBuilders()) {
 
       // Register a DOM id field.
-      String lazyDomElementPath = UiBinderClasses.LAZYDOMELEMENT;
+      String lazyDomElementPath = UiBinderApiPackage.current().getLazyDomElementFqn();
       FieldWriter elementWriter = fieldManager.registerField(lazyDomElementPath, elementPointer);
-      elementWriter.setInitializer(String.format("new %s<Element>(%s)",
-          lazyDomElementPath, fieldManager.convertFieldToGetter(idHolder)));
+      elementWriter.setInitializer(String.format("new %s<%s>(%s)",
+          lazyDomElementPath, UiBinderApiPackage.current().getDomElementFqn(),
+          fieldManager.convertFieldToGetter(idHolder)));
 
       // Add attach/detach sections for this element.
       fieldWriter.addAttachStatement("%s.get();",

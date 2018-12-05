@@ -25,7 +25,7 @@ import java.util.List;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Implementation of FieldWriter for a {@link com.google.gwt.uibinder.client.LazyDomElement}.
+ * Implementation of FieldWriter for a LazyDomElement.
  */
 public class FieldWriterOfLazyDomElement extends AbstractFieldWriter {
 

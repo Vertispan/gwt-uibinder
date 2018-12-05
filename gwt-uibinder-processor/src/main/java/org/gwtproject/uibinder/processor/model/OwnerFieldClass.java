@@ -17,7 +17,7 @@ package org.gwtproject.uibinder.processor.model;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.MortalLogger;
-import org.gwtproject.uibinder.processor.UiBinderClasses;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderContext;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
@@ -277,10 +277,14 @@ public class OwnerFieldClass {
       TypeElement ownerElement = AptUtil.asTypeElement(ownerType);
       List<ExecutableElement> methods = ElementFilter.methodsIn(ownerElement.getEnclosedElements());
       for (ExecutableElement method : methods) {
-        AnnotationMirror annotation = AptUtil.getAnnotation(method, UiBinderClasses.UICHILD);
+        AnnotationMirror annotation = AptUtil
+            .getAnnotation(method, UiBinderApiPackage.current().getUiChildFqn());
         if (annotation == null) {
+          // FIXME - this is only for backwards compatibility
+          //  - any legacy widgets would have the old @UiChild annotation, not the new
           // if it's null, let's check for legacy annotation
-          annotation = AptUtil.getAnnotation(method, UiBinderClasses.Legacy.UICHILD);
+          annotation = AptUtil
+              .getAnnotation(method, UiBinderApiPackage.LEGACY.getUiChildFqn());
         }
         if (annotation != null) {
           Map<String, ? extends AnnotationValue> annotationValues = AptUtil
@@ -327,7 +331,7 @@ public class OwnerFieldClass {
 
     for (ExecutableElement ctor : ElementFilter
         .constructorsIn(fieldElement.getEnclosedElements())) {
-      if (AptUtil.isAnnotationPresent(ctor, UiBinderClasses.UICONSTRUCTOR)) {
+      if (AptUtil.isAnnotationPresent(ctor, UiBinderApiPackage.current().getUiConstructorFqn())) {
         if (uiConstructor != null) {
           logger.die(fieldElement.getSimpleName().toString()
               + " has more than one constructor annotated with @UiConstructor");

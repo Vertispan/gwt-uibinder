@@ -16,10 +16,9 @@
 package org.gwtproject.uibinder.processor.attributeparsers;
 
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,26 +26,23 @@ import java.util.Locale;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses a {@link HasVerticalAlignment.VerticalAlignmentConstant} .
+ * Parses a HasVerticalAlignment.VerticalAlignmentConstant.
  */
 class VerticalAlignmentConstantParser extends StrictAttributeParser {
 
-  private static final String PREFIX = HasVerticalAlignment.class.getCanonicalName()
-      + ".ALIGN_";
-  private static final HashMap<String, String> values = new HashMap<>();
-
-  static {
-    values.put("TOP", PREFIX + "TOP");
-    values.put("MIDDLE", PREFIX + "MIDDLE");
-    values.put("BOTTOM", PREFIX + "BOTTOM");
-    values.put("ALIGN_TOP", PREFIX + "TOP");
-    values.put("ALIGN_MIDDLE", PREFIX + "MIDDLE");
-    values.put("ALIGN_BOTTOM", PREFIX + "BOTTOM");
-  }
+  private final HashMap<String, String> values = new HashMap<>();
 
   VerticalAlignmentConstantParser(FieldReferenceConverter converter, TypeMirror type,
       MortalLogger logger) {
     super(converter, logger, type);
+
+    final String prefix = UiBinderApiPackage.current().getHasVerticalAlignmentFqn() + ".ALIGN_";
+    values.put("TOP", prefix + "TOP");
+    values.put("MIDDLE", prefix + "MIDDLE");
+    values.put("BOTTOM", prefix + "BOTTOM");
+    values.put("ALIGN_TOP", prefix + "TOP");
+    values.put("ALIGN_MIDDLE", prefix + "MIDDLE");
+    values.put("ALIGN_BOTTOM", prefix + "BOTTOM");
   }
 
   @Override

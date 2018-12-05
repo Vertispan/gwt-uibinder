@@ -18,12 +18,11 @@ package org.gwtproject.uibinder.processor.messages;
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.IndentedWriter;
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLAttribute;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.i18n.client.Messages;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class MessagesWriter {
 
     this.logger = mortalLogger;
 
-    baseInterface = Messages.class.getCanonicalName();
+    baseInterface = UiBinderApiPackage.current().getI18nMessagesInterfaceFqn();
   }
 
   /**
@@ -188,7 +187,7 @@ public class MessagesWriter {
           logger.die(elem, "%s must be an interface", baseInterfaceAttr);
         }
         TypeElement msgType = AptUtil.getElementUtils()
-            .getTypeElement(Messages.class.getCanonicalName());
+            .getTypeElement(UiBinderApiPackage.current().getI18nMessagesInterfaceFqn());
         if (msgType == null) {
           throw new RuntimeException("Internal Error: Messages interface not found");
         }
@@ -281,7 +280,8 @@ public class MessagesWriter {
     }
 
     // Imports.
-    writer.write("import static com.google.gwt.i18n.client.LocalizableResource.*;");
+    writer
+        .write("import static %s.*;", UiBinderApiPackage.current().getI18nLocalizableResourceFqn());
     writer.newline();
 
     // Open interface.

@@ -53,7 +53,7 @@ public class UiChildParser implements ElementParser {
   private final UiBinderContext uiBinderCtx;
 
   /**
-   * @param uiBinderCtx
+   *
    */
   public UiChildParser(UiBinderContext uiBinderCtx) {
     this.uiBinderCtx = uiBinderCtx;

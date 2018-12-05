@@ -19,6 +19,7 @@ import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.IndentedWriter;
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.Tokenator;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -97,7 +98,8 @@ public class HtmlTemplatesWriter {
    * Write the SafeHtmlTemplates interface and its GWT.create() call.
    */
   public void writeInterface(IndentedWriter w) {
-    w.write("interface Template extends SafeHtmlTemplates {");
+    w.write("interface Template extends %s {",
+        UiBinderApiPackage.current().getSafeHtmlTemplatesInterfaceFqn());
     w.indent();
     for (HtmlTemplateMethodWriter t : htmlTemplates) {
       t.writeTemplateMethod(w);
@@ -105,7 +107,8 @@ public class HtmlTemplatesWriter {
     w.outdent();
     w.write("}");
     w.newline();
-    w.write("Template template = GWT.create(Template.class);");
+    w.write("Template template = %s.create(Template.class);",
+        UiBinderApiPackage.current().getGWTFqn());
   }
 
   /**

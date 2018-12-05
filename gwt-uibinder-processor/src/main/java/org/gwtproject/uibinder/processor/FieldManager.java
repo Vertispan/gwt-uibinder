@@ -162,7 +162,7 @@ public class FieldManager {
 
   /**
    * Initialize with field builders the generated <b>Widgets</b> inner class. {@see
-   * com.google.gwt.uibinder.rebind.FieldWriter#writeFieldBuilder}.
+   * FieldWriter#writeFieldBuilder}.
    */
   public void initializeWidgetsInnerClass(IndentedWriter w,
       OwnerClass ownerClass) throws UnableToCompleteException {
@@ -254,8 +254,8 @@ public class FieldManager {
   }
 
   /**
-   * Register a new field for {@link com.google.gwt.uibinder.client.LazyDomElement} types.
-   * LazyDomElement fields can only be associated with html elements. Example:
+   * Register a new field for LazyDomElement types. LazyDomElement fields can only be associated
+   * with html elements. Example:
    *
    * <li>LazyDomElement&lt;DivElement&gt; -&gt; &lt;div&gt;</li> <li>LazyDomElement&lt;Element&gt;
    * -&gt; &lt;div&gt;</li> <li>LazyDomElement&lt;SpanElement&gt; -&gt; &lt;span&gt;</li>
@@ -350,7 +350,7 @@ public class FieldManager {
 
   /**
    * Outputs the getter and builder definitions for all fields. {@see
-   * com.google.gwt.uibinder.rebind.AbstractFieldWriter#writeFieldDefinition}.
+   * AbstractFieldWriter#writeFieldDefinition}.
    */
   public void writeFieldDefinitions(IndentedWriter writer, OwnerClass ownerClass)
       throws UnableToCompleteException {

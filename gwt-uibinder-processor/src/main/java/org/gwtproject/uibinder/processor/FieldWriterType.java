@@ -28,7 +28,7 @@ public enum FieldWriterType {
 
   /**
    * Holds the build precedence for this type. This is used when sorting the field builders in the
-   * Widgets constructor. {@see com.google.gwt.uibinder.rebind.initializeWidgetsInnerClass}
+   * Widgets constructor. {@see com .google .gwt .uibinder.rebind.initializeWidgetsInnerClass}
    */
   private int buildPrecedence;
 

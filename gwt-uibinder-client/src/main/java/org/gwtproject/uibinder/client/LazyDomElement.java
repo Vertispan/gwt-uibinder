@@ -15,8 +15,8 @@
  */
 package org.gwtproject.uibinder.client;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
+import org.gwtproject.dom.client.Document;
+import org.gwtproject.dom.client.Element;
 
 /**
  * Wraps a call to a DOM element. LazyDomElement can boost performance of html

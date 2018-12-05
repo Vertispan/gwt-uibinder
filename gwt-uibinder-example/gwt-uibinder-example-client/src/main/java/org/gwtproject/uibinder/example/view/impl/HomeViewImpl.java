@@ -28,7 +28,7 @@ import javax.inject.Inject;
  */
 public class HomeViewImpl implements HomeView {
 
-  @UiTemplate
+  @UiTemplate(legacyWidgets = true)
   interface MyUiBinder extends UiBinder<Widget, HomeViewImpl> {
   }
 

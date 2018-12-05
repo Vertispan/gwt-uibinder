@@ -24,7 +24,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.DisclosurePanel} widgets.
+ * Parses DisclosurePanel widgets.
  */
 public class DisclosurePanelParser implements ElementParser {
 

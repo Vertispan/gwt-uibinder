@@ -35,7 +35,7 @@ import javax.inject.Inject;
  */
 public class UiChildTestViewImpl implements UiChildTestView {
 
-  @UiTemplate
+  @UiTemplate(legacyWidgets = true)
   interface MyUiBinder extends UiBinder<Widget, UiChildTestViewImpl> {
   }
 

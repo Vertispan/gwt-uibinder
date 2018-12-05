@@ -23,8 +23,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
 /**
  * Used by {@link RenderablePanelParser} to interpret renderable elements. Declares the appropriate
- * {@link com.google.gwt.user.client.ui.IsRenderable}, and returns the correct HTML to be inlined in
- * the {@link com.google.gwt.user.client.ui.RenderablePanel}.
+ * IsRenderable, and returns the correct HTML to be inlined in the RenderablePanel.
  */
 class IsRenderableInterpreter implements XMLElement.Interpreter<String> {
 

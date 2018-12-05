@@ -16,6 +16,7 @@
 package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
@@ -43,8 +44,9 @@ public class DomElementParser implements ElementParser {
     writer.endAttachedSection();
 
     writer.setFieldInitializer(fieldName, String.format(
-        "(%1$s) UiBinderUtil.fromHtml(%2$s)",
+        "(%1$s) %3$s.fromHtml(%2$s)",
         AptUtil.asQualifiedNameable(type).getQualifiedName(),
-        writer.declareTemplateCall(html, fieldName)));
+        writer.declareTemplateCall(html, fieldName),
+        UiBinderApiPackage.current().getUiBinderUtilFqn()));
   }
 }

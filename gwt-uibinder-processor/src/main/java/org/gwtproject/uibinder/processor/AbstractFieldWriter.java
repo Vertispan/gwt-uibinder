@@ -18,8 +18,6 @@ package org.gwtproject.uibinder.processor;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
-import com.google.gwt.user.client.ui.RenderablePanel;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,7 +36,6 @@ import javax.lang.model.type.TypeMirror;
  */
 abstract class AbstractFieldWriter implements FieldWriter {
 
-  private static final String DOM_ELEMENT_CLASS = "com.google.gwt.dom.client.Element";
   private static final String NO_DEFAULT_CTOR_ERROR =
       "%1$s has no default (zero args) constructor. To fix this, you can define"
           + " a @UiFactory method on the UiBinder's owner, or annotate a constructor of %2$s with"
@@ -51,6 +48,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
   private final List<String> detachStatements = new ArrayList<String>();
 
   private final String name;
+  private String ownerAssignmentStatement;
   private String initializer;
   private boolean written;
   private int buildPrecedence;
@@ -65,6 +63,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
     }
     this.manager = manager;
     this.name = name;
+    this.ownerAssignmentStatement = name;
     this.logger = logger;
     this.buildPrecedence = 1;
     this.fieldType = fieldType;
@@ -145,6 +144,11 @@ abstract class AbstractFieldWriter implements FieldWriter {
   }
 
   @Override
+  public void setOwnerAssignmentStatement(String ownerAssignmentStatement) {
+    this.ownerAssignmentStatement = ownerAssignmentStatement;
+  }
+
+  @Override
   public String toString() {
     return String.format("[%s %s = %s]", this.getClass().getName(), name,
         initializer);
@@ -172,8 +176,13 @@ abstract class AbstractFieldWriter implements FieldWriter {
     }
 
     if (null == initializer) {
-      initializer = String.format("(%1$s) GWT.create(%1$s.class)",
-          getQualifiedSourceName());
+      if (UiBinderApiPackage.current().isGwtCreateSupported()) {
+        initializer = String.format("(%1$s) %2$s.create(%1$s.class)",
+            getQualifiedSourceName(), UiBinderApiPackage.current().getGWTFqn());
+      } else {
+        initializer = String.format("new %1$s()",
+            getQualifiedSourceName());
+      }
     }
 
     w.write("%s %s = %s;", getQualifiedSourceName(), name, initializer);
@@ -201,7 +210,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
       throws UnableToCompleteException {
 
     TypeElement renderablePanelType = AptUtil.getElementUtils()
-        .getTypeElement(RenderablePanel.class.getName());
+        .getTypeElement(UiBinderApiPackage.current().getRenderablePanelFqn());
 
     boolean outputAttachDetachCallbacks = getAssignableType() != null
         && AptUtil.isAssignableTo(getAssignableType(), renderablePanelType.asType());
@@ -219,8 +228,13 @@ abstract class AbstractFieldWriter implements FieldWriter {
               typeElement.getSimpleName());
         }
       }
-      initializer = String.format("(%1$s) GWT.create(%1$s.class)",
-          getQualifiedSourceName());
+      if (UiBinderApiPackage.current().isGwtCreateSupported()) {
+        initializer = String.format("(%1$s) %2$s.create(%1$s.class)",
+            getQualifiedSourceName(), UiBinderApiPackage.current().getGWTFqn());
+      } else {
+        initializer = String.format("new %1$s()",
+            getQualifiedSourceName());
+      }
     }
 
     w.newline();
@@ -264,7 +278,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
         w.indent();
         w.indent();
         w.write(
-            "new com.google.gwt.user.client.Command() {");
+            "new %s() {", UiBinderApiPackage.current().getCommandFqn());
         w.outdent();
         w.write("@Override public void execute() {");
         w.indent();
@@ -285,8 +299,8 @@ abstract class AbstractFieldWriter implements FieldWriter {
             AptUtil.isAssignableTo(getInstantiableType(), getDomElement().asType())
                 ? name : name + ".getElement()";
 
-        w.write("UiBinderUtil.TempAttachment %s = UiBinderUtil.attachToDom(%s);",
-            attachedVar, elementToAttach);
+        w.write("%1$s.TempAttachment %2$s = %1$s.attachToDom(%3$s);",
+            UiBinderApiPackage.current().getUiBinderUtilFqn(), attachedVar, elementToAttach);
 
         w.newline();
 
@@ -307,7 +321,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
         w.write("%s.detachedInitializationCallback = ", getName());
         w.indent();
         w.indent();
-        w.write("new com.google.gwt.user.client.Command() {");
+        w.write("new %s() {", UiBinderApiPackage.current().getCommandFqn());
         w.outdent();
         w.write("@Override public void execute() {");
         w.indent();
@@ -339,7 +353,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
             "this.owner.%1$s = (%2$s) (Object) %1$s;", name,
             AptUtil.asTypeElement(rawType).getQualifiedName());
       } else {
-        w.write("this.owner.%1$s = %1$s;", name);
+        w.write("this.owner.%1$s = %2$s;", name, ownerAssignmentStatement);
       }
     }
 
@@ -358,10 +372,11 @@ abstract class AbstractFieldWriter implements FieldWriter {
   }
 
   /**
-   * Gets a reference to the type object representing {@link com.google.gwt.dom.client.Element}.
+   * Gets a reference to the type object representing Element.
    */
   private TypeElement getDomElement() {
-    TypeElement domElement = AptUtil.getElementUtils().getTypeElement(DOM_ELEMENT_CLASS);
+    TypeElement domElement = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getDomElementFqn());
     assert domElement != null;
     return domElement;
   }

@@ -16,6 +16,7 @@
 package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
@@ -25,22 +26,22 @@ import java.util.HashMap;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.DockPanel} widgets.
+ * Parses DockPanel widgets.
  */
 public class DockPanelParser implements ElementParser {
 
   private static final String TAG_DOCK = "Dock";
-  private static final HashMap<String, String> values =
-      new HashMap<String, String>();
+  private final HashMap<String, String> values = new HashMap<>();
 
-  static {
-    values.put("NORTH", "com.google.gwt.user.client.ui.DockPanel.NORTH");
-    values.put("SOUTH", "com.google.gwt.user.client.ui.DockPanel.SOUTH");
-    values.put("EAST", "com.google.gwt.user.client.ui.DockPanel.EAST");
-    values.put("WEST", "com.google.gwt.user.client.ui.DockPanel.WEST");
-    values.put("CENTER", "com.google.gwt.user.client.ui.DockPanel.CENTER");
-    values.put("LINE_START", "com.google.gwt.user.client.ui.DockPanel.LINE_START");
-    values.put("LINE_END", "com.google.gwt.user.client.ui.DockPanel.LINE_END");
+  public DockPanelParser() {
+    String dockPanelFqn = UiBinderApiPackage.current().getDockPanelFqn();
+    values.put("NORTH", dockPanelFqn + ".NORTH");
+    values.put("SOUTH", dockPanelFqn + ".SOUTH");
+    values.put("EAST", dockPanelFqn + ".EAST");
+    values.put("WEST", dockPanelFqn + ".WEST");
+    values.put("CENTER", dockPanelFqn + ".CENTER");
+    values.put("LINE_START", dockPanelFqn + ".LINE_START");
+    values.put("LINE_END", dockPanelFqn + ".LINE_END");
   }
 
   public void parse(XMLElement elem, String fieldName, TypeMirror type,
