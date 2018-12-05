@@ -1746,9 +1746,9 @@ public class UiBinderWriter {
     if (!isRenderer) {
       w.write("public class %s implements %s<%s, %s>, %s {", implClassName,
           UiBinderApiPackage.current().getUiBinderInterfaceFqn(),
-          asQualifiedNameable(uiRootType),//.getParameterizedQualifiedSourceName(),
-          asQualifiedNameable(uiOwnerType),//.getParameterizedQualifiedSourceName(),
-          asQualifiedNameable(baseClass)); //.getParameterizedQualifiedSourceName());
+          AptUtil.getParameterizedQualifiedSourceName(uiRootType),
+          AptUtil.getParameterizedQualifiedSourceName(uiOwnerType),
+          AptUtil.getParameterizedQualifiedSourceName(baseClass));
     } else {
       w.write("public class %s extends %s implements %s {", implClassName,
           AbstractUiRenderer.class.getName(),

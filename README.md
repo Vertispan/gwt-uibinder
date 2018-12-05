@@ -64,6 +64,12 @@ The `value` attribute for `@UiTemplate` is now optional in which the annotation 
 the name of the `.ui.xml` file from the name of the class.  This is the same behavior as before, just
 with the annotation present.
 
+As this module is in transition between legacy GWT widgets and the new gwt-widgets module, the 
+`@UiTemplate` interface also has a boolean attribute called `legacyWidgets`.    By default, this is 
+set to false; needed to generate classes for the new widgets.  However, by setting 
+`legacyWidgets = true`, the legacy widgets, SafeHtml, etc will be used.   Be aware that widgets cannot
+be mixed. 
+
 ### GWT.create() no longer used
 
 Previously, one would use `GWT.create(MyUiBinder.class)` to obtain the instance of the generated
