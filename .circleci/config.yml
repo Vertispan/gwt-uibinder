@@ -23,9 +23,18 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: 
+      - run:
+          name: environment check
+          command: |
+            java -XX:+PrintFlagsFinal -version | grep -iE 'HeapSize|PermSize|ThreadStackSize'
+            env MAVEN_OPTS="-XX:+PrintFlagsFinal" mvn -version | grep -iE 'HeapSize|PermSize|ThreadStackSize'
+
+      - run:
           name: build and fetch dependencies
-          command: mvn package dependency:go-offline || true
+          command: |
+            if [ ! -e ~/.m2/ ]; then mkdir ~/.m2/; fi
+            cat .circleci/settings.xml > ~/.m2/settings.xml
+            mvn package dependency:go-offline || true
 
       - save_cache:
           paths:
