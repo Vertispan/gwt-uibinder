@@ -46,7 +46,7 @@ public enum UiBinderApiPackage {
   ),
   ORG_GWTPROJECT_UIBINDER(
       true, //FIXME- update- this will have issues with GSS, Messages, etc.
-      "urn:ui:com.google.gwt.uibinder",// changing this will require updates to .xsd files
+      "urn:ui:org.gwtproject.uibinder",// changing this will require updates to .xsd files
       "org.gwtproject.uibinder.client",
       "org.gwtproject.dom.client",
       "org.gwtproject.user.client.ui",
