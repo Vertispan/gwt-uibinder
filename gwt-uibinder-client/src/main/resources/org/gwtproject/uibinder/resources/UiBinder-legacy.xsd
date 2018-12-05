@@ -65,8 +65,8 @@
 
 <xs:schema
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="urn:ui:org.gwtproject.uibinder"
-    xmlns="urn:ui:org.gwtproject.uibinder"
+    targetNamespace="urn:ui:com.google.gwt.uibinder"
+    xmlns="urn:ui:com.google.gwt.uibinder"
     elementFormDefault="qualified">
 
     <xs:element
