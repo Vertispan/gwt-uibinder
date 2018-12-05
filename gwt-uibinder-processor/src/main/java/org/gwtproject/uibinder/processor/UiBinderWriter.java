@@ -36,12 +36,7 @@ import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
 import org.gwtproject.uibinder.processor.model.OwnerClass;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
-import com.google.gwt.uibinder.client.impl.AbstractUiRenderer;
-import com.google.gwt.user.client.ui.IsRenderable;
-import com.google.gwt.user.client.ui.RenderableStamper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -431,7 +426,7 @@ public class UiBinderWriter {
     }
 
     isRenderableClassType = AptUtil.getElementUtils()
-        .getTypeElement(IsRenderable.class.getCanonicalName()).asType();
+        .getTypeElement(UiBinderApiPackage.current().getIsRenderableFqn()).asType();
     lazyDomElementClass = AptUtil.getElementUtils()
         .getTypeElement(UiBinderApiPackage.current().getLazyDomElementFqn()).asType();
 
@@ -600,8 +595,8 @@ public class UiBinderWriter {
   }
 
   /**
-   * Declare a {@link RenderableStamper} instance that will be filled at runtime with a unique
-   * token. This instance can then be used to stamp a single {@link IsRenderable}.
+   * Declare a RenderableStamper instance that will be filled at runtime with a unique token. This
+   * instance can then be used to stamp a single IsRenderable.
    *
    * @return that variable's name.
    */
@@ -609,11 +604,13 @@ public class UiBinderWriter {
     String renderableStamperName = "renderableStamper" + renderableStamper++;
     FieldWriter domField =
         fieldManager.registerField(FieldWriterType.RENDERABLE_STAMPER,
-            AptUtil.getElementUtils().getTypeElement(RenderableStamper.class.getName()).asType(),
+            AptUtil.getElementUtils()
+                .getTypeElement(UiBinderApiPackage.current().getRenderableStamperFqn()).asType(),
             renderableStamperName);
     domField.setInitializer(formatCode(
         "new %s(%s.get().createUniqueId())",
-        RenderableStamper.class.getName(), UiBinderApiPackage.current().getDomDocumentFqn()));
+        UiBinderApiPackage.current().getRenderableStamperFqn(),
+        UiBinderApiPackage.current().getDomDocumentFqn()));
 
     return renderableStamperName;
   }
@@ -953,8 +950,8 @@ public class UiBinderWriter {
    * safe to interpret at runtime as HTML without escaping, like translated messages with simple
    * formatting. Wrapped in a call to
    *
-   * {@link com.google.gwt.safehtml.shared.SafeHtmlUtils#fromSafeConstant} to keep the expression
-   * from being escaped by the SafeHtml template.
+   * SafeHtmlUtils.fromSafeConstant to keep the expression from being escaped by the SafeHtml
+   * template.
    *
    * @param expression must resolve to trusted HTML string
    */
@@ -971,8 +968,7 @@ public class UiBinderWriter {
   }
 
   /**
-   * Like {@link #tokenForStringExpression}, but used for runtime {@link
-   * com.google.gwt.safehtml.shared.SafeHtml SafeHtml} instances.
+   * Like {@link #tokenForStringExpression}, but used for runtime SafeHtml instances.
    *
    * @param expression must resolve to SafeHtml object
    */
@@ -986,8 +982,7 @@ public class UiBinderWriter {
   }
 
   /**
-   * Like {@link #tokenForStringExpression}, but used for runtime {@link
-   * com.google.gwt.safehtml.shared.SafeUri SafeUri} instances.
+   * Like {@link #tokenForStringExpression}, but used for runtime SafeUri instances.
    *
    * @param expression must resolve to SafeUri object
    */
@@ -1120,8 +1115,7 @@ public class UiBinderWriter {
   }
 
   /**
-   * Add call to {@code com.google.gwt.resources.client.CssResource#ensureInjected()} on each CSS
-   * resource field.
+   * Add call to CssResource#ensureInjected() on each CSS resource field.
    */
   private void ensureInjectedCssFields() {
     for (ImplicitCssResource css : bundleClass.getCssMethods()) {
@@ -1356,8 +1350,9 @@ public class UiBinderWriter {
    */
   private String parseDocumentElement(XMLElement elem) throws UnableToCompleteException {
     fieldManager.registerFieldOfGeneratedType(
-        AptUtil.getElementUtils().getTypeElement(ClientBundle.class.getName()).asType(),
-        bundleClass.getPackageName(), bundleClass.getClassName(), bundleClass.getFieldName());
+        AptUtil.getElementUtils().getTypeElement(UiBinderApiPackage.current().getClientBundleFqn())
+            .asType(), bundleClass.getPackageName(), bundleClass.getClassName(),
+        bundleClass.getFieldName());
 
     FieldWriter rootField = new UiBinderParser(this, messages, fieldManager, bundleClass,
         binderUri, uiBinderCtx, gssOptions).parse(elem);
@@ -1435,7 +1430,7 @@ public class UiBinderWriter {
           formatMethodError(eventMethod));
     }
 
-    String nativeEventName = NativeEvent.class.getCanonicalName();
+    String nativeEventName = UiBinderApiPackage.current().getDomNativeEventFqn();
     TypeElement nativeEventType = AptUtil.getElementUtils().getTypeElement(nativeEventName);
     if (!AptUtil.getTypeUtils().isSameType(nativeEventType.asType(), parameters.get(1).asType())) {
       die("Second parameter must be of type %s in %s", nativeEventName,
@@ -1465,10 +1460,8 @@ public class UiBinderWriter {
    * <pre>
    * <ul>
    *   <li> The annotation must list valid {@code ui:field}s
-   *   <li> The first parameter must be assignable to
-   *        {@link com.google.gwt.event.dom.client.DomEvent DomEvent}
-   *   <li> If present, the second parameter must be of type
-   *        {@link com.google.gwt.dom.client.Element Element}
+   *   <li> The first parameter must be assignable to DomEvent
+   *   <li> If present, the second parameter must be of type Element
    *   <li> For all other parameters in position {@code n} must be of the same type as
    *        {@code parameters[n + 1]}
    * </ul>
@@ -1482,7 +1475,7 @@ public class UiBinderWriter {
 //    JType[] onBrowserEventParamTypes = new JType[onBrowserEventParameters.length - 2];
 //
 //    // If present, second parameter must be an Element
-//    onBrowserEventParamTypes[0] = oracle.findType(com.google.gwt.dom.client.Element.class
+//    onBrowserEventParamTypes[0] = oracle.findType(com .google .gwt.dom.client.Element.class
 //        .getCanonicalName());
 //    // And the rest must be the same type
 //    for (int i = 3; i < onBrowserEventParameters.length; i++) {
@@ -1515,7 +1508,7 @@ public class UiBinderWriter {
 //      JClassType domEventType = oracle.findType(DomEvent.class.getCanonicalName());
 //      JClassType firstParamType = eventHandlerParameters[0].getType().isClassOrInterface();
 //      if (firstParamType == null || !firstParamType.isAssignableTo(domEventType)) {
-//        die("First parameter must be assignable to com.google.gwt.dom.client.DomEvent in %s",
+//        die("First parameter must be assignable to com .google .gwt.dom.client.DomEvent in %s",
 //            formatMethodError(jMethod));
 //      }
 //
@@ -1538,8 +1531,8 @@ public class UiBinderWriter {
    * Scan the base class for the getter methods. Assumes getters begin with "get" and validates that
    * each corresponds to a field declared with {@code ui:field}. If the getter return type is
    * assignable to {@code Element}, the getter must have a single parameter and the parameter must
-   * be assignable to {@code Element}. If the getter return type is assignable to {@code
-   * com.google.gwt.resources.client.CssResource}, the getter must have no parameters.
+   * be assignable to {@code Element}. If the getter return type is assignable to CssResource,
+   * the getter must have no parameters.
    */
   private void validateRendererGetters(TypeMirror owner) throws UnableToCompleteException {
     // TODO implement
@@ -1564,7 +1557,7 @@ public class UiBinderWriter {
 //          die("Style getter %s must have no parameters in %s", getterName,
 //              owner.getQualifiedSourceName());
 //        } else if (jMethod.getParameterTypes().length == 1) {
-//          String elementClassName = com.google.gwt.dom.client.Element.class.getCanonicalName();
+//          String elementClassName = com .google .gwt.dom.client.Element.class.getCanonicalName();
 //          JClassType elementType = oracle.findType(elementClassName);
 //          JClassType getterParamType =
 //              jMethod.getParameterTypes()[0].getErasedType().isClassOrInterface();
@@ -1751,8 +1744,8 @@ public class UiBinderWriter {
           AptUtil.getParameterizedQualifiedSourceName(baseClass));
     } else {
       w.write("public class %s extends %s implements %s {", implClassName,
-          AbstractUiRenderer.class.getName(),
-          asQualifiedNameable(baseClass));//.getParameterizedQualifiedSourceName());
+          UiBinderApiPackage.current().getAbstractUiRendererFqn(),
+          AptUtil.getParameterizedQualifiedSourceName(baseClass));
     }
     w.indent();
   }
@@ -1961,7 +1954,8 @@ public class UiBinderWriter {
     w.write("@SuppressWarnings(\"rawtypes\")");
     w.write("@Override");
     // public void fireEvent(GwtEvent<?> somethingUnlikelyToCollideWithParamNames) {
-    w.write("public void fireEvent(com.google.gwt.event.shared.GwtEvent<?> %sEvent) {",
+    w.write("public void fireEvent(%s<?> %sEvent) {",
+        UiBinderApiPackage.current().getGwtEventFqn(),
         SAFE_VAR_PREFIX);
     w.indent();
     //   switch (getMethodIndex()) {
@@ -2069,9 +2063,11 @@ public class UiBinderWriter {
           .getElementValues().get("value").getValue();
       for (String fieldName : fieldNames) {
         if (rootFieldName.equals(fieldName)) {
-          fieldName = AbstractUiRenderer.ROOT_FAKE_NAME;
+          fieldName = "^"; // FIXME - hardcoded to not add dependency AbstractUiRenderer.ROOT_FAKE_NAME;
         }
-        keys.add(eventType + AbstractUiRenderer.UI_ID_SEPARATOR + fieldName);
+        // FIXME - hardcoded to not add dependency
+        // keys.add(eventType + AbstractUiRenderer.UI_ID_SEPARATOR + fieldName);
+        keys.add(eventType + ":" + fieldName);
         values.add(i);
       }
     }

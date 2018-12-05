@@ -20,10 +20,6 @@ import org.gwtproject.uibinder.processor.FieldManager;
 import org.gwtproject.uibinder.processor.MortalLogger;
 import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,16 +33,10 @@ import javax.lang.model.util.Types;
  */
 public class AttributeParsers {
 
-  private static final String HORIZ_CONSTANT = HorizontalAlignmentConstant.class.getCanonicalName();
-  private static final String VERT_CONSTANT = VerticalAlignmentConstant.class.getCanonicalName();
-  @SuppressWarnings("deprecation")
-  private static final String TEXT_ALIGN_CONSTANT =
-      com.google.gwt.user.client.ui.TextBoxBase.TextAlignConstant.class.getCanonicalName();
   private static final String INT = "int";
   private static final String STRING = String.class.getCanonicalName();
   private static final String DOUBLE = "double";
   private static final String BOOLEAN = "boolean";
-  private static final String UNIT = Unit.class.getCanonicalName();
 
   private final MortalLogger logger;
   private final FieldReferenceConverter converter;
@@ -81,21 +71,30 @@ public class AttributeParsers {
     addAttributeParser("int,int", new IntPairAttributeParser(intParser,
         logger));
 
-    addAttributeParser(HORIZ_CONSTANT, new HorizontalAlignmentConstantParser(
-        converter, elements.getTypeElement(HORIZ_CONSTANT).asType(), logger));
-    addAttributeParser(VERT_CONSTANT, new VerticalAlignmentConstantParser(
-        converter, elements.getTypeElement(VERT_CONSTANT).asType(), logger));
-    addAttributeParser(TEXT_ALIGN_CONSTANT, new TextAlignConstantParser(
-        converter, elements.getTypeElement(TEXT_ALIGN_CONSTANT).asType(), logger));
+    addAttributeParser(UiBinderApiPackage.current().getHorizontalAlignmentConstantFqn(),
+        new HorizontalAlignmentConstantParser(converter, elements
+            .getTypeElement(UiBinderApiPackage.current().getHorizontalAlignmentConstantFqn())
+            .asType(), logger));
+    addAttributeParser(UiBinderApiPackage.current().getVerticalAlignmentConstantFqn(),
+        new VerticalAlignmentConstantParser(
+            converter, elements
+            .getTypeElement(UiBinderApiPackage.current().getVerticalAlignmentConstantFqn())
+            .asType(), logger));
+    addAttributeParser(UiBinderApiPackage.current().getTextBoxBaseTextAlignConstantFqn(),
+        new TextAlignConstantParser(
+            converter, elements
+            .getTypeElement(UiBinderApiPackage.current().getTextBoxBaseTextAlignConstantFqn())
+            .asType(), logger));
 
     StringAttributeParser stringParser = new StringAttributeParser(converter,
         elements.getTypeElement(STRING).asType());
     addAttributeParser(STRING, stringParser);
 
     EnumAttributeParser unitParser = new EnumAttributeParser(converter,
-        elements.getTypeElement(UNIT).asType(), logger);
-    addAttributeParser(DOUBLE + "," + UNIT, new LengthAttributeParser(
-        doubleParser, unitParser, logger));
+        elements.getTypeElement(UiBinderApiPackage.current().getDomStyleUnitFqn()).asType(),
+        logger);
+    addAttributeParser(DOUBLE + "," + UiBinderApiPackage.current().getDomStyleUnitFqn(),
+        new LengthAttributeParser(doubleParser, unitParser, logger));
 
     SafeUriAttributeParser uriParser = new SafeUriAttributeParser(stringParser,
         converter,

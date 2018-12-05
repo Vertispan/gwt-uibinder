@@ -46,8 +46,8 @@ public class BeanParser implements ElementParser {
 
   /**
    * Mapping between parameters and special UIObject methods. The {@link UIObjectParser} has a few
-   * methods that extend the normal bean naming pattern. So, that implementations of {@link
-   * com.google.gwt.user.client.ui.IsWidget} behave like UIObjects, they have to be translated.
+   * methods that extend the normal bean naming pattern. So, that implementations of IsWidget
+   * behave like UIObjects, they have to be translated.
    */
   private static final Map<String, String> ADD_PROPERTY_TO_SETTER_MAP =
       new HashMap<String, String>() {

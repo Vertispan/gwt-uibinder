@@ -17,17 +17,16 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.dom.client.Style.Unit;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.TabLayoutPanel} widgets.
+ * Parses TabLayoutPanel widgets.
  */
 public class TabLayoutPanelParser implements ElementParser {
 
@@ -49,7 +48,7 @@ public class TabLayoutPanelParser implements ElementParser {
     String size = panelElem.consumeRequiredDoubleAttribute("barHeight");
 
     TypeElement unitEnumType = AptUtil.getElementUtils().getTypeElement(
-        Unit.class.getCanonicalName());
+        UiBinderApiPackage.current().getDomStyleUnitFqn());
     String unit = panelElem.consumeAttributeWithDefault("barUnit",
         String.format("%s.%s", AptUtil.asQualifiedNameable(unitEnumType).getQualifiedName(), "PX"),
         unitEnumType.asType());

@@ -41,17 +41,19 @@ public enum UiBinderApiPackage {
       "com.google.gwt.user.client.ui",
       "com.google.gwt.i18n.client",
       "com.google.gwt.safehtml",
-      "com.google.gwt.resources.client"
+      "com.google.gwt.resources.client",
+      "com.google.gwt.event"
   ),
   ORG_GWTPROJECT_UIBINDER(
       true, //FIXME- update- this will have issues with GSS, Messages, etc.
-      "urn:ui:com.google.gwt.uibinder",
+      "urn:ui:com.google.gwt.uibinder",// changing this will require updates to .xsd files
       "org.gwtproject.uibinder.client",
       "org.gwtproject.dom.client",
       "org.gwtproject.user.client.ui",
       "com.google.gwt.i18n.client",
       "org.gwtproject.safehtml",
-      "com.google.gwt.resources.client"
+      "com.google.gwt.resources.client",
+      "org.gwtproject.event.legacy"
   );
 
   /**
@@ -99,12 +101,14 @@ public enum UiBinderApiPackage {
   private final String i18nPackageName;
   private final String safeHtmlPackageName;
   private final String resourcesPackageName;
+  private final String eventsPackageName;
 
 
   UiBinderApiPackage(String uiBinderPackageName) {
     this(true,
         null,
         uiBinderPackageName,
+        null,
         null,
         null,
         null,
@@ -120,7 +124,8 @@ public enum UiBinderApiPackage {
       String widgetsPackageName,
       String i18nPackageName,
       String safeHtmlPackageName,
-      String resourcesPackageName) {
+      String resourcesPackageName,
+      String eventsPackageName) {
     this.gwtCreateSupported = isGwtCreateSupported;
     this.binderUri = binderUri;
     this.uiBinderPackageName = uiBinderPackageName;
@@ -128,8 +133,8 @@ public enum UiBinderApiPackage {
     this.widgetsPackageName = widgetsPackageName;
     this.i18nPackageName = i18nPackageName;
     this.safeHtmlPackageName = safeHtmlPackageName;
-
     this.resourcesPackageName = resourcesPackageName;
+    this.eventsPackageName = eventsPackageName;
   }
 
   public String getBinderUri() {
@@ -150,8 +155,50 @@ public enum UiBinderApiPackage {
     return "com.google.gwt.core.client.GWT";
   }
 
-  public String getElementParserPackageName() {
-    return "org.gwtproject.uibinder.processor.elementparsers";
+  public String getAbstractUiRendererFqn() {
+    return uiBinderPackageName + ".AbstractUiRenderer";
+  }
+
+  public String getClientBundleFqn() {
+    return resourcesPackageName + ".ClientBundle";
+  }
+
+  public String getCommandFqn() {
+    // Command is in parent package of the ui widgets
+    String thePackage = widgetsPackageName.replaceAll("\\.ui$", "");
+    return thePackage + ".Command";
+  }
+
+  public String getCssResourceFqn() {
+    return resourcesPackageName + ".CssResource";
+  }
+
+  public String getCssResourceImportFqn() {
+    return resourcesPackageName + ".CssResource.Import";
+  }
+
+  public String getDataResourceFqn() {
+    return resourcesPackageName + ".DataResource";
+  }
+
+  public String getDataResourceDoNotEmbedFqn() {
+    return resourcesPackageName + ".DataResource.DoNotEmbed";
+  }
+
+  public String getDataResourceMimeTypeFqn() {
+    return resourcesPackageName + ".DataResource.MimeType";
+  }
+
+  public String getDialogBoxFqn() {
+    return widgetsPackageName + ".DialogBox";
+  }
+
+  public String getDialogBoxCaptionFqn() {
+    return widgetsPackageName + ".DialogBox.Caption";
+  }
+
+  public String getDockPanelFqn() {
+    return widgetsPackageName + ".DockPanel";
   }
 
   public String getDomDocumentFqn() {
@@ -162,20 +209,105 @@ public enum UiBinderApiPackage {
     return domPackageName + ".Element";
   }
 
-  public String getDomUnitFqn() {
-    return domPackageName + ".Unit";
+  public String getDomNativeEventFqn() {
+    return domPackageName + ".NativeEvent";
+  }
+
+  public String getDomStyleUnitFqn() {
+    if (COM_GOOGLE_GWT_UIBINDER.equals(this)) {
+      // in org.gwtproject, the Unit inside Style is not an enum.
+      return domPackageName + ".Style.Unit";
+    }
+    return "org.gwtproject.dom.style.shared" + ".Unit";
+  }
+
+  public String getElementParserPackageName() {
+    return "org.gwtproject.uibinder.processor.elementparsers";
+  }
+
+  public String getEventHandlerFqn() {
+    return eventsPackageName + ".shared.EventHandler";
+  }
+
+  public String getGwtEventFqn() {
+    return eventsPackageName + ".shared.GwtEvent";
+  }
+
+  public String getHandlerRegistrationFqn() {
+    String thePackage = eventsPackageName;
+    if (ORG_GWTPROJECT_UIBINDER.equals(this)) {
+      // using the 'legacy package' in the other place for ORG
+      thePackage = "org.gwtproject.event";
+    }
+    return thePackage + ".shared.HandlerRegistration";
+  }
+
+  public String getHasHorizontalAlignmentFqn() {
+    return widgetsPackageName + ".HasHorizontalAlignment";
+  }
+
+  public String getHasHTMLFqn() {
+    return widgetsPackageName + ".HasHTML";
+  }
+
+  public String getHasText() {
+    return widgetsPackageName + ".HasText";
+  }
+
+  public String getHasVerticalAlignmentFqn() {
+    return widgetsPackageName + ".HasVerticalAlignment";
+  }
+
+  public String getHorizontalAlignmentConstantFqn() {
+    return widgetsPackageName + ".HasHorizontalAlignment.HorizontalAlignmentConstant";
+  }
+
+  public String getI18nCurrencyDataFqn() {
+    return i18nPackageName + ".CurrencyData";
+  }
+
+  public String getI18nDateTimeFormatFqn() {
+    return i18nPackageName + ".DateTimeFormat";
+  }
+
+  public String getI18nDateTimeFormatPredefinedFormatFqn() {
+    return i18nPackageName + ".DateTimeFormat.PredefinedFormat";
+  }
+
+  public String getI18nLocalizableResourceFqn() {
+    return i18nPackageName + ".LocalizableResource";
   }
 
   public String getI18nMessagesInterfaceFqn() {
     return i18nPackageName + ".Messages";
   }
 
+  public String getI18nNumberFormatFqn() {
+    return i18nPackageName + ".NumberFormat";
+  }
+
+  public String getI18nTimeZoneFqn() {
+    return i18nPackageName + ".TimeZone";
+  }
+
   public String getImageResourceFqn() {
     return resourcesPackageName + ".ImageResource";
   }
 
+  public String getImageResourceImageOptionsFqn() {
+    return resourcesPackageName + ".ImageResource.ImageOptions";
+  }
+
+  public String getImageResourceRepeatStyleFqn() {
+    return resourcesPackageName + ".ImageResource.RepeatStyle";
+  }
+
   public String getImageFqn() {
     return widgetsPackageName + ".Image";
+  }
+
+  public String getIsRenderableFqn() {
+    return widgetsPackageName + ".IsRenderable";
   }
 
   public String getIsWidgetFqn() {
@@ -190,8 +322,24 @@ public enum UiBinderApiPackage {
     return widgetsPackageName + ".LazyPanel";
   }
 
+  public String getMenuBarFqn() {
+    return widgetsPackageName + ".MenuBar";
+  }
+
+  public String getMenuItemFqn() {
+    return widgetsPackageName + ".MenuItem";
+  }
+
+  public String getMenuItemSeparatorFqn() {
+    return widgetsPackageName + ".MenuItemSeparator";
+  }
+
   public String getRenderablePanelFqn() {
     return widgetsPackageName + ".RenderablePanel";
+  }
+
+  public String getRenderableStamperFqn() {
+    return widgetsPackageName + ".RenderableStamper";
   }
 
   public String getSafeHtmlBuilderFqn() {
@@ -216,6 +364,22 @@ public enum UiBinderApiPackage {
 
   public String getSafeUriInterfaceFqn() {
     return safeHtmlPackageName + ".shared.SafeUri";
+  }
+
+  public String getSplitLayoutPanelFqn() {
+    return widgetsPackageName + ".SplitLayoutPanel";
+  }
+
+  public String getTextBoxBaseFqn() {
+    return widgetsPackageName + ".TextBoxBase";
+  }
+
+  public String getTextBoxBaseTextAlignConstantFqn() {
+    return widgetsPackageName + ".TextBoxBase.TextAlignConstant";
+  }
+
+  public String getTreeItemFqn() {
+    return widgetsPackageName + ".TreeItem";
   }
 
   public String getUiBinderInterfaceFqn() {
@@ -253,6 +417,10 @@ public enum UiBinderApiPackage {
 
   public String getUiRendererInterfaceFqn() {
     return uiBinderPackageName + ".UiRenderer";
+  }
+
+  public String getVerticalAlignmentConstantFqn() {
+    return widgetsPackageName + ".HasVerticalAlignment.VerticalAlignmentConstant";
   }
 
   public String getWidgetFqn() {

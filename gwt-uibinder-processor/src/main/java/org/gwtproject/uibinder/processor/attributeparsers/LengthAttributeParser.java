@@ -16,10 +16,9 @@
 package org.gwtproject.uibinder.processor.attributeparsers;
 
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.dom.client.Style.Unit;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -29,8 +28,6 @@ import java.util.regex.Pattern;
  * Parses a CSS length value (e.g., "2em", "50%"), returning a comma-separated (double, Unit) pair.
  */
 public class LengthAttributeParser implements AttributeParser {
-
-  static final String UNIT = Unit.class.getCanonicalName();
 
   // This regular expression matches CSS length patterns of the form
   // (value)(unit), where the two may be separated by whitespace. Either part
@@ -73,7 +70,7 @@ public class LengthAttributeParser implements AttributeParser {
       unit = enumParser.parse(source, unitStr);
     } else {
       // Use PX by default.
-      unit = UNIT + ".PX";
+      unit = UiBinderApiPackage.current().getDomStyleUnitFqn() + ".PX";
     }
 
     return value + ", " + unit;

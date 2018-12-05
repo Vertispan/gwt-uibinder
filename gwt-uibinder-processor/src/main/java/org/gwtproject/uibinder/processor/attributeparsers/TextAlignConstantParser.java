@@ -16,10 +16,9 @@
 package org.gwtproject.uibinder.processor.attributeparsers;
 
 import org.gwtproject.uibinder.processor.MortalLogger;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.TextBoxBase;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,28 +26,27 @@ import java.util.Locale;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses a {@link TextBoxBase.TextAlignConstant}.
+ * Parses a TextBoxBase.TextAlignConstant.
  */
 class TextAlignConstantParser extends StrictAttributeParser {
 
-  private static final String PREFIX = TextBoxBase.class.getCanonicalName()
-      + ".ALIGN_";
-  private static final HashMap<String, String> values = new HashMap<>();
 
-  static {
-    values.put("LEFT", PREFIX + "LEFT");
-    values.put("CENTER", PREFIX + "CENTER");
-    values.put("RIGHT", PREFIX + "RIGHT");
-    values.put("JUSTIFY", PREFIX + "JUSTIFY");
-    values.put("ALIGN_LEFT", PREFIX + "LEFT");
-    values.put("ALIGN_CENTER", PREFIX + "CENTER");
-    values.put("ALIGN_RIGHT", PREFIX + "RIGHT");
-    values.put("ALIGN_JUSTIFY", PREFIX + "JUSTIFY");
-  }
+  private final HashMap<String, String> values = new HashMap<>();
 
   TextAlignConstantParser(FieldReferenceConverter converter, TypeMirror type,
       MortalLogger logger) {
     super(converter, logger, type);
+
+    final String prefix = UiBinderApiPackage.current().getTextBoxBaseFqn() + ".ALIGN_";
+
+    values.put("LEFT", prefix + "LEFT");
+    values.put("CENTER", prefix + "CENTER");
+    values.put("RIGHT", prefix + "RIGHT");
+    values.put("JUSTIFY", prefix + "JUSTIFY");
+    values.put("ALIGN_LEFT", prefix + "LEFT");
+    values.put("ALIGN_CENTER", prefix + "CENTER");
+    values.put("ALIGN_RIGHT", prefix + "RIGHT");
+    values.put("ALIGN_JUSTIFY", prefix + "JUSTIFY");
   }
 
   @Override

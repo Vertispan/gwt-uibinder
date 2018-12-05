@@ -23,7 +23,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses any widgets that implement {@link com.google.gwt.user.client.ui.HasWidgets}.
+ * Parses any widgets that implement HasWidgets.
  *
  * This handles all panels that support a single-argument add() method.
  */

@@ -76,9 +76,9 @@ public class HtmlInterpreter implements XMLElement.Interpreter<String> {
 
   /**
    * A convenience factory method for the most common use of this class, to work with HTML that will
-   * eventually be rendered under a {@link com.google.gwt.user.client.ui.UIObject} (or really, any
-   * object that responds to <code>getElement()</code>). Uses an instance of {@link
-   * HtmlMessageInterpreter} to process message elements.
+   * eventually be rendered under a UIObject (or really, any object that responds to
+   * <code>getElement()</code>). Uses an instance of {@link HtmlMessageInterpreter} to process
+   * message elements.
    *
    * @param uiExpression An expression that can be evaluated at runtime to find an object whose
    * getElement() method can be called to get an ancestor of all Elements generated from the

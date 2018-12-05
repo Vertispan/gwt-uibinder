@@ -27,9 +27,6 @@ import org.gwtproject.uibinder.processor.model.ImplicitDataResource;
 import org.gwtproject.uibinder.processor.model.ImplicitImageResource;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 import com.google.gwt.resources.rg.GssResourceGenerator.GssOptions;
 
@@ -130,12 +127,12 @@ public class UiBinderParser {
     this.bundleClass = bundleClass;
     this.uiBinderContext = uiBinderContext;
     Elements elementUtils = AptUtil.getElementUtils();
-    this.cssResourceType = elementUtils.getTypeElement(CssResource.class.getCanonicalName())
-        .asType();
-    this.imageResourceType = elementUtils.getTypeElement(ImageResource.class.getCanonicalName())
-        .asType();
-    this.dataResourceType = elementUtils.getTypeElement(DataResource.class.getCanonicalName())
-        .asType();
+    this.cssResourceType = elementUtils
+        .getTypeElement(UiBinderApiPackage.current().getCssResourceFqn()).asType();
+    this.imageResourceType = elementUtils
+        .getTypeElement(UiBinderApiPackage.current().getImageResourceFqn()).asType();
+    this.dataResourceType = elementUtils
+        .getTypeElement(UiBinderApiPackage.current().getDataResourceFqn()).asType();
     this.binderUri = binderUri;
     this.gssOptions = gssOptions;
   }
@@ -215,6 +212,7 @@ public class UiBinderParser {
 
     Boolean flipRtl = elem.consumeBooleanConstantAttribute(FLIP_RTL_ATTRIBUTE);
 
+    // FIXME - using old RepeatStyle, but really only for the valueOf..
     RepeatStyle repeatStyle = null;
     if (elem.hasAttribute(REPEAT_STYLE_ATTRIBUTE)) {
       String value = elem.consumeRawAttribute(REPEAT_STYLE_ATTRIBUTE);

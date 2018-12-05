@@ -354,8 +354,8 @@ public class XMLElement {
    * possible replacement. Escaping is performed to allow the returned text to serve as a Java
    * string literal used as input to a setInnerHTML call. <p> This call requires an interpreter to
    * make sense of any special children. The odds are you want to use {@link
-   * com.google.gwt.uibinder.elementparsers.HtmlInterpreter} for an HTML value, or {@link
-   * com.google.gwt.uibinder.elementparsers.TextInterpreter} for text.
+   * org.gwtproject.uibinder.processor.elementparsers.HtmlInterpreter} for an HTML value, or {@link
+   * org.gwtproject.uibinder.processor.elementparsers.TextInterpreter} for text.
    *
    * @param interpreter Called for each element, expected to return a string replacement for it, or
    * null if it should be left as is
@@ -396,7 +396,7 @@ public class XMLElement {
    * entities in the text are also escaped <p> This call requires an interpreter to make sense of
    * any special children. The odds are you want to use
    *
-   * {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * {@link org.gwtproject.uibinder.processor.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */
@@ -411,7 +411,7 @@ public class XMLElement {
    * entities in the text are NOT escaped <p> This call requires an interpreter to make sense of any
    * special children. The odds are you want to use
    *
-   * {@link com.google.gwt.uibinder.elementparsers.TextInterpreter}
+   * {@link org.gwtproject.uibinder.processor.elementparsers.TextInterpreter}
    *
    * @throws UnableToCompleteException If any elements present are not consumed by the interpreter
    */
@@ -552,9 +552,9 @@ public class XMLElement {
   /**
    * Convenience method for parsing the named attribute as a
    *
-   * {@link com.google.gwt.safehtml.shared.SafeHtml SafeHtml} value or reference.
+   * {@link org.gwtproject.safehtml.shared.SafeHtml SafeHtml} value or reference.
    *
-   * @return an expression that will evaluate to a {@link com.google.gwt.safehtml.shared.SafeHtml
+   * @return an expression that will evaluate to a {@link org.gwtproject.safehtml.shared.SafeHtml
    * SafeHtml} value in the generated code, or null if there is no such attribute
    * @throws UnableToCompleteException on unparseable value
    */
@@ -867,6 +867,6 @@ public class XMLElement {
 
   private TypeMirror getUnitType() {
     return AptUtil.getElementUtils()
-        .getTypeElement(UiBinderApiPackage.current().getDomUnitFqn()).asType();
+        .getTypeElement(UiBinderApiPackage.current().getDomStyleUnitFqn()).asType();
   }
 }

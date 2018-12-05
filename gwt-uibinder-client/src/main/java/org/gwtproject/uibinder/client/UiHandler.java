@@ -22,8 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a method to be automatically bound as an event handler. See examples in {@code
- * com.google.gwt.uibinder.test.client.HandlerDemo}.
+ * Marks a method to be automatically bound as an event handler.
  *
  * <p>The annotation values must be declared in the "ui:field" template attribute.
  */

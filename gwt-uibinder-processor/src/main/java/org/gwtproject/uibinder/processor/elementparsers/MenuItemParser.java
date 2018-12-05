@@ -17,13 +17,11 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.XMLElement.Interpreter;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -38,14 +36,14 @@ public class MenuItemParser implements ElementParser {
 
     // Use special initializer for standard MenuItem,
     // custom subclass should have default constructor.
-    if (MenuItem.class.getName()
+    if (UiBinderApiPackage.current().getMenuItemFqn()
         .equals(AptUtil.asQualifiedNameable(type).getQualifiedName().toString())) {
       writer.setFieldInitializerAsConstructor(fieldName, "\"\"",
-          "(com.google.gwt.user.client.Command) null");
+          "(" + UiBinderApiPackage.current().getCommandFqn() + ") null");
     }
 
     final TypeElement menuBarType = AptUtil.getElementUtils().getTypeElement(
-        MenuBar.class.getCanonicalName());
+        UiBinderApiPackage.current().getMenuBarFqn());
 
     class MenuBarInterpreter implements Interpreter<Boolean> {
 

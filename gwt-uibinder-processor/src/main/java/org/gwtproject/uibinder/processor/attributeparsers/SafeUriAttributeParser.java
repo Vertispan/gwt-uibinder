@@ -23,16 +23,13 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.safehtml.shared.SafeUri SafeUri} literals or references.
+ * Parses SafeUri literals or references.
  *
- * <p>Simple String literals are passed through
- * {@link com.google.gwt.safehtml.shared.UriUtils#fromSafeConstant(String)
- * UriUtils.fromConstantString(String)}
+ * <p>Simple String literals are passed through UriUtils.fromConstantString(String)
  *
  * <p>Accepts concatenated string expressions, mainly for compatibility with legacy
  * <code>&lt;a href="{foo.bar}{baz.bang}"></code> abuses. Passes such nonsense
- * through {@link com.google.gwt.safehtml.shared.UriUtils#fromString(String)
- * UriUtils.fromString(String)}
+ * through UriUtils.fromString(String)
  */
 public class SafeUriAttributeParser extends StrictAttributeParser {
   public static String wrapUnsafeStringAndWarn(MortalLogger logger, XMLElement source,

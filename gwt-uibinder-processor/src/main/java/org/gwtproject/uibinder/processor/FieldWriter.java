@@ -26,8 +26,8 @@ import javax.lang.model.type.TypeMirror;
  * UiBinder#createAndBindUi implementation will need.
  *
  * <p>A field can have a custom initialization statement, set via {@link #setInitializer}. Without
- * one it will be initialized via a {@link com.google.gwt.core.client.GWT#create} call. (In the rare
- * case that you need a field not to be initialized, initialize it to "null".)
+ * one it will be initialized via a GWT.create call. (In the rare case that you need a field not to
+ * be initialized, initialize it to "null".)
  *
  * <p>Dependencies can be declared between fields via {@link #needs}, to ensure that one can be
  * initialized via reference to another. Circular references are not supported, nor detected.
@@ -157,9 +157,8 @@ public interface FieldWriter {
   void setHtml(String html);
 
   /**
-   * Used to provide an initializer string to use instead of a {@link
-   * com.google.gwt.core.client.GWT#create} call. Note that this is an RHS expression. Don't include
-   * the leading '=', and don't end it with ';'.
+   * Used to provide an initializer string to use instead of a GWT.create call. Note that this is an
+   * RHS expression. Don't include the leading '=', and don't end it with ';'.
    *
    * @throws IllegalStateException on second attempt to set the initializer
    */
@@ -183,7 +182,7 @@ public interface FieldWriter {
    * to the builder when called</dd> <dt>getter called more than once</dt> <dd>in this case a field
    * class is created, the builder is written and the getter returns the field class</dd> </dl>
    *
-   * {@see com.google.gwt.uibinder.rebind.FieldWriter#writeFieldGetter}.
+   * {@see FieldWriter#writeFieldGetter}.
    */
   void writeFieldBuilder(IndentedWriter w, int getterCount, OwnerField ownerField)
       throws UnableToCompleteException;

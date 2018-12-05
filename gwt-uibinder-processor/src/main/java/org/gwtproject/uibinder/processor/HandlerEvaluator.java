@@ -25,9 +25,6 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.OwnerClass;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
-import com.google.gwt.event.shared.EventHandler;
-import com.google.web.bindery.event.shared.HandlerRegistration;
-
 import java.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -43,9 +40,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
 /**
- * This class implements an easy way to bind widget event handlers to methods annotated with {@link
- * com.google.gwt.uibinder.client.UiHandler} so that the user doesn't need to worry about writing
- * code to implement these bindings.
+ * This class implements an easy way to bind widget event handlers to methods annotated with
+ * UiHandler so that the user doesn't need to worry about writing code to implement these bindings.
  *
  * <p> For instance, the class defined below:
  *
@@ -73,9 +69,8 @@ import javax.lang.model.util.ElementFilter;
  *   link.addClickHandler(handler0);
  * </pre>
  *
- * Notice that the <b>link</b> object doesn't need to be annotated with {@link
- * com.google.gwt.uibinder.client.UiField} as long as it exists (annotated with ui:field) in the
- * template.
+ * Notice that the <b>link</b> object doesn't need to be annotated with UiField as long as it exists
+ * (annotated with ui:field) in the template.
  */
 class HandlerEvaluator {
 
@@ -88,7 +83,7 @@ class HandlerEvaluator {
    * http://docs.google.com/Doc?docid=0AQfnKgX9tAdgZGZ2cTM5YjdfMmQ4OTk0eGhz&hl=en
    *
    * But that needs to wait for a refactor to get most of this stuff out of here
-   * and into com.google.gwt.uibinder.rebind.model
+   * and into com .google .gwt.uibinder.rebind.model
    */
   private int varCounter = 0;
 
@@ -110,9 +105,9 @@ class HandlerEvaluator {
     this.logger = logger;
 
     handlerRegistrationJClass = AptUtil.getElementUtils()
-        .getTypeElement(HandlerRegistration.class.getName()).asType();
+        .getTypeElement(UiBinderApiPackage.current().getHandlerRegistrationFqn()).asType();
     eventHandlerJClass = AptUtil.getElementUtils()
-        .getTypeElement(EventHandler.class.getName()).asType();
+        .getTypeElement(UiBinderApiPackage.current().getEventHandlerFqn()).asType();
   }
 
   /**
@@ -290,8 +285,8 @@ class HandlerEvaluator {
    * Checks if a specific handler is valid for a given object and return the method that ties them.
    * The object must override a method that returns
    *
-   * {@link com.google.gwt.event.shared.HandlerRegistration} and receives a single input parameter
-   * of the same type of handlerType.
+   * HandlerRegistration and receives a single input parameter of the same type of
+   * handlerType.
    *
    * <p> Output an error in case more than one method match the conditions described above. </p>
    *
@@ -388,11 +383,11 @@ class HandlerEvaluator {
     // All handlers event must have an overrided method getAssociatedType().
     // We take advantage of this information to get the associated handler.
     // Ex:
-    // com.google.gwt.event.dom.client.ClickEvent
-    // ---> com.google.gwt.event.dom.client.ClickHandler
+    // com .google .gwt.event.dom.client.ClickEvent
+    // ---> com .google .gwt.event.dom.client.ClickHandler
     //
-    // com.google.gwt.event.dom.client.BlurEvent
-    // ---> com.google.gwt.event.dom.client.BlurHandler
+    // com .google .gwt.event.dom.client.BlurEvent
+    // ---> com .google .gwt.event.dom.client.BlurHandler
 
     if (eventType == null) {
       return null;

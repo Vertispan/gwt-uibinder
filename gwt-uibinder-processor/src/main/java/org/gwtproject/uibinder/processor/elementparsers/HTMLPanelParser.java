@@ -26,7 +26,7 @@ import org.gwtproject.uibinder.processor.model.OwnerField;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.HTMLPanel} widgets.
+ * Parses HTMLPanel widgets.
  */
 public class HTMLPanelParser implements ElementParser {
 

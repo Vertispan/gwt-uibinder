@@ -24,24 +24,22 @@ import java.util.regex.Pattern;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Deals with field references, e.g. the bits in braces here: <code>&lt;div
- * class="{style.enabled} fancy {style.impressive}" /></code>, by converting
- * them to java expressions (with the help of a
- * {@link com.google.gwt.uibinder.attributeparsers.FieldReferenceConverter.Delegate
- * Delegate}).
+ * Deals with field references, e.g. the bits in braces here: <code>&lt;div class="{style.enabled}
+ * fancy {style.impressive}" /></code>, by converting them to java expressions (with the help of a
+ * {@link FieldReferenceConverter.Delegate Delegate}).
  *
  * <p>A field reference is one or more segments separated by dots. The first
- * segment is considered to be a reference to a ui field, and succeeding
- * segments are method calls. So, <code>"{able.baker.charlie}"</code> becomes
+ * segment is considered to be a reference to a ui field, and succeeding segments are method calls.
+ * So, <code>"{able.baker.charlie}"</code> becomes
  * <code>"able.baker().charlie()"</code>.
  *
  * <p>A field reference starts with '{' and is followed immediately by a character
- * that can legally start a java identifier&mdash;that is a letter, $, or
- * underscore. Braces not followed by such a character are left in place.
+ * that can legally start a java identifier&mdash;that is a letter, $, or underscore. Braces not
+ * followed by such a character are left in place.
  *
  * <p>For convenience when dealing with generated CssResources, field segments with
- * dashes are converted to camel case. That is, {able.baker-charlie} is the same
- * as {able.bakerCharlie}
+ * dashes are converted to camel case. That is, {able.baker-charlie} is the same as
+ * {able.bakerCharlie}
  *
  * <p>Double mustaches (i.e. "{{..}}") are not matched as references to play well
  * with modern templating systems.
@@ -51,9 +49,7 @@ import javax.lang.model.type.TypeMirror;
  */
 public class FieldReferenceConverter {
   /**
-   * May be thrown by the
-   * {@link com.google.gwt.uibinder.attributeparsers.FieldReferenceConverter.Delegate
-   * Delegate} for badly formatted input.
+   * May be thrown by the Delegate for badly formatted input.
    */
   @SuppressWarnings("serial")
   public static class IllegalFieldReferenceException extends RuntimeException {
@@ -65,9 +61,8 @@ public class FieldReferenceConverter {
    */
   interface Delegate {
     /**
-     * Returns the types any parsed field references are expected to return.
-     * Multiple values indicates an overload. E.g., in <a href={...}> either a
-     * String or a SafeUri is allowed.
+     * Returns the types any parsed field references are expected to return. Multiple values
+     * indicates an overload. E.g., in <a href={...}> either a String or a SafeUri is allowed.
      */
     TypeMirror[] getTypes();
 
@@ -75,8 +70,8 @@ public class FieldReferenceConverter {
      * Called for fragment around and between field references.
      *
      * <p>Note that it will be called with empty strings if these surrounding bits
-     * are empty. E.g., "{style.enabled} fancy {style.impressive}" would call
-     * this method three times, with "", " fancy ", and "".
+     * are empty. E.g., "{style.enabled} fancy {style.impressive}" would call this method three
+     * times, with "", " fancy ", and "".
      *
      * <p>A string with no field references is treated as a single fragment, and
      * causes a single call to this method.
@@ -84,16 +79,16 @@ public class FieldReferenceConverter {
     String handleFragment(String fragment) throws IllegalFieldReferenceException;
 
     /**
-     * Called for each expanded field reference, to allow it to be stitched
-     * together with surrounding fragments.
+     * Called for each expanded field reference, to allow it to be stitched together with
+     * surrounding fragments.
      */
     String handleReference(String reference) throws IllegalFieldReferenceException;
   }
 
   /**
-   * Used by {@link FieldReferenceConverter#countFieldReferences}. Passthrough
-   * implementation that counts the number of calls handleReference has been called,
-   * so that we know how many field references a given string contains.
+   * Used by {@link FieldReferenceConverter#countFieldReferences}. Passthrough implementation that
+   * counts the number of calls handleReference has been called, so that we know how many field
+   * references a given string contains.
    */
   private static final class Telltale implements FieldReferenceConverter.Delegate {
     private int computedCount;
@@ -130,8 +125,8 @@ public class FieldReferenceConverter {
   }
 
   /**
-   * Reverses most of the work of {@link #convert}, turning a java expression
-   * back into a dotted path.
+   * Reverses most of the work of {@link #convert}, turning a java expression back into a dotted
+   * path.
    */
   public static String expressionToPath(String expression) {
     String[] chunks = expression.split(DOTS_AND_PARENS);

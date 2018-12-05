@@ -278,7 +278,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
         w.indent();
         w.indent();
         w.write(
-            "new com.google.gwt.user.client.Command() {");
+            "new %s() {", UiBinderApiPackage.current().getCommandFqn());
         w.outdent();
         w.write("@Override public void execute() {");
         w.indent();
@@ -321,7 +321,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
         w.write("%s.detachedInitializationCallback = ", getName());
         w.indent();
         w.indent();
-        w.write("new com.google.gwt.user.client.Command() {");
+        w.write("new %s() {", UiBinderApiPackage.current().getCommandFqn());
         w.outdent();
         w.write("@Override public void execute() {");
         w.indent();
@@ -372,7 +372,7 @@ abstract class AbstractFieldWriter implements FieldWriter {
   }
 
   /**
-   * Gets a reference to the type object representing {@link com.google.gwt.dom.client.Element}.
+   * Gets a reference to the type object representing Element.
    */
   private TypeElement getDomElement() {
     TypeElement domElement = AptUtil.getElementUtils()

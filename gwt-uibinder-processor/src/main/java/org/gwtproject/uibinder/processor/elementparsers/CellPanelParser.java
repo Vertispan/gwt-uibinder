@@ -17,12 +17,10 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 
 import java.util.Locale;
 
@@ -30,7 +28,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.CellPanel} widgets.
+ * Parses CellPanel widgets.
  */
 public class CellPanelParser implements ElementParser {
 
@@ -50,9 +48,9 @@ public class CellPanelParser implements ElementParser {
       FieldWriter childField, UiBinderWriter writer)
       throws UnableToCompleteException {
     TypeElement hAlignConstantType = AptUtil.getElementUtils().getTypeElement(
-        HorizontalAlignmentConstant.class.getCanonicalName());
+        UiBinderApiPackage.current().getHorizontalAlignmentConstantFqn());
     TypeElement vAlignConstantType = AptUtil.getElementUtils().getTypeElement(
-        VerticalAlignmentConstant.class.getCanonicalName());
+        UiBinderApiPackage.current().getVerticalAlignmentConstantFqn());
 
     // Parse horizontal and vertical alignment attributes.
     if (cellElem.hasAttribute(HALIGN_ATTR)) {

@@ -32,7 +32,7 @@ import javax.lang.model.type.TypeMirror;
  * <p>Please notice that some fields defined in the XML and in the generated binder class may not
  * be present in the owner class - for instance, they may not be relevant to the code of the owner
  * class. The fields in the binder class are instead represented by an instance of {@link
- * com.google.gwt.uibinder.rebind.FieldWriter}.
+ * org.gwtproject.uibinder.processor.FieldWriter}.
  */
 public class OwnerField {
 

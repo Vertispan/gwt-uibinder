@@ -23,15 +23,6 @@ import org.gwtproject.uibinder.processor.model.ImplicitCssResource;
 import org.gwtproject.uibinder.processor.model.ImplicitDataResource;
 import org.gwtproject.uibinder.processor.model.ImplicitImageResource;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource.Import;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.DataResource.DoNotEmbed;
-import com.google.gwt.resources.client.DataResource.MimeType;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ImageResource.ImageOptions;
-import com.google.gwt.resources.client.ImageResource.RepeatStyle;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -67,15 +58,15 @@ public class BundleWriter {
     this.logger = logger;
     Elements elementUtils = AptUtil.getElementUtils();
 
-    clientBundleType = elementUtils.getTypeElement(ClientBundle.class.getName()).asType();
-    dataResourceType = elementUtils.getTypeElement(DataResource.class.getCanonicalName()).asType();
-    doNotEmbedType = elementUtils.getTypeElement(DoNotEmbed.class.getCanonicalName()).asType();
-    dataMimeTypeType = elementUtils.getTypeElement(MimeType.class.getCanonicalName()).asType();
-    imageOptionType = elementUtils.getTypeElement(ImageOptions.class.getCanonicalName()).asType();
-    imageResourceType = elementUtils.getTypeElement(ImageResource.class.getCanonicalName())
-        .asType();
-    repeatStyleType = elementUtils.getTypeElement(RepeatStyle.class.getCanonicalName()).asType();
-    importAnnotationType = elementUtils.getTypeElement(Import.class.getCanonicalName()).asType();
+    UiBinderApiPackage api = UiBinderApiPackage.current();
+    clientBundleType = elementUtils.getTypeElement(api.getClientBundleFqn()).asType();
+    dataResourceType = elementUtils.getTypeElement(api.getDataResourceFqn()).asType();
+    doNotEmbedType = elementUtils.getTypeElement(api.getDataResourceDoNotEmbedFqn()).asType();
+    dataMimeTypeType = elementUtils.getTypeElement(api.getDataResourceMimeTypeFqn()).asType();
+    imageOptionType = elementUtils.getTypeElement(api.getImageResourceImageOptionsFqn()).asType();
+    imageResourceType = elementUtils.getTypeElement(api.getImageResourceFqn()).asType();
+    repeatStyleType = elementUtils.getTypeElement(api.getImageResourceRepeatStyleFqn()).asType();
+    importAnnotationType = elementUtils.getTypeElement(api.getCssResourceImportFqn()).asType();
   }
 
   public void write() throws UnableToCompleteException {
@@ -189,8 +180,7 @@ public class BundleWriter {
     }
   }
 
-  private void writeImageOptionsAnnotation(Boolean flipRtl,
-      RepeatStyle repeatStyle) {
+  private void writeImageOptionsAnnotation(Boolean flipRtl, /*RepeatStyle*/ Object repeatStyle) {
     if (flipRtl != null || repeatStyle != null) {
       StringBuilder b = new StringBuilder("@ImageOptions(");
       if (null != flipRtl) {

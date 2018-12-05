@@ -23,7 +23,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.AbsolutePanel AbsolutePanel} widgets.
+ * Parses AbsolutePanel widgets.
  */
 public class AbsolutePanelParser implements ElementParser {
 

@@ -17,19 +17,16 @@ package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
 import org.gwtproject.uibinder.processor.FieldWriter;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
-
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses {@link com.google.gwt.user.client.ui.MenuBar} widgets.
+ * Parses MenuBar widgets.
  */
 public class MenuBarParser implements ElementParser {
 
@@ -39,7 +36,7 @@ public class MenuBarParser implements ElementParser {
   public void parse(XMLElement elem, String fieldName, TypeMirror type,
       UiBinderWriter writer) throws UnableToCompleteException {
     // Generate instantiation (Vertical MenuBars require a ctor param).
-    if (MenuBar.class.getName()
+    if (UiBinderApiPackage.current().getMenuBarFqn()
         .equals(AptUtil.asQualifiedNameable(type).getQualifiedName().toString())) {
       if (elem.hasAttribute("vertical")) {
         String vertical = elem.consumeBooleanAttribute("vertical");
@@ -48,9 +45,10 @@ public class MenuBarParser implements ElementParser {
     }
 
     // Prepare base types.
-    TypeElement itemType = AptUtil.getElementUtils().getTypeElement(MenuItem.class.getName());
+    TypeElement itemType = AptUtil.getElementUtils()
+        .getTypeElement(UiBinderApiPackage.current().getMenuItemFqn());
     TypeElement separatorType = AptUtil.getElementUtils().getTypeElement(
-        MenuItemSeparator.class.getName());
+        UiBinderApiPackage.current().getMenuItemSeparatorFqn());
 
     // Parse children.
     for (XMLElement child : elem.consumeChildElements()) {

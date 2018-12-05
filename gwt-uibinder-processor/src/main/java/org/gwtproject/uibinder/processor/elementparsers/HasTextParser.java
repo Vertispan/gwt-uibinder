@@ -22,7 +22,7 @@ import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Parses widgets that implement {@link com.google.gwt.user.client.ui.HasText}.
+ * Parses widgets that implement HasText.
  */
 public class HasTextParser implements ElementParser {
 
