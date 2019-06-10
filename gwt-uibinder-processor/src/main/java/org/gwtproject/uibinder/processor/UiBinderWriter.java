@@ -2247,7 +2247,7 @@ public class UiBinderWriter {
    */
   private void writeTemplatesInterface(IndentedWriter w) {
     if (!(htmlTemplates.isEmpty())) {
-      htmlTemplates.writeInterface(w);
+      htmlTemplates.writeInterface(w, implClassName);
       w.newline();
     }
   }

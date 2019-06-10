@@ -15,16 +15,15 @@
  */
 package org.gwtproject.uibinder.client.impl;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.DomEvent;
-import com.google.gwt.event.shared.HasHandlers;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.uibinder.client.UiRenderer;
+import org.gwtproject.dom.client.Document;
+import org.gwtproject.dom.client.Element;
+import org.gwtproject.dom.client.EventTarget;
+import org.gwtproject.dom.client.NativeEvent;
+import org.gwtproject.event.dom.client.DomEvent;
+import org.gwtproject.event.shared.HasHandlers;
+import org.gwtproject.safehtml.shared.SafeHtml;
+import org.gwtproject.safehtml.shared.SafeHtmlUtils;
+import org.gwtproject.uibinder.client.UiRenderer;
 
 import java.util.HashMap;
 
@@ -167,9 +166,6 @@ public abstract class AbstractUiRenderer implements UiRenderer {
       if (!isAttachedToDom(root)) {
         throw new RuntimeException("UiRendered element is not attached to DOM while getting \""
             + fieldName + "\"");
-      } else if (!GWT.isProdMode()) {
-        throw new IllegalStateException("\"" + fieldName
-            + "\" not found within rendered element");
       } else {
         // In prod mode we do not distinguish between being unattached or not finding the element
         throw new IllegalArgumentException("UiRendered element is not attached to DOM, or \""
@@ -213,7 +209,7 @@ public abstract class AbstractUiRenderer implements UiRenderer {
    *          inserted as an attribute of the first tag found
    */
   protected static SafeHtml stampUiRendererAttribute(SafeHtml safeHtml, String attributeName,
-      String attributeValue) {
+                                                     String attributeValue) {
     String html = safeHtml.asString();
     int endOfFirstTag = html.indexOf(">");
 
@@ -335,10 +331,6 @@ public abstract class AbstractUiRenderer implements UiRenderer {
    * attached to the document. Always returns <code>true</code> in ProdMode.
    */
   private static boolean isAttachedToDom(Element rendered) {
-    if (GWT.isProdMode()) {
-      return true;
-    }
-
     Element body = Document.get().getBody();
 
     while (rendered != null && rendered.hasParentElement() && !body.equals(rendered)) {
@@ -348,7 +340,7 @@ public abstract class AbstractUiRenderer implements UiRenderer {
   }
 
   /**
-   * Implements {@link com.google.gwt.uibinder.client.UiRenderer#isParentOrRenderer(Element)}.
+   * Implements {@link UiRenderer#isParentOrRenderer(Element)}.
    */
   private static boolean isParentOrRenderer(Element parent, String attribute) {
     if (parent == null) {
@@ -364,7 +356,7 @@ public abstract class AbstractUiRenderer implements UiRenderer {
    * Checks that the parent of {@code rendered} has a single child.
    */
   private static boolean isRenderedElementSingleChild(Element rendered) {
-    return GWT.isProdMode() || rendered.getParentElement().getChildCount() == 1;
+    return rendered.getParentElement().getChildCount() == 1;
   }
 
   /**

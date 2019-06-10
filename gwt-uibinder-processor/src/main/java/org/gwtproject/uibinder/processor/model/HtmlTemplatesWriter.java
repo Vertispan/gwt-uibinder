@@ -97,7 +97,7 @@ public class HtmlTemplatesWriter {
   /**
    * Write the SafeHtmlTemplates interface and its GWT.create() call.
    */
-  public void writeInterface(IndentedWriter w) {
+  public void writeInterface(IndentedWriter w, String outerClassName) {
     w.write("interface Template extends %s {",
         UiBinderApiPackage.current().getSafeHtmlTemplatesInterfaceFqn());
     w.indent();
@@ -107,8 +107,14 @@ public class HtmlTemplatesWriter {
     w.outdent();
     w.write("}");
     w.newline();
-    w.write("Template template = %s.create(Template.class);",
-        UiBinderApiPackage.current().getGWTFqn());
+
+
+    if (!UiBinderApiPackage.current().isGwtCreateSupported()) {
+      w.write("Template template = new %s_TemplateImpl();", outerClassName);
+    } else {
+      w.write("Template template = %s.create(Template.class);",
+              UiBinderApiPackage.current().getGWTFqn());
+    }
   }
 
   /**

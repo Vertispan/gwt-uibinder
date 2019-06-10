@@ -18,6 +18,9 @@ package org.gwtproject.uibinder.processor;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
+import com.google.auto.common.MoreElements;
+import com.google.auto.common.MoreTypes;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -27,6 +30,7 @@ import java.util.Set;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -232,8 +236,35 @@ abstract class AbstractFieldWriter implements FieldWriter {
         initializer = String.format("(%1$s) %2$s.create(%1$s.class)",
             getQualifiedSourceName(), UiBinderApiPackage.current().getGWTFqn());
       } else {
-        initializer = String.format("new %1$s()",
-            getQualifiedSourceName());
+        if (type != null) {
+          if (type.getKind().equals(ElementKind.INTERFACE) ||
+                  MoreTypes.asElement(type).getModifiers().contains(Modifier.ABSTRACT)) {
+            StringBuffer sb = new StringBuffer();
+
+            TypeElement element = (TypeElement)MoreTypes.asElement(type);
+            sb.append(MoreElements.getPackage(element).getQualifiedName().toString());
+            sb.append(".");
+            sb.append((element.getEnclosingElement().getKind().isClass() ||
+                    element.getEnclosingElement().getKind().isInterface()) ?
+                    element.getEnclosingElement().getSimpleName().toString() + "_"
+                    : "");
+            sb.append(element.getSimpleName().toString());
+
+            initializer = String.format("new %1$sImpl()",
+                                        sb.toString());
+          } else {
+            initializer = String.format("new %1$s()",
+                                        getQualifiedSourceName());
+          }
+        } else {
+          System.out.println(getQualifiedSourceName());
+          TypeElement element = AptUtil.getElementUtils().getTypeElement(getQualifiedSourceName());
+          if (element != null) {
+            System.out.println("find " + getQualifiedSourceName());
+          }
+          initializer = String.format("new %1$s()",
+                                     getQualifiedSourceName() + "Impl");
+        }
       }
     }
 

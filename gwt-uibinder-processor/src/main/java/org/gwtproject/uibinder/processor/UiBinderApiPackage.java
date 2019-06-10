@@ -45,14 +45,14 @@ public enum UiBinderApiPackage {
       "com.google.gwt.event"
   ),
   ORG_GWTPROJECT_UIBINDER(
-      true, //FIXME- update- this will have issues with GSS, Messages, etc.
+      false, //FIXME- update- this have issues with GSS, Messages, etc.
       "urn:ui:org.gwtproject.uibinder",// changing this will require updates to .xsd files
       "org.gwtproject.uibinder.client",
       "org.gwtproject.dom.client",
       "org.gwtproject.user.client.ui",
       "com.google.gwt.i18n.client",
       "org.gwtproject.safehtml",
-      "com.google.gwt.resources.client",
+      "org.gwtproject.resources.client",
       "org.gwtproject.event.legacy"
   );
 
@@ -175,6 +175,10 @@ public enum UiBinderApiPackage {
 
   public String getCssResourceImportFqn() {
     return resourcesPackageName + ".CssResource.Import";
+  }
+
+  public String getResourceAnnotationImportFqn() {
+    return resourcesPackageName + ".Resource";
   }
 
   public String getDataResourceFqn() {
