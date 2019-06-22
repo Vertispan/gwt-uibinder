@@ -31,7 +31,6 @@
     <java.version>1.8</java.version>
     <gwt.version>2.8.2</gwt.version>
     <guava.version>24.1-jre</guava.version>
-    <auto.common.version>0.10</auto.common.version>
 
     <license.orgName>Google Inc.</license.orgName>
     <license.year>2018</license.year>

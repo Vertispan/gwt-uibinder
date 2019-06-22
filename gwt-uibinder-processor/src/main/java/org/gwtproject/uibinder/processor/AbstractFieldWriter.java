@@ -18,9 +18,6 @@ package org.gwtproject.uibinder.processor;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 import org.gwtproject.uibinder.processor.model.OwnerField;
 
-import com.google.auto.common.MoreElements;
-import com.google.auto.common.MoreTypes;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -237,12 +234,11 @@ abstract class AbstractFieldWriter implements FieldWriter {
             getQualifiedSourceName(), UiBinderApiPackage.current().getGWTFqn());
       } else {
         if (type != null) {
+          TypeElement element = AptUtil.getElementUtils().getTypeElement(getQualifiedSourceName());
           if (type.getKind().equals(ElementKind.INTERFACE) ||
-                  MoreTypes.asElement(type).getModifiers().contains(Modifier.ABSTRACT)) {
+                  AptUtil.getTypeUtils().asElement(type).getModifiers().contains(Modifier.ABSTRACT)) {
             StringBuffer sb = new StringBuffer();
-
-            TypeElement element = (TypeElement)MoreTypes.asElement(type);
-            sb.append(MoreElements.getPackage(element).getQualifiedName().toString());
+            sb.append(AptUtil.getPackageElement(element).getQualifiedName().toString());
             sb.append(".");
             sb.append((element.getEnclosingElement().getKind().isClass() ||
                     element.getEnclosingElement().getKind().isInterface()) ?
@@ -257,11 +253,6 @@ abstract class AbstractFieldWriter implements FieldWriter {
                                         getQualifiedSourceName());
           }
         } else {
-          System.out.println(getQualifiedSourceName());
-          TypeElement element = AptUtil.getElementUtils().getTypeElement(getQualifiedSourceName());
-          if (element != null) {
-            System.out.println("find " + getQualifiedSourceName());
-          }
           initializer = String.format("new %1$s()",
                                      getQualifiedSourceName() + "Impl");
         }

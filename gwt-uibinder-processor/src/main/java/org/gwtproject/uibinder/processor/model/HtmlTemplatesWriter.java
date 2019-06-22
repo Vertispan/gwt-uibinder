@@ -109,11 +109,11 @@ public class HtmlTemplatesWriter {
     w.newline();
 
 
-    if (!UiBinderApiPackage.current().isGwtCreateSupported()) {
-      w.write("Template template = new %s_TemplateImpl();", outerClassName);
-    } else {
+    if (UiBinderApiPackage.current().isGwtCreateSupported()) {
       w.write("Template template = %s.create(Template.class);",
               UiBinderApiPackage.current().getGWTFqn());
+    } else {
+      w.write("Template template = new %s_TemplateImpl();", outerClassName);
     }
   }
 
