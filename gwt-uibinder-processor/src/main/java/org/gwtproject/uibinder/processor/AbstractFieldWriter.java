@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
@@ -232,8 +233,29 @@ abstract class AbstractFieldWriter implements FieldWriter {
         initializer = String.format("(%1$s) %2$s.create(%1$s.class)",
             getQualifiedSourceName(), UiBinderApiPackage.current().getGWTFqn());
       } else {
-        initializer = String.format("new %1$s()",
-            getQualifiedSourceName());
+        if (type != null) {
+          TypeElement element = AptUtil.getElementUtils().getTypeElement(getQualifiedSourceName());
+          if (type.getKind().equals(ElementKind.INTERFACE) ||
+                  AptUtil.getTypeUtils().asElement(type).getModifiers().contains(Modifier.ABSTRACT)) {
+            StringBuffer sb = new StringBuffer();
+            sb.append(AptUtil.getPackageElement(element).getQualifiedName().toString());
+            sb.append(".");
+            sb.append((element.getEnclosingElement().getKind().isClass() ||
+                    element.getEnclosingElement().getKind().isInterface()) ?
+                    element.getEnclosingElement().getSimpleName().toString() + "_"
+                    : "");
+            sb.append(element.getSimpleName().toString());
+
+            initializer = String.format("new %1$sImpl()",
+                                        sb.toString());
+          } else {
+            initializer = String.format("new %1$s()",
+                                        getQualifiedSourceName());
+          }
+        } else {
+          initializer = String.format("new %1$s()",
+                                     getQualifiedSourceName() + "Impl");
+        }
       }
     }
 

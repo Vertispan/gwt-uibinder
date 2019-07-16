@@ -48,6 +48,7 @@ public class BundleWriter {
   private final TypeMirror imageResourceType;
   private final TypeMirror repeatStyleType;
   private final TypeMirror importAnnotationType;
+  private TypeMirror resourceAnnotationType;
 
   public BundleWriter(ImplicitClientBundle bundleClass, PrintWriterManager writerManager,
       MortalLogger logger) {
@@ -67,6 +68,9 @@ public class BundleWriter {
     imageResourceType = elementUtils.getTypeElement(api.getImageResourceFqn()).asType();
     repeatStyleType = elementUtils.getTypeElement(api.getImageResourceRepeatStyleFqn()).asType();
     importAnnotationType = elementUtils.getTypeElement(api.getCssResourceImportFqn()).asType();
+    if (!api.isGwtCreateSupported()) {
+      resourceAnnotationType = elementUtils.getTypeElement(api.getResourceAnnotationImportFqn()).asType();
+    }
   }
 
   public void write() throws UnableToCompleteException {
@@ -93,8 +97,18 @@ public class BundleWriter {
     writer.write("import %s;", asQualifiedNameable(imageResourceType).getQualifiedName());
     writer.write("import %s;", asQualifiedNameable(imageOptionType).getQualifiedName());
     writer.write("import %s;", asQualifiedNameable(importAnnotationType).getQualifiedName());
+    if (UiBinderApiPackage.current()
+            .equals(UiBinderApiPackage.ORG_GWTPROJECT_UIBINDER)) {
+      writer.write("import %s;", asQualifiedNameable(resourceAnnotationType).getQualifiedName());
+    }
     writer.newline();
 
+
+    if (UiBinderApiPackage.current()
+            .equals(UiBinderApiPackage.ORG_GWTPROJECT_UIBINDER)) {
+      // Add @Resource annotation,
+      writer.write("@Resource");
+    }
     // Open interface
     writer.write("public interface %s extends ClientBundle {",
         bundleClass.getClassName());
