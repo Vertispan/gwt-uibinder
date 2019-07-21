@@ -188,7 +188,7 @@ public class OwnerFieldClass {
     int minRank = Integer.MAX_VALUE;
     for (ExecutableElement method : propertySetters) {
       int rank = rankMethodOnParameters(method);
-      if (rank < minRank) {
+      if (rank <= minRank) {
         minRank = rank;
         preferredMethod = method;
         ambiguousSetters.remove(propertyName);
