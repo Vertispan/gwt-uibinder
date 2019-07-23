@@ -215,9 +215,7 @@ public class OwnerFieldClass {
   private Multimap<String, ExecutableElement> findAllSetters(TypeMirror fieldType) {
     Multimap<String, ExecutableElement> allSetters = LinkedHashMultimap.create();
 
-    TypeElement fieldElement = AptUtil.asTypeElement(fieldType);
-    for (ExecutableElement method : ElementFilter
-        .methodsIn(fieldElement.getEnclosedElements())) {
+    for (ExecutableElement method : AptUtil.getInheritableMethods(fieldType)) {
       if (!isSetterMethod(method)) {
         continue;
       }
@@ -235,11 +233,6 @@ public class OwnerFieldClass {
       if (!legacyPropertyName.equals(beanPropertyName)) {
         allSetters.put(legacyPropertyName, method);
       }
-    }
-
-    TypeMirror superclass = fieldElement.getSuperclass();
-    if (!TypeKind.NONE.equals(superclass.getKind())) {
-      allSetters.putAll(findAllSetters(superclass));
     }
 
     return allSetters;
