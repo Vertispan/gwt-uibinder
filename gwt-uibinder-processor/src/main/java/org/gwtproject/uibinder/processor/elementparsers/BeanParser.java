@@ -16,6 +16,7 @@
 package org.gwtproject.uibinder.processor.elementparsers;
 
 import org.gwtproject.uibinder.processor.AptUtil;
+import org.gwtproject.uibinder.processor.UiBinderApiPackage;
 import org.gwtproject.uibinder.processor.UiBinderContext;
 import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLAttribute;
@@ -217,8 +218,13 @@ public class BeanParser implements ElementParser {
 //              factoryMethod.getName(),
 //              UiBinderWriter.asCommaSeparatedList(args));
 //        } else {
-        initializer = String.format("owner.%s(%s)", factoryMethod.getSimpleName(),
-            UiBinderWriter.asCommaSeparatedList(args));
+        if (UiBinderApiPackage.current().isGwtCreateSupported()) {
+          initializer = String.format("owner.%s(%s)", factoryMethod.getSimpleName(),
+                                      UiBinderWriter.asCommaSeparatedList(args));
+        } else {
+          initializer = String.format("new %s(%s)", factoryMethod.getEnclosingElement(),
+                                      UiBinderWriter.asCommaSeparatedList(args));
+        }
 //        }
         writer.setFieldInitializer(fieldName, initializer);
       } else { // Annotated Constructor
