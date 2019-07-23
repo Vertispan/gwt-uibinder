@@ -64,7 +64,7 @@ public class AptUtil {
   private static ThreadLocal<ProcessingEnvironment>
       processingEnvironmentThreadLocal = new ThreadLocal<>();
 
-  static void setProcessingEnvironment(ProcessingEnvironment processingEnvironment) {
+  public static void setProcessingEnvironment(ProcessingEnvironment processingEnvironment) {
     if (processingEnvironment == null) {
       processingEnvironmentThreadLocal.remove();
     }
