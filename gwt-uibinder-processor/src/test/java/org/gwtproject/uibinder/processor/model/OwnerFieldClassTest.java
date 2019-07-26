@@ -108,4 +108,15 @@ class OwnerFieldClassTest {
 
     verifyNoMoreInteractions(mockLogger, mockContext);
   }
+
+  @Test
+  public void nonAmbiguousGenericsSetter(Elements elements) throws Exception {
+    TypeElement typeElement = elements.getTypeElement(ChildClass.class.getName());
+    OwnerFieldClass cut = new OwnerFieldClass(typeElement.asType(), mockLogger, mockContext);
+
+    ExecutableElement setter = cut.getSetter("data");
+    assertNotNull(setter);
+
+    verifyNoMoreInteractions(mockLogger, mockContext);
+  }
 }

@@ -18,29 +18,9 @@ package org.gwtproject.uibinder.processor.model;
 /**
  *
  */
-public class ChildClass extends ParentClass implements HasData<DetailData> {
+public interface HasData<D extends Data> {
 
-  private DetailData data;
+  void setData(D data);
 
-  @Override
-  public void setText(String text) {
-    super.setText("Child: " + text);
-  }
-
-  /**
-   * This causes the ambiguity.  Parent has setNumber(Integer) which is the same rank as Long
-   */
-  public void setNumber(Long number) {
-    super.setNumber(number);
-  }
-
-  @Override
-  public void setData(DetailData data) {
-    this.data = data;
-  }
-
-  @Override
-  public DetailData getData() {
-    return data;
-  }
+  D getData();
 }

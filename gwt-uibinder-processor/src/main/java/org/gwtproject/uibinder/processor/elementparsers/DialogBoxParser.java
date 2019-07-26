@@ -22,7 +22,7 @@ import org.gwtproject.uibinder.processor.UiBinderWriter;
 import org.gwtproject.uibinder.processor.XMLElement;
 import org.gwtproject.uibinder.processor.ext.UnableToCompleteException;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -96,7 +96,7 @@ public class DialogBoxParser implements ElementParser {
       throws UnableToCompleteException {
     TypeMirror type = writer.findFieldType(element);
 
-    Set<? extends TypeMirror> classes = AptUtil.getFlattenedSupertypeHierarchy(type);
+    List<? extends TypeMirror> classes = AptUtil.getFlattenedSupertypeHierarchy(type);
     TypeElement captionType = AptUtil.getElementUtils().getTypeElement(
         UiBinderApiPackage.current().getDialogBoxCaptionFqn());
     return classes.contains(captionType);

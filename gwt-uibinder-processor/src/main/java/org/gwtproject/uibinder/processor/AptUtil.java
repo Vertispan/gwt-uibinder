@@ -18,10 +18,13 @@ package org.gwtproject.uibinder.processor;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -283,15 +286,41 @@ public class AptUtil {
    * The returned set maintains an internal breadth-first ordering of the type, followed by its
    * interfaces (and their super-interfaces), then the supertype and its interfaces, and so on.
    */
-  public static Set<? extends TypeMirror> getFlattenedSupertypeHierarchy(TypeMirror type) {
-    Set<TypeMirror> superTypes = new HashSet<>();
+  public static List<? extends TypeMirror> getFlattenedSupertypeHierarchy(TypeMirror type) {
+    List<TypeMirror> superTypes = new ArrayList<>();
 
-    while (type != null && !TypeKind.NONE.equals(type.getKind())) {
-      TypeElement typeElement = asTypeElement(type);
-      type = typeElement.getSuperclass();
+    if (type == null) {
+      return superTypes;
+    }
 
-      superTypes.add(type);
-      superTypes.addAll(typeElement.getInterfaces());
+    Deque<TypeMirror> stack = new ArrayDeque<>();
+    stack.push(type);
+
+    while (!stack.isEmpty()) {
+      TypeElement current = asTypeElement(stack.pop());
+
+      TypeMirror superTypeClass;
+
+      try {
+        superTypeClass = current.getSuperclass();
+      } catch (RuntimeException e) {
+        // not sure why this would happen
+        superTypeClass = null;
+      }
+
+      if (superTypeClass != null && superTypeClass.getKind() != TypeKind.NONE) {
+        if (!superTypes.contains(superTypeClass)) {
+          stack.push(superTypeClass);
+          superTypes.add(superTypeClass);
+        }
+      }
+
+      for (TypeMirror superTypeInterface : current.getInterfaces()) {
+        if (!superTypes.contains(superTypeInterface)) {
+          stack.push(superTypeInterface);
+          superTypes.add(superTypeInterface);
+        }
+      }
     }
 
     return superTypes;
@@ -310,25 +339,29 @@ public class AptUtil {
    * @return an array of {@link ExecutableElement} objects representing inheritable methods
    */
   public static List<? extends ExecutableElement> getInheritableMethods(TypeMirror type) {
-    Map<String, ExecutableElement> inheritableMethods = new HashMap<>();
+    Map<ExecutableElement, TypeElement> inheritableMethods = new LinkedHashMap<>();
 
-    Set<TypeMirror> flattenedSupertypeHierarchy = new HashSet<>(
-        getFlattenedSupertypeHierarchy(type));
-    flattenedSupertypeHierarchy.add(type);
-    for (TypeMirror typeMirror : flattenedSupertypeHierarchy) {
+    List<TypeMirror> typeHierarchy = new ArrayList<>(getFlattenedSupertypeHierarchy(type));
+    typeHierarchy.add(0, type);
+
+    // we're going to be looking at methods from child up through ancestry
+    for (TypeMirror typeMirror : typeHierarchy) {
       TypeElement typeElement = asTypeElement(typeMirror);
       if (typeElement != null) {
         List<ExecutableElement> methods = ElementFilter
             .methodsIn(typeElement.getEnclosedElements());
         for (ExecutableElement method : methods) {
-          String readableDeclaration = getReadableDeclaration(method, true,
-              true, true, true, true, true);
-          inheritableMethods.putIfAbsent(readableDeclaration, method);
+          // check to see if this method is overridden by anything we already have
+          if (!inheritableMethods.entrySet().stream()
+              .anyMatch(entry ->
+                  getElementUtils().overrides(entry.getKey(), method, entry.getValue()))) {
+            inheritableMethods.put(method, typeElement);
+          }
         }
       }
     }
 
-    return new ArrayList<>(inheritableMethods.values());
+    return new ArrayList<>(inheritableMethods.keySet());
   }
 
   public static PackageElement getPackageElement(Element element) {

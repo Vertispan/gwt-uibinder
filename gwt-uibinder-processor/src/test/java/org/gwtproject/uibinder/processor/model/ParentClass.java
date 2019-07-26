@@ -34,4 +34,7 @@ public class ParentClass {
   public void setNumber(Integer number) {
     this.number = number;
   }
+
+  public void setData(String arg1, String arg2) {
+  }
 }
