@@ -1,0 +1,36 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:custom='urn:import:org.gwtproject.uibinder.example.widget.custom'
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:style>
+    .container {
+      width: 100%;
+      height: 100%;
+    }
+
+    .title {
+      font-size: x-large;
+      font-weight: bold;
+    }
+
+    p {
+      padding-top: 10px;
+    }
+  </ui:style>
+
+  <g:HTMLPanel addStyleNames="{style.container}">
+    <h1 class="{style.title}">Misc Tests</h1>
+    <p>
+      This page just contains some misc tests and validations.
+    </p>
+    <hr/>
+    <p>
+      <label>Test widget subclass that overrides setter method.</label>
+      <br/>
+      <custom:MyButton text="overridden setter"/>
+    </p>
+  </g:HTMLPanel>
+
+</ui:UiBinder>

@@ -319,7 +319,13 @@ public enum UiBinderApiPackage {
   }
 
   public String getLazyDomElementFqn() {
-    return uiBinderPackageName + ".LazyDomElement";
+    String thePackage = uiBinderPackageName;
+
+    if (this == COM_GOOGLE_GWT_UIBINDER) {
+      // wrong package for lazy dom
+      thePackage = LEGACY.uiBinderPackageName;
+    }
+      return thePackage + ".LazyDomElement";
   }
 
   public String getLazyPanelFqn() {

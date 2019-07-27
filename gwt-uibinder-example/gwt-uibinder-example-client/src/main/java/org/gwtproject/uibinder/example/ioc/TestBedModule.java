@@ -17,11 +17,13 @@ package org.gwtproject.uibinder.example.ioc;
 
 import org.gwtproject.uibinder.example.NavigationRepository.Token;
 import org.gwtproject.uibinder.example.view.HomeView;
+import org.gwtproject.uibinder.example.view.MiscTestView;
 import org.gwtproject.uibinder.example.view.OldVsNewComparisonView;
 import org.gwtproject.uibinder.example.view.Shell;
 import org.gwtproject.uibinder.example.view.SupplementalView;
 import org.gwtproject.uibinder.example.view.UiChildTestView;
 import org.gwtproject.uibinder.example.view.impl.HomeViewImpl;
+import org.gwtproject.uibinder.example.view.impl.MiscTestViewImpl;
 import org.gwtproject.uibinder.example.view.impl.ShellImpl;
 import org.gwtproject.uibinder.example.view.impl.SupplementalViewImpl;
 import org.gwtproject.uibinder.example.view.impl.UiChildTestViewImpl;
@@ -52,7 +54,8 @@ public abstract class TestBedModule {
       Provider<HomeView> homeViewProvider,
       Provider<OldVsNewComparisonView> oldVsNewComparisonViewProvider,
       Provider<UiChildTestView> uiChildTestViewProvider,
-      Provider<SupplementalView> supplementalViewProvider) {
+      Provider<SupplementalView> supplementalViewProvider,
+      Provider<MiscTestView> miscTestViewProvider) {
     Map<Token, Provider<? extends IsWidget>> navMap = new LinkedHashMap<>();
 
     navMap.put(Token.DEFAULT, homeViewProvider);
@@ -60,6 +63,7 @@ public abstract class TestBedModule {
         oldVsNewComparisonViewProvider);
     navMap.put(Token.create("uichild", "UiChild Test"), uiChildTestViewProvider);
     navMap.put(Token.create("supplemental", "Supplemental View"), supplementalViewProvider);
+    navMap.put(Token.create("misc", "Misc Tests"), miscTestViewProvider);
 
     return navMap;
   }
@@ -75,4 +79,7 @@ public abstract class TestBedModule {
 
   @Binds
   abstract SupplementalView supplementalView(SupplementalViewImpl impl);
+
+  @Binds
+  abstract MiscTestView miscTestView(MiscTestViewImpl impl);
 }

@@ -215,9 +215,7 @@ public class OwnerFieldClass {
   private Multimap<String, ExecutableElement> findAllSetters(TypeMirror fieldType) {
     Multimap<String, ExecutableElement> allSetters = LinkedHashMultimap.create();
 
-    TypeElement fieldElement = AptUtil.asTypeElement(fieldType);
-    for (ExecutableElement method : ElementFilter
-        .methodsIn(fieldElement.getEnclosedElements())) {
+    for (ExecutableElement method : AptUtil.getInheritableMethods(fieldType)) {
       if (!isSetterMethod(method)) {
         continue;
       }
@@ -235,11 +233,6 @@ public class OwnerFieldClass {
       if (!legacyPropertyName.equals(beanPropertyName)) {
         allSetters.put(legacyPropertyName, method);
       }
-    }
-
-    TypeMirror superclass = fieldElement.getSuperclass();
-    if (!TypeKind.NONE.equals(superclass.getKind())) {
-      allSetters.putAll(findAllSetters(superclass));
     }
 
     return allSetters;
@@ -361,12 +354,18 @@ public class OwnerFieldClass {
    * Ranks given method based on parameter conversion cost. A lower rank is preferred over a higher
    * rank since it has a lower cost of conversion.
    *
-   * The ranking criteria is as follows: 1) methods with fewer arguments are preferred. for
-   * instance: 'setValue(int)' is preferred 'setValue(int, int)'. 2) within a set of overloads with
-   * the same number of arguments: 2.1) String has the lowest cost = 1 2.2) primitive types, cost =
-   * 2 2.3) boxed primitive types, cost = 3 2.4) any (reference types, etc), cost = 4. 3) if a
-   * setter is overridden by a subclass and have the exact same argument types, it will not be
-   * considered ambiguous.
+   * <pre>
+   * The ranking criteria is as follows:
+   * 1) methods with fewer arguments are preferred. for instance:
+   *    'setValue(int)' is preferred 'setValue(int, int)'.
+   * 2) within a set of overloads with the same number of arguments:
+   * 2.1) String has the lowest cost = 1
+   * 2.2) primitive types, cost = 2
+   * 2.3) boxed primitive types, cost = 3
+   * 2.4) any (reference types, etc), cost = 4.
+   * 3) if a setter is overridden by a subclass and have the exact same argument
+   * types, it will not be considered ambiguous.
+   * </pre>
    *
    * The cost mapping is defined in {@link #TYPE_RANK typeRank }
    *
