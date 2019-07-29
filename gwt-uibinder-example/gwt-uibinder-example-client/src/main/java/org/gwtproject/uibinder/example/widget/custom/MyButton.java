@@ -15,12 +15,18 @@
  */
 package org.gwtproject.uibinder.example.widget.custom;
 
+import org.gwtproject.uibinder.client.UiConstructor;
+
 import com.google.gwt.user.client.ui.Button;
 
 /**
  *
  */
 public class MyButton extends Button {
+
+  @UiConstructor
+  public MyButton() {
+  }
 
   @Override
   public void setText(String text) {

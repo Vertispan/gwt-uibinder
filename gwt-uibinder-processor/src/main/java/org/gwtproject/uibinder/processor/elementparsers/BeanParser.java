@@ -87,6 +87,7 @@ public class BeanParser implements ElementParser {
      * hasn't provided an instance via @UiField(provided = true)
      */
     ExecutableElement creator = null;
+    boolean uiConstructor = false;
     OwnerField uiField = writer.getOwnerClass().getUiField(fieldName);
     if ((uiField == null) || (!uiField.isProvided())) {
       // See if there's a factory method
@@ -94,6 +95,8 @@ public class BeanParser implements ElementParser {
       if (creator == null) {
         // If not, see if there's a @UiConstructor
         creator = ownerFieldClass.getUiConstructor();
+        // old source was able to use type hierarchy to determine this.  we can't here
+        uiConstructor = creator != null;
       }
 
       if (creator != null) {
@@ -208,7 +211,7 @@ public class BeanParser implements ElementParser {
 
     if (creator != null) {
       String[] args = makeArgsList(requiredValues, creator);
-      if (creator instanceof ExecutableElement) { // Factory method
+      if (!uiConstructor) { // Factory method
         ExecutableElement factoryMethod = (ExecutableElement) creator;
         String initializer;
 //        if (writer.getDesignTime().isDesignTime()) {
