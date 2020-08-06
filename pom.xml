@@ -29,7 +29,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <java.version>1.8</java.version>
-    <gwt.version>2.8.2</gwt.version>
+    <gwt.version>2.9.0</gwt.version>
     <guava.version>24.1-jre</guava.version>
 
     <license.orgName>Google Inc.</license.orgName>
