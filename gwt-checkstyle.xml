@@ -21,12 +21,12 @@ Description:
         <property name="fileExtensions" value="java"/>
         <property name="severity" value="error"/>
     </module>
+  <module name="LineLength">
+    <property name="max" value="100"/>
+    <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://|@link"/>
+  </module>
     <module name="TreeWalker">
        <property name="fileExtensions" value="java"/>
-       <module name="LineLength">
-            <property name="max" value="100"/>
-            <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://|@link"/>
-       </module>
        <module name="InterfaceIsType">
             <property name="severity" value="ignore"/>
         </module>
@@ -81,17 +81,19 @@ Description:
         <module name="NeedBraces">
             <metadata name="com.atlassw.tools.eclipse.checkstyle.comment" value="make sure if has braces"/>
         </module>
+        <module name="MissingJavadocMethod">
+        </module>
         <module name="JavadocMethod">
             <metadata name="com.atlassw.tools.eclipse.checkstyle.lastEnabledSeverity" value="info"/>
             <property name="severity" value="info"/>
             <property name="scope" value="protected"/>
-            <property name="allowUndeclaredRTE" value="true"/>
-            <property name="allowMissingParamTags" value="true"/>
-            <property name="allowMissingThrowsTags" value="true"/>
-            <property name="allowMissingReturnTag" value="true"/>
-            <property name="allowMissingJavadoc" value="true"/>
-            <property name="allowMissingPropertyJavadoc" value="true"/>
-            <property name="logLoadErrors" value="true"/>
+<!--            <property name="allowUndeclaredRTE" value="true"/>-->
+<!--            <property name="allowMissingParamTags" value="true"/>-->
+<!--            <property name="allowMissingThrowsTags" value="true"/>-->
+<!--            <property name="allowMissingReturnTag" value="true"/>-->
+<!--            <property name="allowMissingJavadoc" value="true"/>-->
+<!--            <property name="allowMissingPropertyJavadoc" value="true"/>-->
+<!--            <property name="logLoadErrors" value="true"/>-->
             <property name="tokens" value="METHOD_DEF"/>
         </module>
         <module name="ImportOrder">
